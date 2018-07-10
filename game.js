@@ -1,13 +1,22 @@
-const game = ( ({canvas}, board, pieces) => {  
-  canvas.addEventListener('click', (e) => {
-    let clickedTile = board.tiles.filter(tile => {
+const game = ( ({canvas}, board, {p1Pieces, p2Pieces}) => {  
+  const allPieces = [...p1Pieces, ...p2Pieces];
+  
+  canvas.addEventListener('click', handleClick)
+  
+  function handleClick (e) {
+    const clicked = clickedTile(e)[0];   
+    clicked.hasPiece(allPieces)[0] 
+      ? console.log(true)
+      : console.log(false);
+  }
+  
+  function clickedTile(e) {
+    return board.tiles.filter(tile => {
       return tile.x < e.offsetX
-          && tile.x + tile.width > e.offsetX
-          && tile.y < e.offsetY
-          && tile.y + tile.height > e.offsetY;
+        && tile.x + tile.width > e.offsetX
+        && tile.y < e.offsetY
+        && tile.y + tile.height > e.offsetY;
     });
-    console.log(clickedTile[0].label);
-    
-  })
+  }
 
 })(canvas, gameBoard, gamePieces);

@@ -11,6 +11,14 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}) => {
       this.color = color;
       this.label = label;
     }
+    hasPiece (pieces) {
+      return pieces.filter(piece => {
+        return piece.x > this.x 
+          && piece.x < this.x + this.width
+          && piece.y > this.y
+          && piece.y < this.y + this.height
+      })
+    }
   }
 
   const yLabels = [1, 2, 3, 4, 5, 6, 7, 8];

@@ -31,16 +31,15 @@ const gamePieces = ( ({ctx}, board) => {
         let x = (tile.x + (tile.width / 2));
         let y = (tile.y + (tile.height / 2));
         let radius = (tile.width / 2) - (tile.width * 0.1);
-        let color = pieceColors[clr];
         let piece = new Piece(x, y, radius, clr);
         p1Pieces.push(piece);
         drawPiece(piece);
       }
-    })
+    });
   }
 
-  generate(pieceColors.dark)
   generate(pieceColors.light)
+  generate(pieceColors.dark)
 
   return {
     p1Pieces,
