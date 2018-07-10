@@ -1,7 +1,7 @@
 const board = ( ({ctx, canvasWidth, canvasHeight}) => {
   
   const tiles = [];
-  
+
   class Tile {
     constructor(x, y, color, label) {
       this.x = x;
@@ -24,7 +24,7 @@ const board = ( ({ctx, canvasWidth, canvasHeight}) => {
     ctx.fillStyle = color;
     ctx.fill();
     ctx.fillStyle = 'beige'
-    ctx.fillText(label, x + (width / 2), y + (height * 0.8))
+    ctx.fillText(label, x + (width / 2) - 2, y + (height * 0.8))
     ctx.closePath();
   }
   
