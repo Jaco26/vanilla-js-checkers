@@ -13,7 +13,7 @@ const gamePieces = ( ({ctx}, gameTiles) => {
     changePosition (e) {
       this.x = e.offsetX;
       this.y = e.offsetY;
-      drawPiece(this);
+      // drawPiece(this);
     }
   }
 

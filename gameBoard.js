@@ -1,8 +1,5 @@
-const gameBoard = ( (tiles, pieces) => {
-  const board = {
-    tiles,
-    pieces
-  }
+const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
+
   const gameTilesInit = () => {
     tiles.generateTiles();
     tiles.drawTiles()
@@ -11,12 +8,24 @@ const gameBoard = ( (tiles, pieces) => {
   const gamePiecesInit = () => {
     pieces.generatePieces('dark')
     pieces.generatePieces('light')
+    console.log('Hey');
+    
     pieces.drawPieces();
   }
+
+  const reRenderPieces = () => {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    gameTilesInit();
+    pieces.drawPieces()
+  }
   
-  gameTilesInit()
-  gamePiecesInit()
+  gameTilesInit();
+  gamePiecesInit();
 
-  return board
+  return {
+    tiles, 
+    pieces,
+    reRenderPieces,
+  }
 
-})(gameBoardTiles, gamePieces);
+})(canvas, gameBoardTiles, gamePieces);

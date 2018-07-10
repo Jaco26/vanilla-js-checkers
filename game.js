@@ -21,8 +21,6 @@ const game = ( ({canvas}, board) => {
     } 
 
     function clickedTile(e) {
-      console.log(board);
-      
       return board.tiles.tilesArray.filter(tile => {
         return tile.x < e.offsetX
           && tile.x + tile.width > e.offsetX
@@ -33,13 +31,15 @@ const game = ( ({canvas}, board) => {
 
     function handleMousemove(e) {
       console.log(e.offsetX, e.offsetY);
-      console.log(piece);
+      // console.log(piece);
       piece.changePosition(e)
-
+      board.reRenderPieces()
     }
 
     function handleMouseup(e) {      
-      e.target.removeEventListener('mousemove', handleMousemove);
+      console.log(board.pieces);
+      
+      canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup)
     }
 
