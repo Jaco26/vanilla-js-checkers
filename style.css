@@ -1,0 +1,11 @@
+#drag-box {
+  display: flex;
+  flex-direction: row;
+  height: 100px;
+  width: 100px;
+  background-color: aqua;
+}
+
+#checkers-game {
+  background-color: beige;
+}
