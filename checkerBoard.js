@@ -1,4 +1,4 @@
-const board = ( ({ctx, canvasWidth, canvasHeight}) => {
+const gameBoard = ( ({ctx, canvasWidth, canvasHeight}) => {
   
   const tiles = [];
 
@@ -51,7 +51,11 @@ const board = ( ({ctx, canvasWidth, canvasHeight}) => {
   generate();
 
   return {
-    tiles
+    tiles,
+    tileColors: {
+      red,
+      black,
+    }
   }
 
 })(canvas);

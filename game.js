@@ -1,4 +1,4 @@
-const game = ( ({canvas}, board) => {  
+const game = ( ({canvas}, board, pieces) => {  
   canvas.addEventListener('click', (e) => {
     let clickedTile = board.tiles.filter(tile => {
       return tile.x < e.offsetX
@@ -10,4 +10,4 @@ const game = ( ({canvas}, board) => {
     
   })
 
-})(canvas, board);
+})(canvas, gameBoard, gamePieces);
