@@ -23,8 +23,9 @@ const board = ( ({ctx, canvasWidth, canvasHeight}) => {
     ctx.rect(x, y, width, height);
     ctx.fillStyle = color;
     ctx.fill();
+    ctx.font = '12px sans-serif'
     ctx.fillStyle = 'beige'
-    ctx.fillText(label, x + (width / 2) - 2, y + (height * 0.8))
+    ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8))
     ctx.closePath();
   }
   
@@ -32,7 +33,7 @@ const board = ( ({ctx, canvasWidth, canvasHeight}) => {
     let xPos = 0;
     let yPos = 0;
     let colorRed = true;
-    xLabels.forEach( (xLab, i) => { 
+    xLabels.reverse().forEach( (xLab, i) => { 
       yLabels.forEach( (yLab, i) => {
         let color = colorRed ? red : black;
         let tile = new Tile(xPos, yPos, color, xLab + yLab);

@@ -1,3 +1,5 @@
-const pieces = ( ({ctx}) => {
+const pieces = ( ({ctx}, board) => {
   
-})(canvas);
+
+
+})(canvas, board);

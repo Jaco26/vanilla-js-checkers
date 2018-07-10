@@ -6,6 +6,8 @@ const game = ( ({canvas}, board) => {
           && tile.y < e.offsetY
           && tile.y + tile.height > e.offsetY;
     });
+    console.log(clickedTile[0].label);
+    
   })
 
 })(canvas, board);
