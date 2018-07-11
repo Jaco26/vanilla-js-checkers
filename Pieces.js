@@ -11,15 +11,15 @@ const gamePieces = ( ({ctx}, gameTiles) => {
       this.color = color;
     }
     changePosition (e) {
+      console.log(e);      
       this.x = e.offsetX;
       this.y = e.offsetY;
-      // drawPiece(this);
     }
   }
 
   const pieceColors = {
-    light: 'pink',
-    dark: 'beige'
+    light: 'orange',
+    dark: 'green'
   }
 
   const generatePieces = (clr) => {

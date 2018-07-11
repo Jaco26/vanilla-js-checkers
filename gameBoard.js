@@ -8,14 +8,12 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
   const gamePiecesInit = () => {
     pieces.generatePieces('dark')
     pieces.generatePieces('light')
-    console.log('Hey');
-    
     pieces.drawPieces();
   }
 
   const reRenderPieces = () => {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    gameTilesInit();
+    tiles.drawTiles()
     pieces.drawPieces()
   }
   
