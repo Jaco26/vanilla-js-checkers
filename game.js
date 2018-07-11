@@ -1,10 +1,16 @@
 const game = ( ({canvas}, board) => {  
   canvas.addEventListener('mousedown', handleMousedown)
   
+
+
   function handleMousedown (e) {
     const allPieces = [...board.pieces.p1Pieces, ...board.pieces.p2Pieces];
     const clicked = clickedTile(e)[0]; 
+    console.log(clicked);
+    
     const piece = clicked.hasPiece(allPieces)[0];
+    console.log(piece);
+    
     if (piece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);

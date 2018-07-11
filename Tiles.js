@@ -1,5 +1,8 @@
 const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
+
   
+
+
   const tilesArray = [];
 
   class Tile {
@@ -21,8 +24,8 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
     }
   }
 
-  const yLabels = [1, 2, 3, 4, 5, 6, 7, 8];
-  const xLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const yLabels = [0, 1, 2, 3, 4, 5, 6, 7];
+  const xLabels = ['H', 'G',  'F', 'E', 'D', 'C', 'B', 'A'];
 
   tileColors = {
     red: '#FAA',
@@ -33,8 +36,8 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
     let xPos = 0;
     let yPos = 0;
     let colorRed = true;
-    xLabels.reverse().forEach((xLab, i) => {
-      yLabels.forEach((yLab, i) => {
+    xLabels.forEach(xLab => {
+      yLabels.forEach(yLab => {
         let color = colorRed ? tileColors.red : tileColors.black;
         let tile = new Tile(xPos, yPos, color, xLab + yLab);
         tilesArray.push(tile);
@@ -45,6 +48,7 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
       yPos += canvasHeight / 8;
       colorRed = !colorRed;
     });
+    
   }
 
   const drawTile = ({ x, y, width, height, color, label }) => {
@@ -52,6 +56,7 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
     ctx.rect(x, y, width, height);
     ctx.fillStyle = color;
     ctx.fill();
+    ctx.fillStyle = 'black';
     ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8))
     ctx.closePath();
   }

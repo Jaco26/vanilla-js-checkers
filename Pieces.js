@@ -1,4 +1,5 @@
 const gamePieces = ( ({ctx}, gameTiles) => {
+
   const p1Pieces = [];
   const p2Pieces = [];
   
@@ -11,7 +12,6 @@ const gamePieces = ( ({ctx}, gameTiles) => {
       this.color = color;
     }
     changePosition (e) {
-      console.log(e);      
       this.x = e.offsetX;
       this.y = e.offsetY;
     }
@@ -20,6 +20,14 @@ const gamePieces = ( ({ctx}, gameTiles) => {
   const pieceColors = {
     light: 'orange',
     dark: 'green'
+  }
+
+  const storePieces = (clr, piece) => {
+    if (pieceColors[clr] == pieceColors.dark) {
+      p1Pieces.push(piece)
+    } else {
+      p2Pieces.push(piece);
+    }
   }
 
   const generatePieces = (clr) => {
@@ -33,12 +41,12 @@ const gamePieces = ( ({ctx}, gameTiles) => {
         let y = (tile.y + (tile.height / 2));
         let radius = (tile.width / 2) - (tile.width * 0.1);
         let piece = new Piece(id, x, y, radius, pieceColors[clr]);
-        pieceColors[clr] == pieceColors.dark 
-          ? p1Pieces.push(piece) 
-          : p2Pieces.push(piece);
+        storePieces(clr, piece);
         id += 1
       }
     });
+    // console.log(tiles.gameBoardMap);
+    
   }
 
   const drawPiece = ({ x, y, radius, color }) => {
