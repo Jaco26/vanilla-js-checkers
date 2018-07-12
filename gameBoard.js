@@ -1,5 +1,23 @@
 const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
 
+  const gameBoardMap = {
+    H: [],
+    G: [],
+    F: [],
+    E: [],
+    D: [],
+    C: [],
+    B: [],
+    A: [],
+  }
+
+  const mapGameBoard = () => {
+    const { p1Pieces, p2Pieces } = pieces
+    console.log(p1Pieces);
+    console.log(p2Pieces);
+    console.log(tiles);
+  }
+
   const gameTilesInit = () => {
     tiles.generateTiles();
     tiles.drawTiles()
@@ -19,6 +37,7 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
   
   gameTilesInit();
   gamePiecesInit();
+  mapGameBoard();
 
   return {
     tiles, 

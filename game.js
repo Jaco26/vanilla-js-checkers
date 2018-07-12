@@ -6,6 +6,8 @@ const game = ( ({canvas}, board) => {
     const clicked = whichTileGotClicked(e);     
     const tileHasPiece = clicked.hasPiece(allPieces);
     const clickedPiece = whichPieceGotClicked(e);
+    console.log(clickedPiece);
+
     
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
@@ -33,11 +35,15 @@ const game = ( ({canvas}, board) => {
     function handleMousemove(e) {
       clickedPiece.changePosition(e)
       board.reRenderPieces()
+  
     }
 
     function handleMouseup(e) {      
       canvas.removeEventListener('mousemove', handleMousemove);
-      canvas.removeEventListener('mouseup', handleMouseup)
+      canvas.removeEventListener('mouseup', handleMouseup);
+      clickedPiece.findLocation(board.tiles.tilesArray);
+      console.log(clickedPiece);
+      
     }
 
   }

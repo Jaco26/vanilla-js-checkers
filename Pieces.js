@@ -4,7 +4,8 @@ const gamePieces = ( ({ctx}, gameTiles) => {
   const p2Pieces = [];
   
   class Piece {
-    constructor(id, x, y, radius, color){
+    constructor(label, id, x, y, radius, color){
+      this.location = label;
       this.id = id;
       this.x = x;
       this.y = y;
@@ -15,7 +16,16 @@ const gamePieces = ( ({ctx}, gameTiles) => {
       this.x = e.offsetX;
       this.y = e.offsetY;
     }
+    findLocation (gameTiles) {
+      this.location = gameTiles.filter(tile => {
+        return this.x > tile.x 
+          && this.x < tile.x + tile.width
+          && this.y > tile.y
+          && this.y < tile.y + tile.height;
+      })[0].label;
+    }
   }
+
 
   const pieceColors = {
     light: 'orange',
@@ -39,8 +49,9 @@ const gamePieces = ( ({ctx}, gameTiles) => {
       if (i < 24 && tile.color == gameTiles.tileColors.black) {
         let x = (tile.x + (tile.width / 2));
         let y = (tile.y + (tile.height / 2));
+        let {label} = tile
         let radius = (tile.width / 2) - (tile.width * 0.1);
-        let piece = new Piece(id, x, y, radius, pieceColors[clr]);
+        let piece = new Piece(label, id, x, y, radius, pieceColors[clr]);
         storePieces(clr, piece);
         id += 1
       }
