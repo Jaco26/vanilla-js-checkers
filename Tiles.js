@@ -20,7 +20,7 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
           && piece.x < this.x + this.width
           && piece.y > this.y
           && piece.y < this.y + this.height
-      });
+      })[0];
     }
   }
 

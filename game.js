@@ -42,8 +42,8 @@ const game = ( ({canvas}, board) => {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
       clickedPiece.findLocation(board.tiles.tilesArray);
-      console.log(clickedPiece);
-      
+      board.mapGameBoard();
+      console.log(board.gameBoardMap);
     }
 
   }
