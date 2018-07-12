@@ -1,28 +1,25 @@
 const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
 
-  const gameBoardMap = {
-    H: [],
-    G: [],
-    F: [],
-    E: [],
-    D: [],
-    C: [],
-    B: [],
-    A: [],
-  }
+  const gameHistory = [];
 
   const mapGameBoard = () => {
     const allPieces = [...pieces.p1Pieces, ...pieces.p2Pieces];
+    const boardMap = {H: [], G: [], F: [], E: [],  D: [], C: [], B: [], A: []};    
     tiles.tilesArray.forEach(tile => {
-      let piece = tile.hasPiece(allPieces)
+      let piece = tile.hasPiece(allPieces);      
       if (piece && piece.color == pieces.pieceColors['dark']) {
-        gameBoardMap[tile.label[0]][tile.label[1]] = 1
+        boardMap[tile.label[0]][tile.label[1]] = 1
       } else if (piece && piece.color == pieces.pieceColors['light']) {
-        gameBoardMap[tile.label[0]][tile.label[1]] = 2;
+        boardMap[tile.label[0]][tile.label[1]] = 2;
       } else {
-        gameBoardMap[tile.label[0]][tile.label[1]] = 0;
+        boardMap[tile.label[0]][tile.label[1]] = 0;
       }
     });
+    gameHistory.push(boardMap);
+  }
+
+  const mapPath = () => {
+    
   }
 
   const gameTilesInit = () => {
@@ -44,11 +41,12 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
   
   gameTilesInit();
   gamePiecesInit();
-  mapGameBoard();
+  mapGameBoard()
+  console.log(gameHistory);
 
   return {
     mapGameBoard,
-    gameBoardMap,
+    gameHistory,
     tiles, 
     pieces,
     reRenderPieces,

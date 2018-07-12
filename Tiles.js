@@ -68,6 +68,8 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
   return {
     tilesArray,
     tileColors,
+    xLabels,
+    yLabels,
     drawTiles,
     generateTiles
   }

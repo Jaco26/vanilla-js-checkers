@@ -42,10 +42,21 @@ const game = ( ({canvas}, board) => {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
       clickedPiece.findLocation(board.tiles.tilesArray);
+      let lastIndex = board.gameHistory.length - 1;
+      let oldGameBoardMap = board.gameHistory[lastIndex];      
       board.mapGameBoard();
-      console.log(board.gameBoardMap);
+      lastIndex = board.gameHistory.length -1;
+      let newGameBoardMap = board.gameHistory[lastIndex];
+      console.log('Old gameBoardMap', oldGameBoardMap);
+      
+      console.log('Updated gameBoardMap', newGameBoardMap);
+
+      console.log(board.gameHistory);
+      
     }
 
   }
+
+
 
 })(canvas, gameBoard);
