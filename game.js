@@ -3,26 +3,13 @@ const game = ( ({canvas}, board) => {
 
   function handleMousedown (e) {
     const allPieces = [...board.pieces.p1Pieces, ...board.pieces.p2Pieces];
-    const clicked = whichTileGotClicked(e);     
-    const tileHasPiece = clicked.hasPiece(allPieces);
     const clickedPiece = whichPieceGotClicked(e);
-    console.log(clickedPiece);
-
     
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);
     } 
-
-    function whichTileGotClicked(e) {
-      return board.tiles.tilesArray.filter(tile => {
-        return tile.x < e.offsetX
-          && tile.x + tile.width > e.offsetX
-          && tile.y < e.offsetY
-          && tile.y + tile.height > e.offsetY;
-      })[0];
-    }
-
+    
     function whichPieceGotClicked (e) {
       return allPieces.filter(piece => {
         return piece.x + piece.radius > e.offsetX
@@ -35,24 +22,12 @@ const game = ( ({canvas}, board) => {
     function handleMousemove(e) {
       clickedPiece.changePosition(e)
       board.reRenderPieces()
-  
     }
 
     function handleMouseup(e) {      
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      clickedPiece.findLocation(board.tiles.tilesArray);
-      let lastIndex = board.gameHistory.length - 1;
-      let oldGameBoardMap = board.gameHistory[lastIndex];      
-      board.mapGameBoard();
-      lastIndex = board.gameHistory.length -1;
-      let newGameBoardMap = board.gameHistory[lastIndex];
-      console.log('Old gameBoardMap', oldGameBoardMap);
-      
-      console.log('Updated gameBoardMap', newGameBoardMap);
-
-      console.log(board.gameHistory);
-      
+      board.checkGameLogic()      
     }
 
   }

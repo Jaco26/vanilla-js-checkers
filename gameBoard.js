@@ -4,22 +4,39 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
 
   const mapGameBoard = () => {
     const allPieces = [...pieces.p1Pieces, ...pieces.p2Pieces];
-    const boardMap = {H: [], G: [], F: [], E: [],  D: [], C: [], B: [], A: []};    
-    tiles.tilesArray.forEach(tile => {
-      let piece = tile.hasPiece(allPieces);      
+    const boardMap = {H: [], G: [], F: [], E: [],  D: [], C: [], B: [], A: []};  
+    return tiles.tilesArray.reduce( (a, b) => {
+      let piece = b.hasPiece(allPieces);
+      let letter = b.label[0];
+      let index = b.label[1];
       if (piece && piece.color == pieces.pieceColors['dark']) {
-        boardMap[tile.label[0]][tile.label[1]] = 1
+        a[letter][index] = 1;
       } else if (piece && piece.color == pieces.pieceColors['light']) {
-        boardMap[tile.label[0]][tile.label[1]] = 2;
+        a[letter][index] = 2;
       } else {
-        boardMap[tile.label[0]][tile.label[1]] = 0;
+        a[letter][index] = 0;
       }
-    });
-    gameHistory.push(boardMap);
+      return a;
+    }, boardMap)  
   }
 
-  const mapPath = () => {
+  const validMove = (newGameBoard) => {
+    if (gameHistory.length >= 1) {
+      const lastGameBoard = gameHistory[gameHistory.lenth - 1];
+      // compare lastGameBoard against newGameBoard with some yet-to-be 
+      // established rules and see if a given piece's new postition is valid
+    } 
+  }
+
+  const checkGameLogic = () => {
+    console.log('hey');
     
+    const newGameBoard = mapGameBoard()
+    if (validMove(newGameBoard)) {
+      gameHistory.push(newGameBoard);
+    } else {
+      gameHistory.push(mapGameBoard())
+    }
   }
 
   const gameTilesInit = () => {
@@ -41,11 +58,13 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
   
   gameTilesInit();
   gamePiecesInit();
-  mapGameBoard()
+  gameHistory.push(mapGameBoard());
+  console.log(mapGameBoard());
+  
   console.log(gameHistory);
 
   return {
-    mapGameBoard,
+    checkGameLogic,
     gameHistory,
     tiles, 
     pieces,
