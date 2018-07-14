@@ -20,23 +20,29 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
     }, boardMap)  
   }
 
+
+  
+
+
   const validMove = (newGameBoard) => {
     if (gameHistory.length >= 1) {
       const lastGameBoard = gameHistory[gameHistory.lenth - 1];
       // compare lastGameBoard against newGameBoard with some yet-to-be 
       // established rules and see if a given piece's new postition is valid
-    } 
+      if (1 == 1) {
+        return true
+      } 
+      return false;
+    }
   }
 
   const checkGameLogic = () => {
-    console.log('hey');
-    
     const newGameBoard = mapGameBoard()
     if (validMove(newGameBoard)) {
       gameHistory.push(newGameBoard);
-    } else {
-      gameHistory.push(mapGameBoard())
-    }
+      return true;
+    } 
+    return false;
   }
 
   const gameTilesInit = () => {
@@ -59,7 +65,7 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
   gameTilesInit();
   gamePiecesInit();
   gameHistory.push(mapGameBoard());
-  console.log(mapGameBoard());
+  // console.log(mapGameBoard());
   
   console.log(gameHistory);
 
@@ -71,4 +77,4 @@ const gameBoard = ( ({ctx, canvasWidth, canvasHeight}, tiles, pieces) => {
     reRenderPieces,
   }
 
-})(canvas, gameBoardTiles, gamePieces);
+})(canvas, gameBoardTiles, gameBoardPieces);

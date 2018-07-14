@@ -1,8 +1,5 @@
 const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
-
   
-
-
   const tilesArray = [];
 
   class Tile {
@@ -25,7 +22,7 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
   }
 
   const yLabels = [0, 1, 2, 3, 4, 5, 6, 7];
-  const xLabels = ['H', 'G',  'F', 'E', 'D', 'C', 'B', 'A'];
+  const xLabels = ['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'];
 
   tileColors = {
     red: '#FAA',
@@ -74,4 +71,5 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
     generateTiles
   }
 
-})(canvas)
+})(canvas);
+

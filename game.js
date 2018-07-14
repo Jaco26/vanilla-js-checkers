@@ -1,15 +1,23 @@
-const game = ( ({canvas}, board) => {  
+const game = ( ({canvas}, board, pieces, validMove) => {  
   canvas.addEventListener('mousedown', handleMousedown)
 
   function handleMousedown (e) {
-    const allPieces = [...board.pieces.p1Pieces, ...board.pieces.p2Pieces];
+    const allPieces = [...pieces.p1Pieces, ...pieces.p2Pieces];
     const clickedPiece = whichPieceGotClicked(e);
+    const originalPosition = {
+      offsetX: clickedPiece.x,
+      offsetY: clickedPiece.y
+    };
+    console.log(originalPosition);
     
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);
     } 
+
+    validMove.findPossibleMoves(null, clickedPiece)
     
+
     function whichPieceGotClicked (e) {
       return allPieces.filter(piece => {
         return piece.x + piece.radius > e.offsetX
@@ -27,11 +35,17 @@ const game = ( ({canvas}, board) => {
     function handleMouseup(e) {      
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      board.checkGameLogic()      
+      let isValid = board.checkGameLogic();
+      if (!isValid) {
+        clickedPiece.changePosition(originalPosition);
+        board.reRenderPieces();
+      }
+      console.log(board.gameHistory);
+      
     }
 
   }
 
 
 
-})(canvas, gameBoard);
+})(canvas, gameBoard, gameBoardPieces, validMove);

@@ -1,4 +1,4 @@
-const gamePieces = ( ({ctx}, gameTiles) => {
+const gameBoardPieces = ( ({ctx}, gameTiles) => {
 
   const p1Pieces = [];
   const p2Pieces = [];
