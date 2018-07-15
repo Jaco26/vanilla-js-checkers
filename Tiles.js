@@ -1,16 +1,13 @@
-const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
-  
-  const tilesArray = [];
-
+const gameBoardTiles = (() => {
   class Tile {
-    constructor(x, y, color, label) {
+    constructor(x, y, canvasWidth, canvasHeight, color, label) {
       this.x = x;
       this.y = y;
       this.width = canvasWidth / 8;
       this.height = canvasHeight / 8;
       this.color = color;
       this.label = label;
-    }
+    };
     hasPiece(pieces) {
       return pieces.filter(piece => {
         return piece.x > this.x
@@ -18,37 +15,31 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
           && piece.y > this.y
           && piece.y < this.y + this.height
       })[0];
-    }
-  }
+    };
+  };
 
-  const yLabels = [0, 1, 2, 3, 4, 5, 6, 7];
-  const xLabels = ['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'];
 
-  tileColors = {
-    red: '#FAA',
-    black: '#444444',
-  }
-
-  const generateTiles = () => {
+  const createTiles = ({ canvasWidth, canvasHeight }, xLabels, yLabels, tileColors) => {
     let xPos = 0;
     let yPos = 0;
     let colorRed = true;
-    xLabels.forEach(xLab => {
-      yLabels.forEach(yLab => {
+    return yLabels.reduce((accumulator, yLab) => {
+      accumulator = [...accumulator, xLabels.reduce((a, xLab) => {
         let color = colorRed ? tileColors.red : tileColors.black;
-        let tile = new Tile(xPos, yPos, color, xLab + yLab);
-        tilesArray.push(tile);
+        let tile = new Tile(xPos, yPos, canvasWidth, canvasHeight, color, xLab + yLab);
+        a.push(tile);
         xPos += canvasWidth / 8;
         colorRed = !colorRed;
-      });
+        return a;
+      }, [])];
       xPos = 0;
       yPos += canvasHeight / 8;
       colorRed = !colorRed;
-    });
-    
-  }
+      return accumulator
+    }, [])
+  };
 
-  const drawTile = ({ x, y, width, height, color, label }) => {
+  const drawTile = ({ ctx }, { x, y, width, height, color, label }) => {
     ctx.beginPath();
     ctx.rect(x, y, width, height);
     ctx.fillStyle = color;
@@ -56,20 +47,18 @@ const gameBoardTiles = ( ({ctx, canvasWidth, canvasHeight}) => {
     ctx.fillStyle = 'black';
     ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8))
     ctx.closePath();
-  }
-
-  const drawTiles = () => {
-    tilesArray.forEach(tile => drawTile(tile))
-  }
+  };
+  const drawTiles = (canvas, outerArr) => {
+    outerArr.forEach(innerArr => innerArr.forEach(tile => {
+      drawTile(canvas, tile)
+    }))
+  };
 
   return {
-    tilesArray,
-    tileColors,
-    xLabels,
-    yLabels,
-    drawTiles,
-    generateTiles
+    createTiles,
+    drawTiles
   }
 
-})(canvas);
+})();
+
 
