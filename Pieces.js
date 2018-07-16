@@ -12,6 +12,12 @@ const gameBoardPieces = (() => {
       this.x = e.offsetX;
       this.y = e.offsetY;
     }
+    originalPosition(e) {
+      return {
+        x: this.x,
+        y: this.y
+      }
+    }
   };
 
 

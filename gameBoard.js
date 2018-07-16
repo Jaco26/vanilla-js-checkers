@@ -23,8 +23,6 @@ const gameBoard = ((canvas, tiles, pieces) => {
       piecesModule.drawPieces(canvas, [...this.p1Pieces, ...this.p2Pieces]);
       this.mapGameBoard();
     }
-
-
     mapGameBoard() {
       const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
       const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {
@@ -40,10 +38,17 @@ const gameBoard = ((canvas, tiles, pieces) => {
           return a;
         }, [])];
         return outerArray
-      }, []);
-      console.log(currentMap);
-      
-      // this.history.push(currentMap);
+      }, []);  
+      this.history.push(currentMap);
+    }
+
+    clickedPiece (e) {
+      return [...this.p1Pieces, ...this.p2Pieces].filter(piece => {
+        return piece.x + piece.radius > e.offsetX
+          && piece.x - piece.radius < e.offsetX
+          && piece.y + piece.radius > e.offsetY
+          && piece.y - piece.radius < e.offsetY;
+      })[0];
     }
 
     removePiece({ id }) {
