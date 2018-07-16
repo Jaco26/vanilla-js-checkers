@@ -1,7 +1,11 @@
-const game = ( ({canvas}, board, pieces, validMove) => {  
-  canvas.addEventListener('mousedown', handleMousedown)
+const game = ( ({canvas}, board) => {  
+  
+  const game = board.startNewGame();
+  console.log(game);
+  
 
-  function handleMousedown (e) {
+
+  function handleMouseDown (e) {
     const allPieces = [...pieces.p1Pieces, ...pieces.p2Pieces];
     const clickedPiece = whichPieceGotClicked(e);
     const originalPosition = {
@@ -46,6 +50,6 @@ const game = ( ({canvas}, board, pieces, validMove) => {
 
   }
 
+  canvas.addEventListener('mousedown', handleMouseDown);
 
-
-})(canvas, gameBoard, gameBoardPieces, validMove);
+})(canvas, gameBoard);

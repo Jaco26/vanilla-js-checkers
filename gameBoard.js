@@ -26,15 +26,10 @@ const gameBoard = ((canvas, tiles, pieces) => {
 
 
     mapGameBoard() {
-      const allPieces = [...this.p1Pieces, ...this.p2Pieces];
-      // console.log(this.tiles);
+      const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
       const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {
-        // console.log(innerTileArr);
-
-
-        outerArray = innerTileArr.reduce((a, currentTile, index) => {
+        outerArray = [...outerArray, innerTileArr.reduce((a, currentTile, index) => {
           let piece = currentTile.hasPiece(allPieces);
-
           if (piece && piece.color == this.pieceClrs.dark) {
             a[index] = 1;
           } else if (piece && piece.color == this.pieceClrs.light) {
@@ -42,13 +37,13 @@ const gameBoard = ((canvas, tiles, pieces) => {
           } else {
             a[index] = 0;
           }
-          console.log(a);
-
           return a;
-        }, []);
+        }, [])];
         return outerArray
       }, []);
-      this.history.push(currentMap);
+      console.log(currentMap);
+      
+      // this.history.push(currentMap);
     }
 
     removePiece({ id }) {
