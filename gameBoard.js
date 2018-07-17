@@ -1,13 +1,8 @@
 const gameBoard = ((canvas, tiles, pieces) => {
-  const miscIngredients = {
-    yLabs: [7, 6, 5, 4, 3, 2, 1, 0],
-    xLabs: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
-    tileClrs: { red: '#FAA', black: '#444444' },
-    pieceClrs: { light: 'orange', dark: 'green' }
-  }
 
   class Game {
     constructor(canvas, tilesModule, piecesModule) {
+      this.canvas = canvas;
       this.yLabs = [7, 6, 5, 4, 3, 2, 1, 0];
       this.xLabs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
       this.tileClrs = { red: '#FAA', black: '#444444' };
@@ -19,13 +14,16 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.boardMap = [];
       this.history = [];
 
+      this.drawTiles = tilesModule.drawTiles;
+      this.drawPieces = piecesModule.drawPieces;
+
       tilesModule.drawTiles(canvas, this.tiles);
       piecesModule.drawPieces(canvas, [...this.p1Pieces, ...this.p2Pieces]);
       this.mapGameBoard();
     }
     mapGameBoard() {
       const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
-      const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {
+      const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {        
         outerArray = [...outerArray, innerTileArr.reduce((a, currentTile, index) => {
           let piece = currentTile.hasPiece(allPieces);
           if (piece && piece.color == this.pieceClrs.dark) {
@@ -60,9 +58,14 @@ const gameBoard = ((canvas, tiles, pieces) => {
       });
     }
 
+    reRenderPieces () {
+      this.drawTiles(this.canvas, this.tiles)
+      this.drawPieces(this.canvas, [...this.p1Pieces, ...this.p2Pieces]);
+    }
+
   }
 
-  const startNewGame = () => new Game(canvas, tiles, pieces, miscIngredients);
+  const startNewGame = () => new Game(canvas, tiles, pieces);
 
   return {
     startNewGame

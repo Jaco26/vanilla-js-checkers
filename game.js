@@ -1,5 +1,7 @@
-const game = ( ({canvas}, board) => {  
-  
+const game = ( ({canvas}, board, validator) => {  
+  const { Validator } = validator;
+
+
   const game = board.startNewGame();
   console.log(game);
 
@@ -7,42 +9,30 @@ const game = ( ({canvas}, board) => {
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
-    console.log(clickedPiece);
     const originalPosition = clickedPiece.originalPosition(e);
-    console.log(originalPosition);
-    
-    
+    const possibleMoves = Validator.possibleMoves(clickedPiece, game);
+    console.log(possibleMoves);
+  
+
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);
     } 
 
-    validMove.findPossibleMoves(null, clickedPiece)
+    // validMove.findPossibleMoves(null, clickedPiece)
     
-
-    function whichPieceGotClicked (e) {
-      return allPieces.filter(piece => {
-        return piece.x + piece.radius > e.offsetX
-          && piece.x - piece.radius < e.offsetX
-          && piece.y + piece.radius > e.offsetY
-          && piece.y - piece.radius < e.offsetY;
-      })[0];
-    }
-
     function handleMousemove(e) {
       clickedPiece.changePosition(e)
-      board.reRenderPieces()
+      game.reRenderPieces()
     }
 
     function handleMouseup(e) {      
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      let isValid = board.checkGameLogic();
-      if (!isValid) {
-        clickedPiece.changePosition(originalPosition);
-        board.reRenderPieces();
+      if (true) {
+        game.mapGameBoard()
       }
-      console.log(board.gameHistory);
+      console.log(game.history);
       
     }
 
@@ -50,4 +40,4 @@ const game = ( ({canvas}, board) => {
 
 
 
-})(canvas, gameBoard);
+})(canvas, gameBoard, validator);

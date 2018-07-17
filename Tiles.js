@@ -1,12 +1,13 @@
 const gameBoardTiles = (() => {
   class Tile {
-    constructor(x, y, canvasWidth, canvasHeight, color, label) {
+    constructor(x, y, canvasWidth, canvasHeight, color, label, index2d) {
       this.x = x;
       this.y = y;
       this.width = canvasWidth / 8;
       this.height = canvasHeight / 8;
       this.color = color;
       this.label = label;
+      this.index2d = index2d
     };
     hasPiece(pieces) {
       return pieces.filter(piece => {
@@ -23,10 +24,12 @@ const gameBoardTiles = (() => {
     let xPos = 0;
     let yPos = 0;
     let colorRed = true;
-    return yLabels.reduce((accumulator, yLab) => {
-      accumulator = [...accumulator, xLabels.reduce((a, xLab) => {
+    return yLabels.reduce((accumulator, yLab, iY) => {
+      accumulator = [...accumulator, xLabels.reduce((a, xLab, iX) => {
+        let label = `${xLab}${yLab}`;
+        let index2d = `${iY}${iX}`;
         let color = colorRed ? tileColors.red : tileColors.black;
-        let tile = new Tile(xPos, yPos, canvasWidth, canvasHeight, color, xLab + yLab);
+        let tile = new Tile(xPos, yPos, canvasWidth, canvasHeight, color, label, index2d);
         a.push(tile);
         xPos += canvasWidth / 8;
         colorRed = !colorRed;

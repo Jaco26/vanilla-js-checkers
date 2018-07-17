@@ -1,7 +1,7 @@
 const gameBoardPieces = (() => {
   class Piece {
-    constructor(label, id, x, y, radius, color) {
-      this.label = label;
+    constructor(location, id, x, y, radius, color) {
+      this.location = location;
       this.id = id;
       this.x = x;
       this.y = y;
@@ -35,8 +35,9 @@ const gameBoardPieces = (() => {
         let x = (tile.x + (tile.width / 2));
         let y = (tile.y + (tile.height / 2));
         let { label } = tile
-        let radius = (tile.width / 2) - (tile.width * 0.1);
-        let piece = new Piece(label, id, x, y, radius, pieceColors[clr]);
+        let radius = (tile.width / 2) - (tile.width * 0.1);   
+        let location = tile.index2d;
+        let piece = new Piece(location, id, x, y, radius, pieceColors[clr]);
         accumulator.push(piece);
         id += 1;
       }
