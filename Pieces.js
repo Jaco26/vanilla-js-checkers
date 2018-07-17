@@ -14,9 +14,21 @@ const gameBoardPieces = (() => {
     }
     originalPosition(e) {
       return {
-        x: this.x,
-        y: this.y
+        offsetX: this.x,
+        offsetY: this.y
       }
+    }
+    getCurrentLocation({tiles}) {
+      this.location = tiles.reduce( (a, b) => {
+        a = [...a, ...b];
+        return a;
+      }, []).filter(tile => {
+        return this.x > tile.x
+          && this.x < tile.x + tile.width
+          && this.y > tile.y
+          && this.y < tile.y + tile.height
+      })[0].index2d;
+      return this.location;
     }
   };
 
