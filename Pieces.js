@@ -13,12 +13,6 @@ const gameBoardPieces = (() => {
       this.x = e.offsetX;
       this.y = e.offsetY;
     }
-    originalPosition(e) {
-      return {
-        offsetX: this.x,
-        offsetY: this.y
-      }
-    }
     getCurrentLocation({tiles}) {
       this.tile = tiles.reduce( (a, b) => {
         a = [...a, ...b];
@@ -32,8 +26,6 @@ const gameBoardPieces = (() => {
       return this.tile.index2d;
     }
     snapToTile () {
-      console.log('Hey');
-      
       this.x = this.tile.x + (this.tile.width / 2);
       this.y = this.tile.y + (this.tile.height / 2);
     }
