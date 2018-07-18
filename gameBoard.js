@@ -11,7 +11,6 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.tiles = tilesModule.createTiles(canvas, this.xLabs, this.yLabs, this.tileClrs);
       this.p1Pieces = piecesModule.createPlayerPieces(this.tiles, this.tileClrs, this.pieceClrs, 'light');
       this.p2Pieces = piecesModule.createPlayerPieces(this.tiles, this.tileClrs, this.pieceClrs, 'dark');
-      this.boardMap = [];
       this.history = [];
 
       this.drawTiles = tilesModule.drawTiles;

@@ -4,13 +4,13 @@ const validator = ( () => {
       const currentBoard = history[history.length - 1];
       // console.log(piece.location);
       // console.log(piece.color);
-      
       return true;
     }
 
-    static checkMove () {
-
+    static movedFromTile (pos1, pos2) {
+      return pos1 == pos2;
     }
+
   }
 
   return {

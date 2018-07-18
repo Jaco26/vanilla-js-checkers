@@ -10,7 +10,7 @@ const game = ( ({canvas}, board, validator) => {
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
     const originalPosition = clickedPiece.originalPosition(e);
-    const originalLocation = clickedPiece.getCurrentLocation(game);
+    const location1 = clickedPiece.getCurrentLocation(game);
     const possibleMoves = Validator.possibleMoves(clickedPiece, game);
     
  
@@ -31,17 +31,19 @@ const game = ( ({canvas}, board, validator) => {
     function handleMouseup(e) {      
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      const newLocation = clickedPiece.getCurrentLocation(game);
-      console.log(originalLocation);
-      console.log(newLocation);
-
-      if (originalLocation == newLocation) {
+      const location2 = clickedPiece.getCurrentLocation(game);
+  
+      
+      const movedFromTile = Validator.movedFromTile(location1, location2)
+      if (movedFromTile) {
         // player didn't move piece off of the square it occupied
         // on mousedown
         clickedPiece.changePosition(originalPosition);
         game.reRenderPieces()
       } else {
         game.mapGameBoard();
+        clickedPiece.snapToTile();
+        game.reRenderPieces();
       }
 
      

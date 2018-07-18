@@ -7,6 +7,7 @@ const gameBoardPieces = (() => {
       this.y = y;
       this.radius = radius;
       this.color = color;
+      this.tile = {};
     }
     changePosition(e) {
       this.x = e.offsetX;
@@ -19,7 +20,7 @@ const gameBoardPieces = (() => {
       }
     }
     getCurrentLocation({tiles}) {
-      this.location = tiles.reduce( (a, b) => {
+      this.tile = tiles.reduce( (a, b) => {
         a = [...a, ...b];
         return a;
       }, []).filter(tile => {
@@ -27,9 +28,16 @@ const gameBoardPieces = (() => {
           && this.x < tile.x + tile.width
           && this.y > tile.y
           && this.y < tile.y + tile.height
-      })[0].index2d;
-      return this.location;
+      })[0];
+      return this.tile.index2d;
     }
+    snapToTile () {
+      console.log('Hey');
+      
+      this.x = this.tile.x + (this.tile.width / 2);
+      this.y = this.tile.y + (this.tile.height / 2);
+    }
+
   };
 
 
