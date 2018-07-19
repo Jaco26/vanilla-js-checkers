@@ -1,12 +1,14 @@
 const gameBoardPieces = (() => {
   class Piece {
-    constructor(location, id, x, y, radius, color) {
+    constructor(player, location, id, x, y, radius, color) {
+      this.player = player;
       this.location = location;
       this.id = id;
       this.x = x;
       this.y = y;
       this.radius = radius;
       this.color = color;
+      this.isKing = false;
       this.tile = {};
     }
     changePosition(e) {
@@ -23,25 +25,33 @@ const gameBoardPieces = (() => {
           && this.y > tile.y
           && this.y < tile.y + tile.height
       })[0];
-      return this.tile.index2d;
+      this.location = this.tile.index2d;
+      return this.location;
     }
     snapToTile () {
       this.x = this.tile.x + (this.tile.width / 2);
       this.y = this.tile.y + (this.tile.height / 2);
     }
 
+
   };
 
 
-  const createPlayerPieces = (tilesArray, tileClrObj, pieceColors, clr) => {
-    let tiles = tilesArray.reduce((a, b) => {
+  const flattenArray = (array) => {
+    return array.reduce( (a, b) => {
       a = [...a, ...b];
       return a;
     }, []);
+  }
+
+  const createPlayerPieces = (tilesArray, tileClrObj, pieceColors, clr) => {
+    let tiles = flattenArray(tilesArray);
+    let id = 1;
+    let player = 'p1';
     if (pieceColors[clr] == pieceColors.dark) {
       tiles.reverse();
+      player = 'p2';
     }
-    let id = 1;
     return tiles.reduce((accumulator, tile, index) => {
       if (index < 24 && tile.color == tileClrObj.black) {
         let x = (tile.x + (tile.width / 2));
@@ -49,7 +59,7 @@ const gameBoardPieces = (() => {
         let { label } = tile
         let radius = (tile.width / 2) - (tile.width * 0.1);   
         let location = tile.index2d;
-        let piece = new Piece(location, id, x, y, radius, pieceColors[clr]);
+        let piece = new Piece(player, location, id, x, y, radius, pieceColors[clr]);
         accumulator.push(piece);
         id += 1;
       }

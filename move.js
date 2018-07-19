@@ -1,4 +1,4 @@
-const game = ( ({canvas}, board, validator) => {  
+const move = ( ({canvas}, board, validator) => {  
   const { Validator } = validator;
 
   const game = board.startNewGame();
@@ -28,8 +28,8 @@ const game = ( ({canvas}, board, validator) => {
       const movedFromTile = Validator.movedFromTile(location1, location2)
       if (movedFromTile) {
         // player didn't move piece off of the square it occupied on mousedown
-        clickedPiece.snapToTile()
-        game.reRenderPieces()
+        clickedPiece.snapToTile();
+        game.reRenderPieces();
       } else {
         game.mapGameBoard();
         clickedPiece.snapToTile();
