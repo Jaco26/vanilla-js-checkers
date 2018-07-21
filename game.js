@@ -1,12 +1,6 @@
 const move = ( ({canvas}, board, validator, moves) => {  
   const { Validator, PossibleMoves } = validator;
 
-
-
-  
-
-  
-
   const game = board.startNewGame();
   console.log(game);
 
@@ -15,10 +9,7 @@ const move = ( ({canvas}, board, validator, moves) => {
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
 
-    console.log(moves.validMoves(clickedPiece, game));
-
-
-    
+    moves.findViableMoves(clickedPiece, game);
 
     const pieceStart = clickedPiece.getCurrentLocation(game);
     
@@ -52,6 +43,7 @@ const move = ( ({canvas}, board, validator, moves) => {
         clickedPiece.snapToTile();
         game.reRenderPieces();
       }
+      
     }
   }
 

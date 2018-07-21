@@ -29,8 +29,10 @@ const gameBoard = ((canvas, tiles, pieces) => {
             a[index] = 1;
           } else if (piece && piece.color == this.pieceClrs.light) {
             a[index] = 2;
-          } else {
+          } else if (currentTile.color == this.tileClrs.black) {
             a[index] = 0;
+          } else {
+            a[index] = null;
           }
           return a;
         }, [])];
