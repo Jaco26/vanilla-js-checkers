@@ -1,5 +1,5 @@
 const move = ( ({canvas}, board, validator) => {  
-  const { Validator } = validator;
+  const { Validator, PossibleMoves } = validator;
 
   const game = board.startNewGame();
   console.log(game);
@@ -9,7 +9,9 @@ const move = ( ({canvas}, board, validator) => {
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
     const pieceStart = clickedPiece.getCurrentLocation(game);
-    const possibleMoves = Validator.possibleMoves(clickedPiece, game);
+    // const possibleMoves = Validator.possibleMoves(clickedPiece, game);
+    console.log(new PossibleMoves(clickedPiece, game));
+    
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);

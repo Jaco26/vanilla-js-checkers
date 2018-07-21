@@ -26,7 +26,10 @@ const gameBoardPieces = (() => {
           && this.y < tile.y + tile.height
       })[0];
       this.location = this.tile.index2d;
-      return {location: this.location, tile: this.tile};
+      return {
+        location: this.location, 
+        tile: this.tile
+      };
     }
     snapToTile (tile = {}) {      
       if (tile.x) this.tile = tile;
@@ -35,7 +38,6 @@ const gameBoardPieces = (() => {
     }
     
   };
-
 
   const flattenArray = (array) => {
     return array.reduce( (a, b) => {
@@ -47,10 +49,10 @@ const gameBoardPieces = (() => {
   const createPlayerPieces = (tilesArray, tileClrObj, pieceColors, clr) => {
     let tiles = flattenArray(tilesArray);
     let id = 1;
-    let player = 'p1';
+    let player = 'p2';
     if (pieceColors[clr] == pieceColors.dark) {
       tiles.reverse();
-      player = 'p2';
+      player = 'p1';
     }
     return tiles.reduce((accumulator, tile, index) => {
       if (index < 24 && tile.color == tileClrObj.black) {
