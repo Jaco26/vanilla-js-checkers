@@ -86,21 +86,26 @@ const validator = ( () => {
     }
 
     findValidMoves() {
+      // get the 'next' row in the game map 2d array
       const nextRow = this.nextRow();
-      const nextRowHasValidMoves = this.hasValidMoves(nextRow); 
-      
+      // check to see if the opponent occupies the next row in 
+      // the tiles diagnally adjacent the current tile
+      const startColIndex = this.clickedColIndex;
+      const validMoves = this.validMoves(nextRow, startColIndex)
 
     }
 
-    hasValidMoves(nextRow) {
-      const iLeft = this.nextColIndex('left', this.clickedColIndex);
-      const iRight = this.nextColIndex('right', this.clickedColIndex);
+    validMoves(nextRow, currentColIndex) {
+      const iLeft = this.nextColIndex('left', currentColIndex);
+      const iRight = this.nextColIndex('right', currentColIndex);
       const opponentInNextRow = this.opponentInNextRow(nextRow, {
         iLeft,
         iRight
       });
-      console.log('opponentInNextRow', opponentInNextRow);
-       
+      let opponent
+      if (opponentInNextRow) {
+        
+      }
     }
 
     opponentInNextRow(nextRow, {iLeft, iRight}) {
