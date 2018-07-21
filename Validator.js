@@ -26,8 +26,8 @@ const validator = ( () => {
     }
 
     static nextRow (piece, prevRowIndex, nRowsAhead, currentBoard) {
-      const nextRowIndex = this.nextRowIndex(piece, prevRowIndex, nRowsAhead);      
-      if (!nextRowIndex) {        
+      const nextRowIndex = this.nextRowIndex(piece, prevRowIndex, nRowsAhead);            
+      if (nextRowIndex == undefined) {        
         return 'End of board';
       }
       return currentBoard[nextRowIndex];
@@ -45,7 +45,7 @@ const validator = ( () => {
     }
 
     static movedFromTile (pos1, pos2) {
-      return pos1 == pos2;
+      return pos1 != pos2;
     }
 
   }

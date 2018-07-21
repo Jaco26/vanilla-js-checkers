@@ -26,14 +26,14 @@ const gameBoardPieces = (() => {
           && this.y < tile.y + tile.height
       })[0];
       this.location = this.tile.index2d;
-      return this.location;
+      return {location: this.location, tile: this.tile};
     }
-    snapToTile () {
+    snapToTile (tile = {}) {      
+      if (tile.x) this.tile = tile;
       this.x = this.tile.x + (this.tile.width / 2);
       this.y = this.tile.y + (this.tile.height / 2);
     }
-
-
+    
   };
 
 
