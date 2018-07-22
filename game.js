@@ -9,10 +9,12 @@ const move = ( ({canvas}, board, validator, moves) => {
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
 
-    moves.findViableMoves(clickedPiece, game);
+    const validMoves = moves.findViableMoves(clickedPiece, game);
+    console.log(validMoves);
+    
 
     const pieceStart = clickedPiece.getCurrentLocation(game);
-    
+
     if (clickedPiece) {
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);

@@ -54,42 +54,28 @@ const moves = ( () => {
     }
   }
   
-  /**
-   * 
-   * @param {Number} colDirRange The number of index's to the left and right 
-   * of the column index of the clicked piece. Start at 1 and each `findPossibleTiles`
-   * call will increment it by 1
-   * @param {Number} clickedCol The column index of the clicked piece
-   * @param {Number} rowIterateN A number representing the number of rows between the 
-   * clicked piece and the end of the board. Each `findPossibleTiles` call will decrement 
-   * it by 1 and when it equals 0, `findPossibleTiles` will return.
-   * @param {Number} rowDir Either 1 or -1. Will increment or decrement `currentRowI` appropriately
-   * @param {Number} currentRowI The index of the current row of `currentBoard` to be searched
-   * @param {Array} currentBoard A 2D array abstraction of the gameboard on mousedown
-   * @param {Number} opponent 2 if the clicked piece.player == 'p1', otherwise, 1
-   * @param {Array} possibleTiles Initially empty array that will be filled with possibly viable tiles
-   */
-  const findPossibleTiles = (colDirRange, clickedCol, rowIterateN, rowDir, currentRowI, currentBoard, opponent, possibleTiles) => {
-    if (rowIterateN == 0) {
-      return;
-    }
-    currentRowI += rowDir;
-    let start = clickedCol - colDirRange >= 0 && clickedCol - colDirRange <= 7 
-      ? clickedCol - colDirRange : 0;
-    let end = clickedCol + colDirRange >= 0 && clickedCol + colDirRange <= 7 
-      ? clickedCol + colDirRange : 7;
-    let currentRow = currentBoard[currentRowI]
-    for (let i = start; i <= end; i++) {
-      if (currentRow[i] != null) {      
-        possibleTiles.push({
-          index2d: currentRowI.toString() + i,
-          occupant: determineTileOccupant(currentRow[i], opponent),
-        });
+
+  const findPossibleTilesWithReduce = (currentBoard, options) => {
+    let { colDirRange, clickedCol, rowIterateN, rowIterateDir, searchRowIndex, opponent} = options;
+    const range = [...Array(rowIterateN).keys()]; // => [1, 2, 3...] 
+    return range.reduce( (a, b) => {
+      const start = clickedCol - colDirRange;
+      const end = clickedCol + colDirRange;
+      const currentRow = currentBoard[searchRowIndex];
+      const row = [];
+      for (let colI = start; colI <= end; colI++) {
+        if (currentRow[colI] != null) {
+          row.push({
+            index2d: searchRowIndex.toString() + colI,
+            occupant: determineTileOccupant(currentRow[colI], opponent),
+          });
+        }
       }
-    }
-    colDirRange += 1;
-    rowIterateN -= 1;
-    findPossibleTiles(colDirRange, clickedCol, rowIterateN, rowDir, currentRowI, currentBoard, opponent, possibleTiles);
+      a.push(row);
+      colDirRange += 1; // ex
+      searchRowIndex += rowIterateDir;
+      return a;
+    }, []);
   }
 
   /**
@@ -104,29 +90,53 @@ const moves = ( () => {
    *      checker, and false if not.
   */
   const coneOfPossibility = ({player, location}, game) => {
-    let possibleTiles = [];
     let currentBoard = game.history[game.history.length - 1];    
-    let colDirRange = 1;
-    let clickedCol = Number(location[1]);
-    let startRow = Number(location[0]);
-    let rowIterateN, rowIterateDir, opponent;
-    if (player == 'p1') {
-      rowIterateN = 7 - (7 - Number(location[0]));
-      rowIterateDir = -1;
-      opponent = 2;
-    } else {
-      rowIterateN = 0 + (7 - Number(location[0]));
-      rowIterateDir = 1;
-      opponent = 1;
+    let options = {
+      colDirRange: 1, // The range on either side of the clicked tile that could hold valid tiles
+      clickedCol: Number(location[1]),
     }
-    findPossibleTiles(colDirRange, clickedCol, rowIterateN, rowIterateDir, startRow, currentBoard, opponent, possibleTiles);    
-    return possibleTiles;
+    if (player == 'p1') {
+      options.searchRowIndex = Number(location[0]) - 1; // index of row to begin search for valid tiles
+      options.rowIterateN = 7 - (7 - Number(location[0])); // n rows between the clicked piece and end of board
+      options.rowIterateDir = -1; // Decrement `searchRowI` by 1
+      options.opponent = 2; // Player two pieces are represented by the `2` 
+    } else {
+      options.searchRowIndex = Number(location[0]) + 1; 
+      options.rowIterateN = 0 + (7 - Number(location[0])); 
+      options.rowIterateDir = 1;
+      options.opponent = 1;  
+    }    
+    return findPossibleTilesWithReduce(currentBoard, options);
+  }
+
+  const opponentIsJumpable = (opponetRow, rowAfter, jumpToColDirection, jumpFromLocation) => {
+    const jumpFromCol = Number(jumpFromLocation[1]);
+    const tile = rowAfter.filter(col => {
+      return Number(col.index2d[1]) == jumpFromCol + jumpToColDirection;
+    })[0];
+    if (tile.occupant == 'empty') {
+      return tile;
+    }
   }
 
   const findViableMoves = (piece, game) => {
-    const potentialTiles = coneOfPossibility(piece, game);
-    console.log(potentialTiles);
-    
+    const potentialViableTiles = coneOfPossibility(piece, game);
+    return potentialViableTiles.reduce( ( valid, startTiles, index, arr) => {
+      let morePossibleMoves = false; 
+      startTiles.forEach((tile, i) => {
+        if (tile.occupant == 'empty') {
+          valid.push(tile.index2d);
+        } else if (tile.occupant == 'opponent') {
+          let jumpToColDirection = i == 0 ? -2 : 2;
+          let okToLand = opponentIsJumpable(arr[index], arr[index + 1], jumpToColDirection, piece.location);
+          if (okToLand) {
+            valid.push(okToLand.index2d);
+          }
+        }
+      });
+      if (!morePossibleMoves) arr.splice(1); // only run once...at the end of the first iteration, splice the array at index 1
+      return valid;
+    }, []);
   }
 
   return {
