@@ -9,10 +9,10 @@ const move = ( ({canvas}, board, validator, moves) => {
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
 
-    const validMoves = moves.findViableMoves(clickedPiece, game);
-    console.log(validMoves);
-    
-
+    // const validMoves = moves.findViableMoves(clickedPiece, game);
+    // console.log(validMoves);
+    const validMoves = moves.coneOfPossibility(clickedPiece, game);
+  
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
     if (clickedPiece) {
@@ -28,9 +28,10 @@ const move = ( ({canvas}, board, validator, moves) => {
     function handleMouseup(e) {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      const pieceEnd = clickedPiece.getCurrentLocation(game);      
+      const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const movedFromTile = Validator.movedFromTile(pieceStart.location, pieceEnd.location);
-      const validMove = pieceEnd.tile.color == '#444444'; // TODO: replace 'true' with value returned from actual validation method
+      // const validMove = validMoves.some(tile => tile.index2d == pieceEnd.location);
+      const validMove = pieceEnd.tile.color == '#444444';
       if (movedFromTile) {
         if (validMove) {
           game.mapGameBoard();

@@ -78,6 +78,63 @@ const moves = ( () => {
     }, []);
   }
 
+
+
+
+
+
+
+
+  const colLeftAndRight = (board, iRowStart, iColStart, opponent) => {
+    const left = {
+      index2d: iRowStart.toString() + (iColStart - 1).toString(),
+      occupant: board[iRowStart][iColStart - 1]
+    }; 
+    const right = {
+      index2d: iRowStart.toString() + (iColStart + 1).toString(),
+      occupant: board[iRowStart][iColStart + 1]
+    };
+    return [left, right].map(tile => {      
+      switch (tile.occupant) {
+        case 0:
+          tile.occupant = 'empty';
+          break;
+        case opponent:
+          tile.occupant = 'opponent';
+          break;
+        default:
+          tile.occupant = 'team';
+      }
+      return tile;       
+    });
+  }
+
+  const searchRow = (board, iRowStart, iColStart, opponent) => { 
+    const results = colLeftAndRight(board, iRowStart, iColStart, opponent);
+    const moves = {end: [], possibleJump: []};    
+    return results.reduce( (a, b) => {
+      if (b.occupant == 'empty') {
+        a.end.push(b);
+      } else if (b.occupant == 'opponent') {
+        a.possibleJump.push(b);
+      }
+      return a;
+    }, moves);
+  }
+
+  const boardCrawler = (board, options) => {
+    let { iColStart, iRowStart, nRowIterate, rowIterateDir, opponent } = options;
+    let validMoves = [];
+    do {      
+      let rowResults = searchRow(board, iRowStart, iColStart, opponent);
+      console.log(rowResults);
+      
+      iRowStart += rowIterateDir;
+      nRowIterate -= 1;
+    } while (nRowIterate > 0);
+    
+  }
+
   /**
    * coneOfPossibility returns an array of objects, each of which abstracts information
    * about possibly valid sqare for a checker piece to move to.
@@ -93,44 +150,63 @@ const moves = ( () => {
     let currentBoard = game.history[game.history.length - 1];    
     let options = {
       colDirRange: 1, // The range on either side of the clicked tile that could hold valid tiles
-      clickedCol: Number(location[1]),
+      iColStart: Number(location[1]),
     }
     if (player == 'p1') {
-      options.searchRowIndex = Number(location[0]) - 1; // index of row to begin search for valid tiles
-      options.rowIterateN = 7 - (7 - Number(location[0])); // n rows between the clicked piece and end of board
+      options.iRowStart = Number(location[0]) - 1; // index of row to begin search for valid tiles
+      options.nRowIterate = 7 - (7 - Number(location[0])); // n rows between the clicked piece and end of board
       options.rowIterateDir = -1; // Decrement `searchRowI` by 1
       options.opponent = 2; // Player two pieces are represented by the `2` 
     } else {
-      options.searchRowIndex = Number(location[0]) + 1; 
-      options.rowIterateN = 0 + (7 - Number(location[0])); 
+      options.iRowStart = Number(location[0]) + 1; 
+      options.nRowIterate = 0 + (7 - Number(location[0])); 
       options.rowIterateDir = 1;
       options.opponent = 1;  
     }    
-    return findPossibleTilesWithReduce(currentBoard, options);
+    boardCrawler(currentBoard, options);
+    // return findPossibleTilesWithReduce(currentBoard, options);
   }
 
-  const opponentIsJumpable = (opponetRow, rowAfter, jumpToColDirection, jumpFromLocation) => {
+
+
+
+
+
+
+
+
+
+
+  const opponentIsJumpable = (rows, rowAfter, jumpToColDirection, jumpToRowDirection, jumpFromLocation) => {
     const jumpFromCol = Number(jumpFromLocation[1]);
-    const tile = rowAfter.filter(col => {
-      return Number(col.index2d[1]) == jumpFromCol + jumpToColDirection;
-    })[0];
-    if (tile.occupant == 'empty') {
-      return tile;
+    if (rowAfter) {
+      const tile = rowAfter.filter(col => {
+        return Number(col.index2d[1]) == jumpFromCol + jumpToColDirection;
+      })[0];
+      if (tile && tile.occupant == 'empty') {
+        return tile;
+      }
     }
+    
   }
 
   const findViableMoves = (piece, game) => {
     const potentialViableTiles = coneOfPossibility(piece, game);
-    return potentialViableTiles.reduce( ( valid, startTiles, index, arr) => {
+    return potentialViableTiles.reduce( ( valid, tileRow, index, arr) => {
       let morePossibleMoves = false; 
-      startTiles.forEach((tile, i) => {
+      // console.log(arr);
+      // arr.splice(1)
+      tileRow.forEach((tile, i) => {
         if (tile.occupant == 'empty') {
-          valid.push(tile.index2d);
+          valid.push(tile);
         } else if (tile.occupant == 'opponent') {
+          // morePossibleMoves = true;
           let jumpToColDirection = i == 0 ? -2 : 2;
-          let okToLand = opponentIsJumpable(arr[index], arr[index + 1], jumpToColDirection, piece.location);
+          let jumpToRowDirection = piece.player == 'p1' ? -2 : 2;
+          let okToLand = opponentIsJumpable(arr, arr[index + 1], jumpToColDirection, jumpToRowDirection, piece.location);
           if (okToLand) {
-            valid.push(okToLand.index2d);
+
+            valid.push(okToLand);
           }
         }
       });
@@ -141,7 +217,8 @@ const moves = ( () => {
 
   return {
     // validMoves,
-    findViableMoves
+    findViableMoves,
+    coneOfPossibility
   }
 
 })();
