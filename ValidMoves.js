@@ -110,16 +110,34 @@ const moves = ( () => {
   }
 
   const searchRow = (board, iRowStart, iColStart, opponent) => { 
-    const results = colLeftAndRight(board, iRowStart, iColStart, opponent);
-    const moves = {end: [], possibleJump: []};    
+    const results = colLeftAndRight(board, iRowStart, iColStart, opponent);    
+    const moves = {end: [], hasPossibleJump: []};    
     return results.reduce( (a, b) => {
       if (b.occupant == 'empty') {
         a.end.push(b);
       } else if (b.occupant == 'opponent') {
-        a.possibleJump.push(b);
+        a.hasPossibleJump.push(b);
       }
       return a;
     }, moves);
+  }
+
+  const recursiveFind = (board, opponent, tile, ends) => {
+    if (tile.occupant == 'empty') {
+      return 
+    }     
+    let iRowStart = Number(tile.index2d[0]);
+    let iColStart = Number(tile.index2d[1]);
+    searchRow(board, iRowStart, iColStart, opponent);
+    
+  }
+
+  const findEnd = (board, opponent, {hasPossibleJump}) => {
+    let ends = [];
+    hasPossibleJump.forEach(tile => {
+      recursiveFind(board, opponent, tile, ends);
+    });
+    return ends;
   }
 
   const boardCrawler = (board, options) => {
@@ -127,12 +145,19 @@ const moves = ( () => {
     let validMoves = [];
     do {      
       let rowResults = searchRow(board, iRowStart, iColStart, opponent);
-      console.log(rowResults);
-      
+      validMoves = [...validMoves, ...rowResults.end];
+      if (rowResults.hasPossibleJump[0]) {
+        // console.log('HEYYY', iRowStart);
+        // console.log(rowResults.hasPossibleJump[0]);
+        
+        validMoves = [...validMoves, ...findEnd(board, opponent, rowResults)]
+      } else {
+        break;
+      }
       iRowStart += rowIterateDir;
       nRowIterate -= 1;
-    } while (nRowIterate > 0);
-    
+    } while (nRowIterate > 0);    
+    return validMoves;
   }
 
   /**
@@ -163,7 +188,7 @@ const moves = ( () => {
       options.rowIterateDir = 1;
       options.opponent = 1;  
     }    
-    boardCrawler(currentBoard, options);
+    return boardCrawler(currentBoard, options);
     // return findPossibleTilesWithReduce(currentBoard, options);
   }
 

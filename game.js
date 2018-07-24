@@ -1,4 +1,4 @@
-const move = ( ({canvas}, board, validator, moves) => {  
+const move = ( ({canvas}, board, validator, moves, moveFinder) => {  
   const { Validator, PossibleMoves } = validator;
 
   const game = board.startNewGame();
@@ -11,8 +11,12 @@ const move = ( ({canvas}, board, validator, moves) => {
 
     // const validMoves = moves.findViableMoves(clickedPiece, game);
     // console.log(validMoves);
-    const validMoves = moves.coneOfPossibility(clickedPiece, game);
-  
+
+    // const validMoves = moves.coneOfPossibility(clickedPiece, game);
+    // console.log(validMoves);
+    console.log(moveFinder.validMoves(clickedPiece, game));
+    
+    
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
     if (clickedPiece) {
@@ -51,4 +55,4 @@ const move = ( ({canvas}, board, validator, moves) => {
   }
 
 
-})(canvas, gameBoard, validator, moves);
+})(canvas, gameBoard, validator, moves, moveFinder);
