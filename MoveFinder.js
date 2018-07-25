@@ -12,6 +12,12 @@ const moveFinder = ( () => {
   }
 
   const examineTile = (board, rowIndex, colIndex, dir, opponent ) => {
+    console.log('board', board);
+    console.log('rowIndex', rowIndex);
+    console.log('colIndex', colIndex);
+    console.log('dir', dir);
+    console.log('opponent', opponent);
+    
     const row = board[rowIndex];
     if (dir != 'left' && dir != 'right') throw new Error('Incorrect value passed for `dir`. Pass "left" or "right"');
     direction = dir == 'left' ? -1 : 1;
@@ -21,33 +27,29 @@ const moveFinder = ( () => {
     };
  
   }
+  
 
-  const dontSearchNextRow = (left, right) => {
-    return left.occpant == 'empty' && right.occpant == 'empty'
+  const findMovesInDirection = (dir, movesArray, options, nIterations) => {
+    let { currentBoard, rowIndex, rowDirection, colIndex, opponent } = options
+    const tile = examineTile(currentBoard, rowIndex, colIndex, dir, opponent);
+    if (tile.occpant == 'empty') {
+      if (nIterations == 1) {
+        movesArray.push(tile);
+        return;
+      } else {
+        
+      }
+    }
   }
-
 
 
   const findMoves = (options) => {
     let moves = [];
-    let firstIteration = true;
-    let { currentBoard, colIndex, searchRowIndex, rowDirection, rowIterateN, opponent } = options;   
-    while (rowIterateN > 0) {
-      let left = examineTile(currentBoard, searchRowIndex, colIndex, 'left', opponent);
-      let right = examineTile(currentBoard, searchRowIndex, colIndex, 'right', opponent);
-      if (firstIteration && dontSearchNextRow(left, right)) {
-     
-        console.log('STOP THE SEARCH!', searchRowIndex);
-        moves.push(left, right);
-      } else {
-        console.log('SEARCH NEXT ROW!', searchRowIndex);
-        break
-      }
-      firstIteration = false;
-      searchRowIndex += rowDirection;
-      rowIterateN -= 1;
-    }
-    return moves;
+    findMovesInDirection('left', moves, options, 1);
+    findMovesInDirection('right', moves, options, 1);
+    console.log(moves);
+    
+    // return moves;
   }
 
   
@@ -78,12 +80,12 @@ const moveFinder = ( () => {
 
     if (piece.player == 'p1') {
       options.rowDirection = -1; // decrement outer array index
-      options.searchRowIndex = Number(piece.location[0]) - 1; // start search in rows[clickedRow - 1]
+      options.rowIndex = Number(piece.location[0]) - 1; // start search in rows[clickedRow - 1]
       options.opponent = 2;
       options.rowIterateN = 7 - (7 - Number(piece.location[0])); // n rows between the clicked piece and end of board
     } else {
       options.rowDirection = 1; // increment outer array index
-      options.searchRowIndex = Number(piece.location[0]) + 1; // start search in rows[clickedRow + 1]
+      options.rowIndex = Number(piece.location[0]) + 1; // start search in rows[clickedRow + 1]
       options.opponent = 1;
       options.rowIterateN = 0 + (7 - Number(piece.location[0])); 
     }
