@@ -1,14 +1,14 @@
 const board = [
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 1, 0, 1, 0],
+  [0, 0, 1, 0, 0, 0, 1, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 1, 0, 0, 0],
+  [0, 0, 0, 0, 1, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 1, 0, 1, 0, 0, 0],
   [0, 0, 0, 0, 1, 0, 0, 0],
 ];
-let rowStart = 4; // start row index
-let colStart = 5; // start column index
+let rowStart = 0; // start row index
+let colStart = 3; // start column index
 let forkCounter = 0;
 function testArraySearch() {
   let viableMoves = [];
@@ -35,7 +35,7 @@ function fork(board, activeRowI, colI, viableMoves) {
   let nextRow = board[forwardRowI];   
   if (!nextRow) {    
     viableMoves.push(activeRowI.toString() + colI.toString());
-    return
+    return;
   }
   let colLeft = colI - 1; 
   let colRight = colI + 1;   
@@ -52,7 +52,7 @@ function fork(board, activeRowI, colI, viableMoves) {
     }
   } else {
     viableMoves.push(activeRowI.toString() + colI.toString());
-  }  
+  }
   if (nextRow[colRight] == 1) {
     let potentialMove = searchNext(board, forwardRowI, colRight, 1)
     if (potentialMove == 1) {

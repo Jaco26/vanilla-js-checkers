@@ -1,5 +1,5 @@
-const move = ( ({canvas}, board, validator, moves, moveFinder) => {  
-  const { Validator, PossibleMoves } = validator;
+const move = ( ({canvas}, board, moveFinder) => {  
+  // const { Validator, PossibleMoves } = validator;
 
   const game = board.startNewGame();
   console.log(game);
@@ -33,26 +33,27 @@ const move = ( ({canvas}, board, validator, moves, moveFinder) => {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
-      const movedFromTile = Validator.movedFromTile(pieceStart.location, pieceEnd.location);
+      // const movedFromTile = Validator.movedFromTile(pieceStart.location, pieceEnd.location);
       // const validMove = validMoves.some(tile => tile.index2d == pieceEnd.location);
       const validMove = pieceEnd.tile.color == '#444444';
-      if (movedFromTile) {
-        if (validMove) {
-          game.mapGameBoard();
-          clickedPiece.snapToTile();
-          game.reRenderPieces();
-        } else {
-          clickedPiece.snapToTile(pieceStart.tile);
-          game.reRenderPieces();
-        }
-      } else {
-        // player didn't move piece off of the square it occupied on mousedown
-        clickedPiece.snapToTile();
-        game.reRenderPieces();
-      }
+      game.mapGameBoard();
+      // if (movedFromTile) {
+      //   if (validMove) {
+      //     game.mapGameBoard();
+      //     clickedPiece.snapToTile();
+      //     game.reRenderPieces();
+      //   } else {
+      //     clickedPiece.snapToTile(pieceStart.tile);
+      //     game.reRenderPieces();
+      //   }
+      // } else {
+      //   // player didn't move piece off of the square it occupied on mousedown
+      //   clickedPiece.snapToTile();
+      //   game.reRenderPieces();
+      // }
       
     }
   }
 
 
-})(canvas, gameBoard, validator, moves, moveFinder);
+})(canvas, gameBoard, moveFinder);
