@@ -45,7 +45,7 @@ const moveFinder = ( () => {
     let colLeft = activeColI - 1;
     let colRight = activeColI + 1;
 
-    if (nextRow[colLeft] == opponent) {      
+    if (nextRow[colLeft] == opponent) {            
       let possibleJumpOptions = {forwardDirection, colDirection: -1};
       let possibleJump = searchNext(board, forwardRowI, colLeft, possibleJumpOptions);
       if (possibleJump == opponent) {
@@ -62,7 +62,7 @@ const moveFinder = ( () => {
         }
         fork(moves, nextForkOptions);
       }
-    } else if (forkCount == 1 && nextRow[colRight] != findTeam(opponent)) { 
+    } else if (forkCount == 1 && nextRow[colLeft] != findTeam(opponent)) {       
       moves.push( (activeRowI + forwardDirection).toString() + (activeColI - 1).toString()); 
     } else {
       moves.push(activeRowI.toString() + activeColI.toString());
@@ -107,8 +107,8 @@ const moveFinder = ( () => {
     return [...new Set(moves)].filter(move => {
       return move != startPosition 
         && Number(move) > -1
-        && Number(move[0]) >= 0
         && Number(move[0]) <= 7
+        && Number(move[1]) <= 7
       });
   }
 
