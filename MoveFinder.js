@@ -1,9 +1,30 @@
 const moveFinder = ( () => {
 
+  const findTeam = (opponent) => {
+    return [1, 2].find(n => n != opponent);
+  }
+
+  let searchNextCounter = 0;
+
   const searchNext = (board, rowI, colI, options) => {
-    let thisRow = board[rowI + options.forwardDirection];
-    console.log(options);
-    
+    searchNextCounter += 1;
+    let loggerObj = {
+      'Row Index': rowI,
+      'Forward Direction': options.forwardDirection,
+      'Column Index': colI,
+      'Column Direction': options.colDirection,
+      searchNextCounter
+    }
+    // console.log(loggerObj);
+    let thisRow;
+    let nextRowI = rowI + options.forwardDirection
+    if (nextRowI < 0) {
+      thisRow = board[0];
+    } else if (nextRowI > 7) {
+      thisRow = board[7];
+    } else {
+      thisRow = board[rowI + options.forwardDirection];
+    }     
     let thisCol = thisRow[colI + options.colDirection];
     return thisCol;
   }
@@ -24,12 +45,11 @@ const moveFinder = ( () => {
     let colLeft = activeColI - 1;
     let colRight = activeColI + 1;
 
-    if (nextRow[colLeft] == opponent) {
+    if (nextRow[colLeft] == opponent) {      
       let possibleJumpOptions = {forwardDirection, colDirection: -1};
       let possibleJump = searchNext(board, forwardRowI, colLeft, possibleJumpOptions);
       if (possibleJump == opponent) {
         moves.push(activeRowI.toString() + activeColI.toString());
-        return;
       } else {
         moves.push(activeRowI.toString() + activeColI.toString());
         let nextForkOptions = {
@@ -42,8 +62,10 @@ const moveFinder = ( () => {
         }
         fork(moves, nextForkOptions);
       }
-    } else { 
-      moves.push((activeRowI + forwardDirection).toString() + (activeColI - 1).toString()); 
+    } else if (forkCount == 1 && nextRow[colRight] != findTeam(opponent)) { 
+      moves.push( (activeRowI + forwardDirection).toString() + (activeColI - 1).toString()); 
+    } else {
+      moves.push(activeRowI.toString() + activeColI.toString());
     }
 
     if (nextRow[colRight] == opponent) {
@@ -51,7 +73,6 @@ const moveFinder = ( () => {
       let possibleJump = searchNext(board, forwardRowI, colRight, possibleJumpOptions); // change
       if (possibleJump == opponent) {
         moves.push(activeRowI.toString() + activeColI.toString());
-        return;
       } else {
         moves.push(activeRowI.toString() + activeColI.toString());
         let nextForkOptions = {
@@ -64,8 +85,10 @@ const moveFinder = ( () => {
         }
         fork(moves, nextForkOptions);
       }
-    } else  {
-      moves.push( (activeRowI + forwardDirection).toString() + (activeColI + 1).toString()); // change
+    } else if (forkCount == 1 && nextRow[colRight] != findTeam(opponent)) {
+      moves.push((activeRowI + forwardDirection).toString() + (activeColI + 1).toString());
+    } else {
+      moves.push(activeRowI.toString() + activeColI.toString());
     }
   }
 
@@ -81,7 +104,12 @@ const moveFinder = ( () => {
     }
     let moves = [];
     fork(moves, options);
-    return [...new Set(moves)].filter(move => move != startPosition);
+    return [...new Set(moves)].filter(move => {
+      return move != startPosition 
+        && Number(move) > -1
+        && Number(move[0]) >= 0
+        && Number(move[0]) <= 7
+      });
   }
 
   return {
