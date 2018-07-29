@@ -6,7 +6,11 @@ const move = ( ({canvas}, board, moveFinder) => {
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
+    console.log(clickedPiece);
+    
     const validMoves = moveFinder.getValidMoves(clickedPiece, game);    
+    console.log(validMoves);
+    
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
     if (clickedPiece) {
@@ -30,6 +34,7 @@ const move = ( ({canvas}, board, moveFinder) => {
         game.reRenderPieces(); // IMPORTANT: need to redraw the game pieces to see the dropped piece "snap" to tile...
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
+        clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
         game.reRenderPieces();
       } 
     }

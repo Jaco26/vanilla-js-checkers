@@ -36,7 +36,6 @@ const gameBoardPieces = (() => {
       this.x = this.tile.x + (this.tile.width / 2);
       this.y = this.tile.y + (this.tile.height / 2);
     }
-    
   };
 
   const flattenArray = (array) => {
