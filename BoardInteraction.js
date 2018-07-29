@@ -20,7 +20,6 @@ const boardInteraction = ( () => {
     game.reRenderPieces();
   }
 
-
   return {
     outlineValidMoves,
     removeValidMovesHiliting,

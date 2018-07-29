@@ -1,4 +1,5 @@
 const gameBoardTiles = (() => {
+  
   class Tile {
     constructor(x, y, canvasWidth, canvasHeight, color, label, index2d) {
       this.x = x;
@@ -18,7 +19,6 @@ const gameBoardTiles = (() => {
       })[0];
     };
   };
-
 
   const createTiles = ({ canvasWidth, canvasHeight }, xLabels, yLabels, tileColors) => {
     let xPos = 0;
@@ -49,10 +49,9 @@ const gameBoardTiles = (() => {
     ctx.fill();
     ctx.fillStyle = 'black';
     ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8));
-    // ctx.strokeStyle = outline;
-    // ctx.stroke();
     ctx.closePath();
   };
+
   const drawTiles = (canvas, outerArr) => {
     outerArr.forEach(innerArr => innerArr.forEach(tile => {
       drawTile(canvas, tile)

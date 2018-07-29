@@ -11,10 +11,12 @@ const gameBoardPieces = (() => {
       this.isKing = false;
       this.tile = {};
     }
+
     changePosition(e) {
       this.x = e.offsetX;
       this.y = e.offsetY;
     }
+
     getCurrentLocation({tiles}) {
       this.tile = tiles.reduce( (a, b) => {
         a = [...a, ...b];
@@ -31,6 +33,7 @@ const gameBoardPieces = (() => {
         tile: this.tile
       };
     }
+
     snapToTile (tile = {}) {      
       if (tile.x) this.tile = tile;
       this.x = this.tile.x + (this.tile.width / 2);
@@ -75,6 +78,7 @@ const gameBoardPieces = (() => {
     ctx.fill();
     ctx.closePath();
   };
+  
   const drawPieces = (canvas, playerPieces) => {
     playerPieces.forEach(piece => drawPiece(canvas, piece));
   };

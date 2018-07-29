@@ -1,7 +1,8 @@
 const move = ( ({canvas}, board, moveFinder, bi) => {  
 
   const game = board.startNewGame();
-
+  console.log(game);
+  
   canvas.addEventListener('mousedown', handleMouseDown);
 
   function handleMouseDown (e) {
@@ -26,9 +27,9 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const validMove = moveFinder.isValidMove(pieceEnd, validMoves);      
       if (validMove) {
-        game.mapGameBoard();
         clickedPiece.snapToTile();
         bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
+        game.mapGameBoard();
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece

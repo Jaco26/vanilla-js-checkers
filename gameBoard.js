@@ -21,6 +21,7 @@ const gameBoard = ((canvas, tiles, pieces) => {
       piecesModule.drawPieces(canvas, [...this.p1Pieces, ...this.p2Pieces]);
       this.mapGameBoard();
     }
+    
     mapGameBoard() {
       const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
       const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {        
@@ -64,7 +65,6 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.drawTiles(this.canvas, this.tiles)
       this.drawPieces(this.canvas, [...this.p1Pieces, ...this.p2Pieces]);
     }
-
   }
 
   const startNewGame = () => new Game(canvas, tiles, pieces);
