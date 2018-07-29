@@ -29,7 +29,7 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
       if (validMove) {
         clickedPiece.snapToTile();
         bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
-        game.mapGameBoard();
+        game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
