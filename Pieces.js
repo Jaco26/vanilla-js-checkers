@@ -85,5 +85,4 @@ const gameBoardPieces = (() => {
     drawPieces
   }
 
-
 })();

@@ -4,18 +4,7 @@ const moveFinder = ( () => {
     return [1, 2].find(n => n != opponent);
   }
 
-  let searchNextCounter = 0;
-
   const searchNext = (board, rowI, colI, options) => {
-    searchNextCounter += 1;
-    let loggerObj = {
-      'Row Index': rowI,
-      'Forward Direction': options.forwardDirection,
-      'Column Index': colI,
-      'Column Direction': options.colDirection,
-      searchNextCounter
-    }
-    // console.log(loggerObj);
     let thisRow;
     let nextRowI = rowI + options.forwardDirection
     if (nextRowI < 0) {
@@ -32,8 +21,7 @@ const moveFinder = ( () => {
   const fork = (moves, options) => {
     let { board, activeRowI, activeColI, forwardDirection, opponent, forkCount } = options;    
     forkCount += 1;
-
-    if (activeRowI > board.length) return;
+    
     let forwardRowI = activeRowI + forwardDirection;
     let nextRow = board[forwardRowI];
 
@@ -69,8 +57,8 @@ const moveFinder = ( () => {
     }
 
     if (nextRow[colRight] == opponent) {
-      let possibleJumpOptions = { forwardDirection, colDirection: 1 }; // change
-      let possibleJump = searchNext(board, forwardRowI, colRight, possibleJumpOptions); // change
+      let possibleJumpOptions = { forwardDirection, colDirection: 1 }; 
+      let possibleJump = searchNext(board, forwardRowI, colRight, possibleJumpOptions); 
       if (possibleJump == opponent) {
         moves.push(activeRowI.toString() + activeColI.toString());
       } else {
@@ -81,7 +69,7 @@ const moveFinder = ( () => {
           opponent,
           forkCount,
           activeRowI: forwardRowI + forwardDirection,
-          activeColI: colRight + 1, // change
+          activeColI: colRight + 1, 
         }
         fork(moves, nextForkOptions);
       }
@@ -90,9 +78,9 @@ const moveFinder = ( () => {
     } else {
       moves.push(activeRowI.toString() + activeColI.toString());
     }
-  }
+  };
 
-  const validMoves = (clickedPiece, game) => {    
+  const getValidMoves = (clickedPiece, game) => {    
     let startPosition = clickedPiece.location;
     let options = {
       board: game.history.slice(-1)[0],
@@ -101,7 +89,7 @@ const moveFinder = ( () => {
       forwardDirection: clickedPiece.player == 'p1' ? -1 : 1,
       opponent: clickedPiece.player == 'p1' ? 2 : 1,
       forkCount: 0,
-    }
+    };
     let moves = [];
     fork(moves, options);
     return [...new Set(moves)].filter(move => {
@@ -110,10 +98,15 @@ const moveFinder = ( () => {
         && Number(move[0]) <= 7
         && Number(move[1]) <= 7
       });
+  };
+
+  const isValidMove = (piece, validMoves) => {    
+    return validMoves.includes(piece.location);
   }
 
   return {
-    validMoves,
-  }
+    getValidMoves,
+    isValidMove,
+  };
 
 })();
