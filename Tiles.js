@@ -42,13 +42,15 @@ const gameBoardTiles = (() => {
     }, [])
   };
 
-  const drawTile = ({ ctx }, { x, y, width, height, color, label }) => {
+  const drawTile = ({ ctx }, { x, y, width, height, color, label, outline = '' }) => {
     ctx.beginPath();
     ctx.rect(x, y, width, height);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.fillStyle = 'black';
-    ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8))
+    ctx.fillText(label, x + (width / 2) - 7, y + (height * 0.8));
+    // ctx.strokeStyle = outline;
+    // ctx.stroke();
     ctx.closePath();
   };
   const drawTiles = (canvas, outerArr) => {

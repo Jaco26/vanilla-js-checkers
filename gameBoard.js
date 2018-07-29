@@ -13,6 +13,7 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.p2Pieces = piecesModule.createPlayerPieces(this.tiles, this.tileClrs, this.pieceClrs, 'dark');
       this.history = [];
 
+      this.createTiles = tilesModule.createTiles;
       this.drawTiles = tilesModule.drawTiles;
       this.drawPieces = piecesModule.drawPieces;
 
