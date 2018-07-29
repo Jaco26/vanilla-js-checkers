@@ -36,7 +36,7 @@ const moveFinder = ( () => {
     if (nextRow[colLeft] == opponent) {            
       let possibleJumpOptions = {forwardDirection, colDirection: -1};
       let possibleJump = searchNext(board, forwardRowI, colLeft, possibleJumpOptions);
-      if (possibleJump == opponent) {
+      if (possibleJump == opponent || possibleJump == findTeam(opponent)) {
         moves.push(activeRowI.toString() + activeColI.toString());
       } else {
         moves.push(activeRowI.toString() + activeColI.toString());
@@ -59,7 +59,7 @@ const moveFinder = ( () => {
     if (nextRow[colRight] == opponent) {
       let possibleJumpOptions = { forwardDirection, colDirection: 1 }; 
       let possibleJump = searchNext(board, forwardRowI, colRight, possibleJumpOptions); 
-      if (possibleJump == opponent) {
+      if (possibleJump == opponent || possibleJump == findTeam(opponent)) {
         moves.push(activeRowI.toString() + activeColI.toString());
       } else {
         moves.push(activeRowI.toString() + activeColI.toString());
