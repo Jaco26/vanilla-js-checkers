@@ -1,13 +1,12 @@
 const move = ( ({canvas}, board, moveFinder, bi) => {  
+
   const game = board.startNewGame();
-  // console.log(game);
 
   canvas.addEventListener('mousedown', handleMouseDown);
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
     const validMoves = moveFinder.getValidMoves(clickedPiece, game);       
-    // draw green outlines on all valid tiles
     bi.outlineValidMoves(validMoves, game);
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
@@ -17,8 +16,8 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
     }   
 
     function handleMousemove(e) {
-      clickedPiece.changePosition(e)
-      game.reRenderPieces()
+      clickedPiece.changePosition(e);
+      game.reRenderPieces();
     }
 
     function handleMouseup(e) {
@@ -37,6 +36,5 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
       } 
     }
   }
-
 
 })(canvas, gameBoard, moveFinder, boardInteraction);
