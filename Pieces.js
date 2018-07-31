@@ -9,12 +9,24 @@ const gameBoardPieces = (() => {
       this.radius = radius;
       this.color = color;
       this.isKing = false;
-      this.tile = {};
+      this.tile = {}; // mutated by getCurrentLocation
+      this.path = []; // mutated by trackPath
     }
 
     changePosition(e) {
       this.x = e.offsetX;
       this.y = e.offsetY;
+    }
+
+    trackPath() {
+      this.path.push({
+        x: this.x,
+        y: this.y,
+      });
+    }
+
+    setPathEmpty() {
+      this.path = [];
     }
 
     getCurrentLocation({tiles}) {

@@ -18,6 +18,7 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
 
     function handleMousemove(e) {
       clickedPiece.changePosition(e);
+      clickedPiece.trackPath();
       game.reRenderPieces();
     }
 
@@ -27,7 +28,7 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const validMove = moveFinder.isValidMove(pieceEnd, validMoves);      
       if (validMove) {
-        clickedPiece.snapToTile();
+        clickedPiece.snapToTile(pieceEnd.tile);
         bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
       } else {
@@ -35,6 +36,13 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
         bi.removeValidMovesHiliting(validMoves, game); 
       } 
+
+      // experiment with path tracking...
+      let path = clickedPiece.path;
+      console.log(path);
+      clickedPiece.setPathEmpty();
+      console.log(clickedPiece);
+      
     }
   }
 
