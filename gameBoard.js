@@ -43,7 +43,20 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.history.push(currentMap);
     }
 
-    clickedPiece (e) {
+    drawPath(path = []) {
+      const ctx = this.canvas.ctx;      
+      ctx.beginPath();
+      path.forEach(pt => {
+        ctx.beginPath();
+        ctx.fillStyle = 'lightblue';
+        ctx.fillRect(pt.x, pt.y, 5, 5);
+        ctx.closePath();
+      });
+    }
+
+
+
+    clickedPiece(e) {
       return [...this.p1Pieces, ...this.p2Pieces].filter(piece => {
         return piece.x + piece.radius > e.offsetX
           && piece.x - piece.radius < e.offsetX
@@ -61,7 +74,7 @@ const gameBoard = ((canvas, tiles, pieces) => {
       });
     }
 
-    reRenderPieces () {
+    reRenderPieces() {
       this.drawTiles(this.canvas, this.tiles)
       this.drawPieces(this.canvas, [...this.p1Pieces, ...this.p2Pieces]);
     }
