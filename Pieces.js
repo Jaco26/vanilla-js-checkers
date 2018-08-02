@@ -35,9 +35,9 @@ const gameBoardPieces = (() => {
         return a;
       }, []).filter(tile => {
         return this.x > tile.x
-          && this.x < tile.x + tile.width
-          && this.y > tile.y
-          && this.y < tile.y + tile.height
+            && this.x < tile.x + tile.width
+            && this.y > tile.y
+            && this.y < tile.y + tile.height
       })[0];
       this.location = this.tile.index2d;
       return {
