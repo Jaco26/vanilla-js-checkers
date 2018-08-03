@@ -1,5 +1,25 @@
 const whoGotJumped = (() => {
 
+  /*
+    I need to:
+      - calulate the possible valid paths a piece might take based on the valid tiles available to it
+      - track the path the moved piece took 
+      - compare the moved piece's path against the possible valid paths
+  */
+
+  /*
+    To determine the path a players piece took, do the following:
+      - FIND all valid paths from the piece's starting position
+      - based on the piece's end position, try to ELIMINATE all paths but one 
+      - IF that is successful
+          - FIND all oponent pieces in the path
+          - REMOVE them
+      - ELSE 
+        - USING the path tracked by the piece as it went, determine intended path based on proximity
+        - FIND all oponent pieces in the path 
+        - REMOVE them
+  */
+
   const flatten2DArray = (arr) => {
     return arr.reduce((a, b) => {
       a = [...a, ...b];
@@ -39,12 +59,48 @@ const whoGotJumped = (() => {
     }, []);
   }
 
-  const normalizePath = (movedPiece, game) => {
+  const didItComeFromThere = (location, pieceStart, validMoves) => {
+    return location == pieceStart || validMoves.includes(location);
+  }
+
+  const lookBack = (path, options) => {
+    let { validMoves, pieceStart, pieceEnd, backLeft, backRight } = options;
+    let lookLeft = Number(pieceEnd) + backLeft;
+    let lookRight = Number(pieceEnd) + backRight;
+    let lookLeft2 = (lookLeft + backLeft).toString();
+    let lookRight2 = (lookRight + backRight).toString();
+    console.log('look right', lookRight);
+    console.log('look left', lookLeft);
+    if (lookLeft2 == pieceStart || validMoves.includes(lookLeft2)) {
+      console.log('Came from the left');
+    }
+    if (lookRight2 == pieceStart || validMoves.includes(lookRight2)) {
+      console.log('Came from the right');
+    }
+  }
+
+  const tracePath = (options) => {
+    let path = [];
+    lookBack(path, options);
+    return path;
+  }
+
+  const normalizePath = (movedPiece, pieceStart, pieceEnd, validMoves, game) => {
     const { tiles } = game;
-    const { path } = movedPiece
+    const { path, player } = movedPiece
     let tilesTravled = getTilesTravled(path, tiles);
-    console.log(tilesTravled);
-    
+    if (Math.abs(Number(pieceStart.location[0]) - Number(pieceEnd.location[0])) == 1) {      
+      return;
+    } else {
+      const traceBackOptions = {
+        validMoves,
+        pieceStart: pieceStart.location,
+        pieceEnd: pieceEnd.location,
+        backRight: player == 'p1' ? 11 : -9,
+        backLeft: player == 'p1' ? 9 : -11,
+      }
+      let playerPath = tracePath(traceBackOptions);
+    }
   }
 
   return {

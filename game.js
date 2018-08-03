@@ -10,6 +10,12 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
     const validMoves = moveFinder.getValidMoves(clickedPiece, game);       
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
+    let sortedValidMoves = validMoves.sort((a, b) => {
+      return Number(a) < Number(b);
+    });
+   
+    
+
     bi.outlineValidMoves(validMoves, game);
 
     if (clickedPiece) {
@@ -29,17 +35,25 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
       canvas.removeEventListener('mouseup', handleMouseup);
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const validMove = moveFinder.isValidMove(pieceEnd, validMoves);      
+
+
+      //  console.log('Start Point', pieceStart.location);
+      //  console.log('Sorted Valid Moves', sortedValidMoves);
+      //  console.log('End Point', pieceEnd.location);
+       
+
       if (validMove) {
         clickedPiece.snapToTile(pieceEnd.tile);
         bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.drawPath(clickedPiece.path);
-        jumps.normalizePath(clickedPiece, game);
+        jumps.normalizePath(clickedPiece, pieceStart, pieceEnd, validMoves, game);
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
         bi.removeValidMovesHiliting(validMoves, game); 
       } 
+
 
       // // experiment with path tracking...
       // let path = clickedPiece.path;

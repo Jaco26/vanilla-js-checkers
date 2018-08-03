@@ -16,7 +16,7 @@ const moveFinder = ( () => {
     return thisCol;
   }
 
-  function handlePossibleJump(moves, options) {
+  function handlePossibleJump(moves, paths, options) {
     let { board, activeRowI, activeColI, forwardDirection, opponent, forkCount, colDirection, forwardRowI, adjacentColI } = options;
     let possibleJumpOptions = { forwardRowI, adjacentColI, forwardDirection, colDirection};
     let possibleJump = searchNext(board, possibleJumpOptions);    
@@ -32,11 +32,11 @@ const moveFinder = ( () => {
         activeRowI: forwardRowI + forwardDirection,
         activeColI: adjacentColI + colDirection,
       };
-      fork(moves, nextForkOptions);
+      fork(moves, paths, nextForkOptions);
     }
   }
 
-  function fork(moves, options) {
+  function fork(moves, paths, options) {
     let { board, activeRowI, activeColI, forwardDirection, opponent } = options;    
     options.forkCount += 1;
     let forwardRowI = activeRowI + forwardDirection;
@@ -56,7 +56,7 @@ const moveFinder = ( () => {
         adjacentColI: colLeft,
         colDirection: -1,
       }    
-      handlePossibleJump(moves, { ...options, ...handlePossibleJumpOptions })     
+      handlePossibleJump(moves, paths, { ...options, ...handlePossibleJumpOptions});
     } else if (options.forkCount == 1 && nextRow[colLeft] != findTeam(opponent)) {       
       moves.push( (activeRowI + forwardDirection).toString() + (activeColI - 1).toString()); 
     } else {
@@ -69,7 +69,7 @@ const moveFinder = ( () => {
         adjacentColI: colRight,
         colDirection: 1,
       };
-      handlePossibleJump(moves, { ...options, ...handlePossibleJumpOptions });
+      handlePossibleJump(moves, paths, { ...options, ...handlePossibleJumpOptions});
     } else if (options.forkCount == 1 && nextRow[colRight] != findTeam(opponent)) {
       moves.push((activeRowI + forwardDirection).toString() + (activeColI + 1).toString());
     } else {
@@ -88,7 +88,8 @@ const moveFinder = ( () => {
       forkCount: 0,
     };
     let moves = [];
-    fork(moves, options);
+    let paths = [];
+    fork(moves, paths, options);
     return [...new Set(moves)].filter(move => {
       return move != startPosition 
         && Number(move) > -1

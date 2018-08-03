@@ -1,5 +1,8 @@
 const boardInteraction = ( () => {
 
+
+
+
   const outlineValidMoves = (validMoves, game) => {
     validMoves.forEach(move => {
       let rowI = Number(move[0]);
