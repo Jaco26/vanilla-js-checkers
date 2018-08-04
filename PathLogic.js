@@ -69,13 +69,14 @@ const whoGotJumped = (() => {
     let lookRight = Number(pieceEnd) + backRight;
     let lookLeft2 = (lookLeft + backLeft).toString();
     let lookRight2 = (lookRight + backRight).toString();
-    console.log('look right', lookRight);
-    console.log('look left', lookLeft);
-    if (lookLeft2 == pieceStart || validMoves.includes(lookLeft2)) {
-      console.log('Came from the left');
-    }
-    if (lookRight2 == pieceStart || validMoves.includes(lookRight2)) {
-      console.log('Came from the right');
+    let maybeFromLeft = lookLeft2 == pieceStart || validMoves.includes(lookLeft2);
+    let maybeFromRight = lookRight2 == pieceStart || validMoves.includes(lookRight2);
+    if (maybeFromLeft && maybeFromRight) {
+      console.log(`The piece could have come from either direction. Return and infer based on piece's path`);
+      return;
+    } else if (maybeFromLeft) {
+      console.log(`The piece came from the left`);
+      
     }
   }
 
