@@ -10,13 +10,7 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
     const validMoves = moveFinder.getValidMoves(clickedPiece, game);       
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
-    let sortedValidMoves = validMoves.sort((a, b) => {
-      return Number(a) < Number(b);
-    });
-   
-    
-
-    bi.outlineValidMoves(validMoves, game);
+    bi.hiliteValidMoves(validMoves, game);
 
     if (clickedPiece) {
       clickedPiece.setPathEmpty();
@@ -35,31 +29,17 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
       canvas.removeEventListener('mouseup', handleMouseup);
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const validMove = moveFinder.isValidMove(pieceEnd, validMoves);      
-
-
-      //  console.log('Start Point', pieceStart.location);
-      //  console.log('Sorted Valid Moves', sortedValidMoves);
-      //  console.log('End Point', pieceEnd.location);
-       
-
       if (validMove) {
         clickedPiece.snapToTile(pieceEnd.tile);
         bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
-        game.drawPath(clickedPiece.path);
-        jumps.normalizePath(clickedPiece, pieceStart, pieceEnd, validMoves, game);
+        game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
+        jumps.findPath(clickedPiece, pieceStart, pieceEnd, validMoves, game); // IMPORTANT: must be called after mapGameBoard to provide an up-to-date version of the game board to the functions determining which pieces got jumped (if any)
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
         bi.removeValidMovesHiliting(validMoves, game); 
       } 
-
-
-      // // experiment with path tracking...
-      // let path = clickedPiece.path;
-      // // console.log(path);
-      // clickedPiece.setPathEmpty();
-      // // console.log(clickedPiece);
       
     }
   }

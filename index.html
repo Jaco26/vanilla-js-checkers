@@ -5,20 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Checkers With Pure JS</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <canvas id="checkers-game"></canvas>
 
   <script src="utils.js"></script>
-  <script src="canvas.js"></script>
-  <script src="Tiles.js"></script>
-  <script src="Pieces.js"></script>
-  <script src="gameBoard.js"></script>
-  <script src="MoveFinder.js"></script>
-  <script src="BoardInteraction.js"></script>
-  <script src="PathLogic.js"></script>
+
+  <script src="./render-board/canvas.js"></script>
+  <script src="./render-board/Tiles.js"></script>
+  <script src="./render-board/Pieces.js"></script>
+  <script src="./render-board/gameBoard.js"></script>
+  <script src="./render-board/BoardInteraction.js"></script>
+
+  <script src="./game-logic/MoveFinder.js"></script>
+  <script src="./game-logic/PathLogic.js"></script>
+
   <script src="game.js"></script>
 </body>
 </html>

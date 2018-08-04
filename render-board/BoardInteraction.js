@@ -3,7 +3,7 @@ const boardInteraction = ( () => {
 
 
 
-  const outlineValidMoves = (validMoves, game) => {
+  const hiliteValidMoves = (validMoves, game) => {
     validMoves.forEach(move => {
       let rowI = Number(move[0]);
       let colI = Number(move[1]);
@@ -24,7 +24,7 @@ const boardInteraction = ( () => {
   }
 
   return {
-    outlineValidMoves,
+    hiliteValidMoves,
     removeValidMovesHiliting,
   };
 

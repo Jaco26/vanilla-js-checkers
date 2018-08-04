@@ -1,5 +1,5 @@
-const whoGotJumped = (() => {
-
+const whoGotJumped = ((utils) => {
+  const { flatten, traceBackPath } = utils
   /*
     I need to:
       - calulate the possible valid paths a piece might take based on the valid tiles available to it
@@ -20,15 +20,9 @@ const whoGotJumped = (() => {
         - REMOVE them
   */
 
-  const flatten2DArray = (arr) => {
-    return arr.reduce((a, b) => {
-      a = [...a, ...b];
-      return a;
-    }, []);
-  }
 
   const getTilePerPathPoint = (path, tiles) => {
-    let flatTiles = flatten2DArray(tiles);
+    let flatTiles = flatten(tiles);
     return path.reduce((a, point) => {
       let pointTile = flatTiles.filter(tile => {
         return tile.x < point.x &&
@@ -59,25 +53,9 @@ const whoGotJumped = (() => {
     }, []);
   }
 
-  const didItComeFromThere = (location, pieceStart, validMoves) => {
-    return location == pieceStart || validMoves.includes(location);
-  }
-
   const lookBack = (path, options) => {
-    let { validMoves, pieceStart, pieceEnd, backLeft, backRight } = options;
-    let lookLeft = Number(pieceEnd) + backLeft;
-    let lookRight = Number(pieceEnd) + backRight;
-    let lookLeft2 = (lookLeft + backLeft).toString();
-    let lookRight2 = (lookRight + backRight).toString();
-    let maybeFromLeft = lookLeft2 == pieceStart || validMoves.includes(lookLeft2);
-    let maybeFromRight = lookRight2 == pieceStart || validMoves.includes(lookRight2);
-    if (maybeFromLeft && maybeFromRight) {
-      console.log(`The piece could have come from either direction. Return and infer based on piece's path`);
-      return;
-    } else if (maybeFromLeft) {
-      console.log(`The piece came from the left`);
-      
-    }
+    let oneLeft = traceBackPath.examineTile(1, 'left', options);
+    let oneRight = traceBackPath.examineTile(1, 'right', options);
   }
 
   const tracePath = (options) => {
@@ -86,26 +64,33 @@ const whoGotJumped = (() => {
     return path;
   }
 
-  const normalizePath = (movedPiece, pieceStart, pieceEnd, validMoves, game) => {
+  
+
+  const findPath = (movedPiece, pieceStart, pieceEnd, validMoves, game) => {
     const { tiles } = game;
     const { path, player } = movedPiece
     let tilesTravled = getTilesTravled(path, tiles);
-    if (Math.abs(Number(pieceStart.location[0]) - Number(pieceEnd.location[0])) == 1) {      
-      return;
-    } else {
-      const traceBackOptions = {
-        validMoves,
-        pieceStart: pieceStart.location,
-        pieceEnd: pieceEnd.location,
-        backRight: player == 'p1' ? 11 : -9,
-        backLeft: player == 'p1' ? 9 : -11,
-      }
-      let playerPath = tracePath(traceBackOptions);
-    }
+    // if (Math.abs(Number(pieceStart.location[0]) - Number(pieceEnd.location[0])) == 1) {      
+    //   return;
+    // } else {
+      // const traceBackOptions = {
+      //   validMoves,
+      //   pieceStart: pieceStart.location,
+      //   pieceEnd: pieceEnd.location,
+      //   backRight: player == 'p1' ? 11 : -9,
+      //   backLeft: player == 'p1' ? 9 : -11,
+      // }
+      let tracePathOptions = {
+        validMoves: validMoves,
+        player: player,
+        traceOrigin: pieceEnd.location,
+      }; 
+      let playerPath = tracePath(tracePathOptions);
+    // }
   }
 
   return {
-    normalizePath,
+    findPath,
   }
 
-})();
+})(utils);
