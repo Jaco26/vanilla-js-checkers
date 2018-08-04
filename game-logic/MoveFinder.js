@@ -1,6 +1,8 @@
 const moveFinder = ( () => {
 
-  const findTeam = (opponent) => [1, 2].find(n => n != opponent);
+  function findTeam(opponent) {
+    return [1, 2].find(n => n != opponent);
+  } 
 
   function searchNext(board, options) {
     let thisRow;
