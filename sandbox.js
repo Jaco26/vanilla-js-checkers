@@ -1,13 +1,15 @@
 const sandbox = ( () => {
 
   
-  function tileContent(occupant, playerOpponent) {
-    if (occupant == playerOpponent) {
-      return 'opponent';
-    } else if (occupant == 0) {
-      return 'empty';
-    } else {
-      return 'team'
+  function tileContent(occupant, player) {
+    const playerOpponent = player == 'p1' ? 2 : 1;
+    switch(occupant) {
+      case playerOpponent:
+        return 'opponent';
+      case 0:
+        return 'empty';
+      default:
+        return 'team';
     }
   }
 
@@ -16,36 +18,41 @@ const sandbox = ( () => {
     if (player == 'p2') return (colDirection == 'right' ? 9 : 11) * nRows;
   } 
 
-  function getTileNRowsAhead(nRows, colDirection, options) {
-    const { board, player, origin } = options;    
+  function getTileNRowsAhead(origin, nRows, colDirection, options) {
+    const { board, player } = options;    
     const tileIndex = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();
     const row = Number(tileIndex[0]);
     const col = Number(tileIndex[1]);
+    const occupant = board[row][col];
     return {
-      contents: board[row][col],
+      contents: tileContent(occupant, player),
       location: tileIndex,
     };
   }
 
+  function fork(origin, options) {
+    return {
+      nextRowLeft: getTileNRowsAhead(origin, 1, 'left', options),
+      nextRowRight: getTileNRowsAhead(origin, 1, 'right', options),
+      forkCount: options.forkCount += 1,
+    }
+  }
 
-  function forkFromOrigin(paths, options) {
-    let nextRowLeft = getTileNRowsAhead(1, 'left', options);
-    let nextRowRight = getTileNRowsAhead(1, 'right', options);
-    console.log(nextRowLeft);
-    console.log(nextRowRight);
+  function getPathsFromOrigin(paths, origin, options) {
+    let { nextRowLeft, nextRowRight } = fork(origin, options);
+    
   }
 
   function getValidPaths(clickedPiece, game) {
-    const startPos = clickedPiece.location;
+    let origin = clickedPiece.location;
     const options = {
       board: game.history[game.history.length - 1],
       player: clickedPiece.player,
-      origin: clickedPiece.location,
-      opponent: clickedPiece.player == 'p1' ? 2 : 1,
-      count: 0,
+      forkCount: 0,
     };    
     const paths = [];
-    forkFromOrigin(paths, options)
+    getPathsFromOrigin(paths, origin, options);
+    return paths;
   }
 
   const game = {
@@ -61,7 +68,6 @@ const sandbox = ( () => {
         [1, null, 1, null, 1, null, 1, null],
       ],
     ]
-    
   } 
 
   const piece = {

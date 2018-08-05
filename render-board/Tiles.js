@@ -26,7 +26,8 @@ const gameBoardTiles = (() => {
     let colorRed = true;
     return yLabels.reduce((accumulator, yLab, iY) => {
       accumulator = [...accumulator, xLabels.reduce((a, xLab, iX) => {
-        let label = `${xLab}${yLab}`;
+        // let label = `${xLab}${yLab}`;
+        let label = `${iY}${iX} `
         let index2d = `${iY}${iX}`;
         let color = colorRed ? tileColors.red : tileColors.black;
         let tile = new Tile(xPos, yPos, canvasWidth, canvasHeight, color, label, index2d);

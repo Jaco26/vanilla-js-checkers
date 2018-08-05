@@ -39,7 +39,7 @@ const whoGotJumped = ((utils, tilesTraveled) => {
     const { tiles } = game;
     const { path, player } = movedPiece
     let tilesTravled = getTilesTraveled(path, tiles);
-    console.log(tilesTravled);
+    console.log('Tiles traveled: ',tilesTravled);
     
       let tracePathOptions = {
         validMoves: validMoves,
