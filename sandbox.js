@@ -1,6 +1,16 @@
 const sandbox = ( () => {
 
-  
+  function firstCharToUpper(str) {
+    return str[0].toUpperCase() + str.slice(1);
+  }
+
+  function handleForkResult(direction, forkResult, options) {
+    let concern = forkResult[`nextRow${firstCharToUpper(direction)}`];
+    console.log(concern);
+    console.log(options);
+  }
+
+
   function tileContent(occupant, player) {
     const playerOpponent = player == 'p1' ? 2 : 1;
     switch(occupant) {
@@ -27,20 +37,24 @@ const sandbox = ( () => {
     return {
       contents: tileContent(occupant, player),
       location: tileIndex,
+      tileLeft: {},
+      tileRight: {},
     };
   }
 
+
   function fork(origin, options) {
     return {
-      nextRowLeft: getTileNRowsAhead(origin, 1, 'left', options),
-      nextRowRight: getTileNRowsAhead(origin, 1, 'right', options),
-      forkCount: options.forkCount += 1,
+      location: origin,
+      tileLeft: getTileNRowsAhead(origin, 1, 'left', options),
+      tileRight: getTileNRowsAhead(origin, 1, 'right', options),
     }
   }
 
-  function getPathsFromOrigin(paths, origin, options) {
-    let { nextRowLeft, nextRowRight } = fork(origin, options);
-    
+  
+  function getPathTree(paths, origin, options) {
+    paths[origin] = fork(origin, options);
+
   }
 
   function getValidPaths(clickedPiece, game) {
@@ -50,10 +64,17 @@ const sandbox = ( () => {
       player: clickedPiece.player,
       forkCount: 0,
     };    
-    const paths = [];
-    getPathsFromOrigin(paths, origin, options);
+    const paths = {
+      root: {}
+    };
+    
+    let pathTree = getPathTree(paths.root, origin, options);
+    console.log(paths);
+    
     return paths;
   }
+
+
 
   const game = {
     history: [
@@ -78,3 +99,85 @@ const sandbox = ( () => {
   getValidPaths(piece, game)
 
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function reducer(n, obj) {
+//   if (n == 0) {
+//     return obj;
+//   } 
+//   obj[n] = {
+//     number: n,
+//     square: n * n,
+//     squareRoot: Math.sqrt(n),
+//   };
+//   n -= 1;
+//   reducer(n, obj)
+// }
+
+// let thing = {};
+// reducer(4, thing)
+// console.log(thing);
+
+
+
+ /* 
+     origin = {
+       location: 54,
+       tileLeft: {
+         location: 43,
+         tileLeft: {
+           location: 32,
+           tileLeft: {
+
+           },
+           tileRight: {
+
+           }
+         },
+         tileRight: {
+           location: 34,
+           tileLeft: {
+
+           },
+           tileRight: {
+
+           }
+         }
+       },
+       tileRight: {
+         location: 45,
+         tileLeft: {
+           location: 36,
+           tileLeft: {
+
+           },
+           tileRight: {
+
+           }
+         },
+         tileRight: {
+           location: 32,
+           tileLeft: {
+
+           },
+           tileRight: {
+
+           }
+         }
+       }
+     }
+   */
