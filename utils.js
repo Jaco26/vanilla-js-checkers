@@ -21,6 +21,8 @@ const utils = ( () => {
   }
 
 
+  
+
 
   const getTileIndex = (traceOrigin, originModifier) => (Number(traceOrigin) + originModifier).toString();
 
@@ -45,9 +47,7 @@ const utils = ( () => {
         console.log(`The tile at location ${tileIndex} is not included in the list of valid moves`);
         
       }
- 
-      
-      // return tileContent;
+      return tileContent;
     },
   }
 

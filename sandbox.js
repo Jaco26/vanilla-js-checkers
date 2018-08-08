@@ -36,7 +36,7 @@ const sandbox = ( () => {
     const occupant = board[row][col];
     return {
       contents: tileContent(occupant, player),
-      location: tileIndex,
+      locale: tileIndex,
       tileLeft: {},
       tileRight: {},
     };
@@ -45,16 +45,37 @@ const sandbox = ( () => {
 
   function fork(origin, options) {
     return {
-      location: origin,
+      locale: origin,
       tileLeft: getTileNRowsAhead(origin, 1, 'left', options),
       tileRight: getTileNRowsAhead(origin, 1, 'right', options),
     }
   }
 
+  let count = 0;
   
   function getPathTree(paths, origin, options) {
-    paths[origin] = fork(origin, options);
-
+    count += 1;
+    let pathKeys;
+    if (Object.keys(paths)) {
+      pathKeys = Object.keys(paths);
+    }
+    console.log(pathKeys);
+    
+    const { locale, tileLeft, tileRight } = fork(origin, options);
+    if (pathKeys[0]) {
+      paths[pathKeys[pathKeys.length - 1]] = {locale, tileLeft, tileRight };
+    } else {
+      paths[origin] = { locale, tileLeft, tileRight };
+    }
+   
+ 
+    
+    [tileLeft, tileRight].forEach(tile => {
+      if (count > 3) return;
+      getPathTree(paths, tile.locale, options);
+    })
+    
+    
   }
 
   function getValidPaths(clickedPiece, game) {
@@ -99,18 +120,6 @@ const sandbox = ( () => {
   getValidPaths(piece, game)
 
 })();
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
