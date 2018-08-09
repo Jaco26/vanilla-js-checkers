@@ -54,22 +54,24 @@ const sandbox = ( () => {
   let count = 0;
   
   function getPathTree(paths, origin, options) {
+    // console.log(options);
+    
     count += 1;
     let pathKeys;
-    if (Object.keys(paths)) {
-      pathKeys = Object.keys(paths);
+    // if (Object.keys(paths)) {
+    //   pathKeys = Object.keys(paths);
+    // }
+
+    if (Object.values(paths)) {
+      pathValues = Object.keys(paths);
     }
-    console.log(pathKeys);
     
     const { locale, tileLeft, tileRight } = fork(origin, options);
-    if (pathKeys[0]) {
-      paths[pathKeys[pathKeys.length - 1]] = {locale, tileLeft, tileRight };
+    if (pathValues[0]) {
+      paths[pathKeys[pathKeys.length - 1]] = { locale, tileLeft, tileRight };
     } else {
       paths[origin] = { locale, tileLeft, tileRight };
     }
-   
- 
-    
     [tileLeft, tileRight].forEach(tile => {
       if (count > 3) return;
       getPathTree(paths, tile.locale, options);
@@ -89,8 +91,8 @@ const sandbox = ( () => {
       root: {}
     };
     
-    let pathTree = getPathTree(paths.root, origin, options);
-    console.log(paths);
+    // let pathTree = getPathTree(paths.root, origin, options);
+    // console.log(paths);
     
     return paths;
   }
@@ -122,6 +124,42 @@ const sandbox = ( () => {
 })();
 
 
+var count = 3; 
+
+function objectOpener(obj) {
+  if (count < 0) return; // no infinite loop
+  
+  // get all top level properties of obj
+  const keys = Object.keys(obj)
+
+  // remove the top layer
+  obj = keys.reduce((a, b) => {  
+    a = a[b];   
+    return a;
+  }, obj);
+  
+  count--;
+
+  objectOpener(obj);
+}
+
+const testObj = {
+  l1: {
+    // baba: 'String prop',
+    l2: {
+      l3: {
+        l4: {
+
+        }
+      }
+    }
+  }
+}
+
+
+objectOpener(testObj)
+
+console.log(testObj);
 
 
 // function reducer(n, obj) {
