@@ -127,16 +127,22 @@ const sandbox = ( () => {
 var count = 3; 
 
 function objectOpener(obj) {
-  if (count < 0) return; // no infinite loop
+  if (count < 0) return obj; // no infinite loop
   
   // get all top level properties of obj
   const keys = Object.keys(obj)
 
+  // console.log(keys);
+  
   // remove the top layer
   obj = keys.reduce((a, b) => {  
-    a = a[b];   
+    // console.log(a[b]);
+    
+    a = obj[b];  
+    console.log(a);
+     
     return a;
-  }, obj);
+  }, {});
   
   count--;
 
@@ -145,7 +151,6 @@ function objectOpener(obj) {
 
 const testObj = {
   l1: {
-    // baba: 'String prop',
     l2: {
       l3: {
         l4: {
@@ -157,9 +162,9 @@ const testObj = {
 }
 
 
-objectOpener(testObj)
+console.log(objectOpener(testObj))
 
-console.log(testObj);
+// console.log(testObj);
 
 
 // function reducer(n, obj) {

@@ -1,4 +1,4 @@
-const tilesTraveled = ( (utils) => {
+const tilesTraveled = ((utils, SimplePath) => {
   const { flatten } = utils;
   
   function getTilesPerPathPoint(path, tiles) {
@@ -24,17 +24,22 @@ const tilesTraveled = ( (utils) => {
   function getTilesTraveled(path, tiles) {
      let tilesPerPathPoint = getTilesPerPathPoint(path, tiles);
      let tileLocations = getTileLocations(tilesPerPathPoint);
-     return tileLocations.reduce((a, tile, index, arr) => {
+     let tilesTraveled = tileLocations.reduce((a, tile, index, arr) => {
        if (tile == arr[index + 1]) {
          return a;
        }
        a.push(tile);
        return a;
      }, []);
+     let simplePath = SimplePath.getSimplePath(tilesTraveled, tiles);
+     return {
+       tilesTraveled,
+       simplePath
+     }
   }
 
   return {
     getTilesTraveled
   };
 
-})(utils);
+})(utils, SimplePath);
