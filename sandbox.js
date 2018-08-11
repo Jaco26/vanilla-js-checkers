@@ -124,32 +124,7 @@ const sandbox = ( () => {
 })();
 
 
-var count = 3; 
-
-function objectOpener(obj) {
-  if (count < 0) return obj; // no infinite loop
-  
-  // get all top level properties of obj
-  const keys = Object.keys(obj)
-
-  // console.log(keys);
-  
-  // remove the top layer
-  obj = keys.reduce((a, b) => {  
-    // console.log(a[b]);
-    
-    a = obj[b];  
-    console.log(a);
-     
-    return a;
-  }, {});
-  
-  count--;
-
-  objectOpener(obj);
-}
-
-const testObj = {
+let testTest = {
   l1: {
     l2: {
       l3: {
@@ -161,8 +136,94 @@ const testObj = {
   }
 }
 
+function shallow(obj, count) {    
+  if (Object.keys(obj)[0]) {
+    const entries = Object.entries(obj);
+    obj = entries.reduce((a, [key, val]) => {
+      const innerEntries = Object.entries(val)
+      if (innerEntries[0]) {
+        a = innerEntries.reduce((accum, [keyInner, valInner]) => {
+          accum[keyInner] = valInner;
+          return accum;
+        }, {});
+      }
+      return a;
+    }, {});
+    count += 1;
+    console.log(obj);  
+    shallow(obj, count);
+  } else {    
+    return count;
+  }
+}
 
-console.log(objectOpener(testObj))
+function deepDive(obj, cb) {
+  let count = 0;
+  cb(obj, count);
+  return obj;
+}
+
+
+let result = deepDive(testTest, shallow)//.then(response => console.log(response))
+console.log(result);
+
+
+
+
+
+// console.log();
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var count = 3; 
+
+// function objectOpener(obj) {
+//   if (count < 0) return obj; // no infinite loop
+  
+//   // get all top level properties of obj
+//   const keys = Object.keys(obj)
+
+//   // console.log(keys);
+  
+//   // remove the top layer
+//   obj = keys.reduce((a, b) => {  
+//     // console.log(a[b]);
+    
+//     a = obj[b];  
+//     console.log(a);
+     
+//     return a;
+//   }, {});
+  
+//   count--;
+
+//   objectOpener(obj);
+// }
+
+// const testObj = {
+//   l1: {
+//     l2: {
+//       l3: {
+//         l4: {
+
+//         }
+//       }
+//     }
+//   }
+// }
+
+
+// console.log(objectOpener(testObj))
 
 // console.log(testObj);
 
