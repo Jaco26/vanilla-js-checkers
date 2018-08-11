@@ -53,31 +53,43 @@ const sandbox = ( () => {
 
   let count = 0;
   
+  // function getPathTree(paths, origin, options) {    
+  //   count += 1;
+  //   let pathKeys;
+  //   if (Object.keys(paths)) {
+  //     pathKeys = Object.keys(paths);
+  //   }    
+  //   let pathValues;
+  //   if (Object.entries(paths)) {
+  //     pathValues = Object.keys(paths);
+  //   }
+    
+  //   const { locale, tileLeft, tileRight } = fork(origin, options);
+  //   if (pathValues[0]) {
+  //     paths[pathKeys[pathKeys.length - 1]] = { locale, tileLeft, tileRight };
+  //   } else {
+  //     paths[origin] = { locale, tileLeft, tileRight };
+  //   }
+  //   [tileLeft, tileRight].forEach(tile => {
+  //     if (count > 3) return;
+  //     getPathTree(paths, tile.locale, options);
+  //   })
+  // }
+
   function getPathTree(paths, origin, options) {
     // console.log(options);
+    console.log(paths);
     
-    count += 1;
-    let pathKeys;
-    // if (Object.keys(paths)) {
-    //   pathKeys = Object.keys(paths);
-    // }
-
-    if (Object.values(paths)) {
-      pathValues = Object.keys(paths);
-    }
     
-    const { locale, tileLeft, tileRight } = fork(origin, options);
-    if (pathValues[0]) {
-      paths[pathKeys[pathKeys.length - 1]] = { locale, tileLeft, tileRight };
-    } else {
-      paths[origin] = { locale, tileLeft, tileRight };
-    }
+    let {tileLeft, tileRight, locale} = fork(origin, options);
+    let firstPathKey = Object.keys(paths)[0];
+    console.log(firstPathKey);
+    
     [tileLeft, tileRight].forEach(tile => {
-      if (count > 3) return;
+      paths[tile.locale] = tile;
       getPathTree(paths, tile.locale, options);
-    })
-    
-    
+    });
+      
   }
 
   function getValidPaths(clickedPiece, game) {
@@ -91,8 +103,8 @@ const sandbox = ( () => {
       root: {}
     };
     
-    // let pathTree = getPathTree(paths.root, origin, options);
-    // console.log(paths);
+    let pathTree = getPathTree(paths.root, origin, options);
+    console.log(paths);
     
     return paths;
   }
@@ -124,48 +136,48 @@ const sandbox = ( () => {
 })();
 
 
-let testTest = {
-  l1: {
-    l2: {
-      l3: {
-        l4: {
+// let testTest = {
+//   l1: {
+//     l2: {
+//       l3: {
+//         l4: {
 
-        }
-      }
-    }
-  }
-}
+//         }
+//       }
+//     }
+//   }
+// }
 
-function shallow(obj, count) {    
-  if (Object.keys(obj)[0]) {
-    const entries = Object.entries(obj);
-    obj = entries.reduce((a, [key, val]) => {
-      const innerEntries = Object.entries(val)
-      if (innerEntries[0]) {
-        a = innerEntries.reduce((accum, [keyInner, valInner]) => {
-          accum[keyInner] = valInner;
-          return accum;
-        }, {});
-      }
-      return a;
-    }, {});
-    count += 1;
-    console.log(obj);  
-    shallow(obj, count);
-  } else {    
-    return count;
-  }
-}
+// function shallow(obj, count) {    
+//   if (Object.keys(obj)[0]) {
+//     const entries = Object.entries(obj);
+//     obj = entries.reduce((a, [key, val]) => {
+//       const innerEntries = Object.entries(val)
+//       if (innerEntries[0]) {
+//         a = innerEntries.reduce((accum, [keyInner, valInner]) => {
+//           accum[keyInner] = valInner;
+//           return accum;
+//         }, {});
+//       }
+//       return a;
+//     }, {});
+//     count += 1;
+//     console.log(obj);  
+//     shallow(obj, count);
+//   } else {    
+//     return count;
+//   }
+// }
 
-function deepDive(obj, cb) {
-  let count = 0;
-  cb(obj, count);
-  return obj;
-}
+// function deepDive(obj, cb) {
+//   let count = 0;
+//   cb(obj, count);
+//   return obj;
+// }
 
 
-let result = deepDive(testTest, shallow)//.then(response => console.log(response))
-console.log(result);
+// let result = deepDive(testTest, shallow)//.then(response => console.log(response))
+// console.log(result);
 
 
 

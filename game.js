@@ -7,7 +7,9 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
-    const validMoves = moveFinder.getValidMoves(clickedPiece, game);       
+    const validMoves = moveFinder.getValidMoves(clickedPiece, game);  
+    console.log(validMoves);
+         
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
     bi.hiliteValidMoves(validMoves, game);

@@ -1,5 +1,5 @@
 const whoGotJumped = ((utils, tilesTraveled) => {
-  const { flatten, traceBackPath } = utils;
+  // const { flatten, traceBackPath } = utils;
   const { getTilesTraveled } = tilesTraveled;
   /*
     I need to:
@@ -39,14 +39,14 @@ const whoGotJumped = ((utils, tilesTraveled) => {
     const { tiles } = game;
     const { path, player } = movedPiece
     let tilesTravled = getTilesTraveled(path, tiles);
-    console.log('Tiles traveled: ',tilesTravled);
+    console.log('Tiles traveled: ', tilesTravled.tilesTraveled);
     
       let tracePathOptions = {
         validMoves: validMoves,
         player: player,
         traceOrigin: pieceEnd.location,
       }; 
-      let playerPath = tracePath(tracePathOptions);
+      // let playerPath = tracePath(tracePathOptions);
     // }
   }
 
