@@ -1,12 +1,10 @@
 const moveFinderPart2 = (() => {
 
-  const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : undefined;
+  const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : null;
 
-  function getTileIndex(origin, nRows, player, colDirection) {
-    let initial = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();    
-    let secondary = initial.length == 2 ? initial : '0' + initial;
-    return Number(secondary) > 0 ? secondary : undefined;
-  }
+  const nextRowIsOneOutFromRoot = (row, options) => row ? Math.abs(Number(options.root) - Number(row.locale)) < 12 : null;
+  
+  const possibleJumpIsValid = (possibleJump) => possibleJump && possibleJump.contents == 'empty';
 
   function tileContent(occupant, player) {
     const playerOpponent = player == 'p1' ? 2 : 1;
@@ -22,22 +20,23 @@ const moveFinderPart2 = (() => {
 
   function getOriginModifier(nRows, player, colDirection) {
     if (player == 'p1') return (colDirection == 'right' ? -9 : -11) * nRows;
-    if (player == 'p2') return (colDirection == 'right' ? 9 : 11) * nRows;
+    if (player == 'p2') return (colDirection == 'right' ? 11 : 9) * nRows;
+  }
+
+  function getTileIndex(origin, nRows, player, colDirection) {
+    let initial = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();
+    let secondary = initial.length == 2 ? initial : '0' + initial;
+    return Number(secondary) > 0 ? secondary : undefined;
   }
 
   function getTileNRowsAhead(origin, nRows, colDirection, options) {
     const { board, player } = options;
     const tileIndex = getTileIndex(origin, nRows, player, colDirection);   
-
     if (!tileIndex) return; 
-
     const row = Number(tileIndex[0]);
     const col = Number(tileIndex[1]);
-
     if (outOfBounds(row) || outOfBounds(col)) return;
-    
-    console.log('tileindex', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree
-        
+    console.log('Active tile index', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree   
     const occupant = board[row][col];
     const contents = tileContent(occupant, player);    
     if (contents) {
@@ -48,39 +47,37 @@ const moveFinderPart2 = (() => {
     }
   }
 
-  function handlePossibleJump(moves, possibleJump, options) {
-    if (possibleJump.contents == 'empty') {
-      moves.push(possibleJump);
-      fork(moves, possibleJump.locale, options);
-    }
-  }
-
   function fork(moves, origin, options) {
     options.forkCount += 1;
-
     let nextRowLeft = getTileNRowsAhead(origin, 1, 'left', options);
-    if (options.forkCount == 1 && nextRowLeft.contents == 'empty') {
+    // console.log(nextRowIsOneOutFromRoot(nextRowLeft, options));
+
+    if (nextRowLeft && nextRowLeft.contents == 'opponent') {
+      let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
+      if (possibleJumpIsValid(possibleJump)) {
+        moves.push(nextRowLeft, possibleJump);
+        fork(moves, possibleJump.locale, options);
+      }
+    } else if (nextRowIsOneOutFromRoot(nextRowLeft, options) && nextRowLeft.contents == 'empty') {
       moves.push(nextRowLeft);
-    } else if (nextRowLeft && nextRowLeft.contents == 'opponent') {
-      let possibleJumpTo = getTileNRowsAhead(origin, 2, 'left', options);
-      
-      if (possibleJumpTo) handlePossibleJump(moves, possibleJumpTo, options);
-    }
+    } 
 
     let nextRowRight = getTileNRowsAhead(origin, 1, 'right', options);
-    if (options.forkCount == 1 && nextRowRight.contents == 'empty') {
+    if (nextRowRight && nextRowRight.contents == 'opponent') {
+      let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
+      if (possibleJumpIsValid(possibleJump)) {
+        moves.push(nextRowRight, possibleJump);
+        fork(moves, possibleJump.locale, options);
+      }
+    } else if (nextRowIsOneOutFromRoot(nextRowRight, options) && nextRowRight.contents == 'empty') {
       moves.push(nextRowRight);
-    } else if (nextRowRight && nextRowRight.contents == 'opponent') {
-      let possibleJumpTo = getTileNRowsAhead(origin, 2, 'right', options);
-      if (possibleJumpTo) handlePossibleJump(moves, possibleJumpTo, options);
-    }
-    
-    
+    } 
   }
 
   function getValidMoves(clickedPiece, game) {
     let origin = clickedPiece.location;
     const options = {
+      root: origin,
       board: game.history[game.history.length - 1],
       player: clickedPiece.player,
       forkCount: 0,
@@ -90,30 +87,11 @@ const moveFinderPart2 = (() => {
     return moves;
   }
 
-  const isValidMove = (piece, validMoves) => validMoves.includes(piece.location);
-
-  // const game = {
-  //   history: [
-  //     [
-  //       [null, 2, null, 2, null, 0, null, 2],
-  //       [0, null, 2, null, 2, null, 2, null],
-  //       [null, 2, null, 2, null, 2, null, 0],
-  //       [0, null, 0, null, 0, null, 2, null],
-  //       [null, 0, null, 2, null, 0, null, 0],
-  //       [1, null, 1, null, 2, null, 1, null],
-  //       [null, 1, null, 1, null, 1, null, 1],
-  //       [1, null, 0, null, 1, null, 1, null],
-  //     ],
-  //   ]
-  // }
-
-  // const piece = {
-  //   location: '54',
-  //   player: 'p2'
-  // }
-
-
-  // console.log(getValidMoves(piece, game));
+  const isValidMove = (piece, validPaths) => {
+    return validPaths.filter(tile => tile.contents == 'empty')
+      .map(tile => tile.locale)
+      .includes(piece.location);
+  };
 
   return {
     getValidMoves,
