@@ -12,7 +12,8 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
          
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
-    bi.hiliteValidMoves(validMoves, game);
+    const validLocales = validMoves.map(move => move.locale)
+    bi.hiliteValidMoves(validLocales, game);
 
     if (clickedPiece) {
       clickedPiece.setPathEmpty();
@@ -30,20 +31,20 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
-      const validMove = moveFinder.isValidMove(pieceEnd, validMoves);      
+      const validMove = moveFinder.isValidMove(pieceEnd, validLocales);      
       if (validMove) {
         clickedPiece.snapToTile(pieceEnd.tile);
-        bi.removeValidMovesHiliting(validMoves, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
+        bi.removeValidMovesHiliting(validLocales, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
         jumps.findPath(clickedPiece, pieceStart, pieceEnd, validMoves, game); // IMPORTANT: must be called after mapGameBoard to provide an up-to-date version of the game board to the functions determining which pieces got jumped (if any)
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-        bi.removeValidMovesHiliting(validMoves, game); 
+        bi.removeValidMovesHiliting(validLocales, game); 
       } 
       
     }
   }
 
-})(canvas, gameBoard, moveFinder, boardInteraction, whoGotJumped);
+})(canvas, gameBoard, moveFinderPart2, boardInteraction, whoGotJumped);

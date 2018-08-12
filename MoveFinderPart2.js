@@ -1,10 +1,6 @@
 const moveFinderPart2 = (() => {
 
-  function outOfBounds(i) {
-    if (i) {      
-      return (!Number(i) && Number(i) != 0) || Number(i) > 7;
-    }
-  }
+  const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : undefined;
 
   function getTileIndex(origin, nRows, player, colDirection) {
     let initial = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();    
@@ -26,7 +22,7 @@ const moveFinderPart2 = (() => {
 
   function getOriginModifier(nRows, player, colDirection) {
     if (player == 'p1') return (colDirection == 'right' ? -9 : -11) * nRows;
-    if (player == 'p2') return (colDirection == 'right' ? -9 : -11) * nRows;
+    if (player == 'p2') return (colDirection == 'right' ? 9 : 11) * nRows;
   }
 
   function getTileNRowsAhead(origin, nRows, colDirection, options) {
@@ -94,32 +90,34 @@ const moveFinderPart2 = (() => {
     return moves;
   }
 
+  const isValidMove = (piece, validMoves) => validMoves.includes(piece.location);
 
-  const game = {
-    history: [
-      [
-        [null, 2, null, 2, null, 0, null, 2],
-        [0, null, 2, null, 2, null, 2, null],
-        [null, 2, null, 2, null, 2, null, 0],
-        [0, null, 0, null, 0, null, 2, null],
-        [null, 0, null, 2, null, 0, null, 0],
-        [1, null, 1, null, 2, null, 1, null],
-        [null, 1, null, 1, null, 1, null, 1],
-        [1, null, 1, null, 1, null, 1, null],
-      ],
-    ]
-  }
+  // const game = {
+  //   history: [
+  //     [
+  //       [null, 2, null, 2, null, 0, null, 2],
+  //       [0, null, 2, null, 2, null, 2, null],
+  //       [null, 2, null, 2, null, 2, null, 0],
+  //       [0, null, 0, null, 0, null, 2, null],
+  //       [null, 0, null, 2, null, 0, null, 0],
+  //       [1, null, 1, null, 2, null, 1, null],
+  //       [null, 1, null, 1, null, 1, null, 1],
+  //       [1, null, 0, null, 1, null, 1, null],
+  //     ],
+  //   ]
+  // }
 
-  const piece = {
-    location: '63',
-    player: 'p1'
-  }
+  // const piece = {
+  //   location: '54',
+  //   player: 'p2'
+  // }
 
 
-  console.log(getValidMoves(piece, game));
+  // console.log(getValidMoves(piece, game));
 
   return {
     getValidMoves,
+    isValidMove,
   };
 
 })();
