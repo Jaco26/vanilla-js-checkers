@@ -1,106 +1,96 @@
-const moveFinder = ( () => {
+const moveFinder = (() => {
 
-  function findTeam(opponent) {
-    return [1, 2].find(n => n != opponent);
-  } 
+  const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : null;
 
-  function searchNext(board, options) {
-    let thisRow;
-    let nextRowI = options.forwardRowI + options.forwardDirection
-    if (nextRowI < 0) {
-      thisRow = board[0];
-    } else if (nextRowI > 7) {
-      thisRow = board[7];
-    } else {
-      thisRow = board[nextRowI];
-    }     
-    let thisCol = thisRow[options.adjacentColI + options.colDirection];
-    return thisCol;
-  }
+  const nextRowIsOneOutFromRoot = (row, options) => row ? Math.abs(Number(options.root) - Number(row.locale)) < 12 : null;
+  
+  const possibleJumpIsValid = (possibleJump) => possibleJump && possibleJump.contents == 'empty';
 
-  function handlePossibleJump(moves, paths, options) {
-    let { board, activeRowI, activeColI, forwardDirection, opponent, forkCount, colDirection, forwardRowI, adjacentColI } = options;
-    let possibleJumpOptions = { forwardRowI, adjacentColI, forwardDirection, colDirection};
-    let possibleJump = searchNext(board, possibleJumpOptions);    
-    if (possibleJump == opponent || possibleJump == findTeam(opponent)) {
-      moves.push(activeRowI.toString() + activeColI.toString());
-    } else {
-      moves.push(activeRowI.toString() + activeColI.toString());
-      let nextForkOptions = {
-        board,
-        forwardDirection, 
-        opponent, 
-        forkCount,
-        activeRowI: forwardRowI + forwardDirection,
-        activeColI: adjacentColI + colDirection,
-      };
-      fork(moves, paths, nextForkOptions);
+  function tileContent(occupant, player) {
+    const playerOpponent = player == 'p1' ? 2 : 1;
+    switch(occupant) {
+      case playerOpponent:
+        return 'opponent';
+      case 0:
+        return 'empty';
+      default: 
+        return 'team';
     }
   }
 
-  function fork(moves, paths, options) {
-    let { board, activeRowI, activeColI, forwardDirection, opponent } = options;    
+  function getOriginModifier(nRows, player, colDirection) {
+    if (player == 'p1') return (colDirection == 'right' ? -9 : -11) * nRows;
+    if (player == 'p2') return (colDirection == 'right' ? 11 : 9) * nRows;
+  }
+
+  function getTileIndex(origin, nRows, player, colDirection) {
+    let initial = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();
+    let secondary = initial.length == 2 ? initial : '0' + initial;
+    return Number(secondary) > 0 ? secondary : null;
+  }
+
+  function getTileNRowsAhead(origin, nRows, colDirection, options) {
+    const { board, player } = options;
+    const tileIndex = getTileIndex(origin, nRows, player, colDirection);   
+    if (!tileIndex) return; 
+    const row = Number(tileIndex[0]);
+    const col = Number(tileIndex[1]);
+    if (outOfBounds(row) || outOfBounds(col)) return;
+    console.log('Active tile index', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree   
+    const occupant = board[row][col];
+    const contents = tileContent(occupant, player);    
+    if (contents) {
+      return {
+        contents,
+        locale: tileIndex,
+      };
+    }
+  }
+
+  function fork(moves, origin, options) {
     options.forkCount += 1;
-    let forwardRowI = activeRowI + forwardDirection;
-    let nextRow = board[forwardRowI];
 
-    if (!nextRow) {
-      moves.push(activeRowI.toString() + activeColI.toString());
-      return;
-    }   
+    let nextRowLeft = getTileNRowsAhead(origin, 1, 'left', options);
+    if (nextRowLeft && nextRowLeft.contents == 'opponent') {
+      let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
+      if (possibleJumpIsValid(possibleJump)) {
+        moves.push(nextRowLeft, possibleJump);
+        fork(moves, possibleJump.locale, options);
+      }
+    } else if (nextRowIsOneOutFromRoot(nextRowLeft, options) && nextRowLeft.contents == 'empty') {
+      moves.push(nextRowLeft);
+    } 
 
-    let colLeft = activeColI - 1;
-    let colRight = activeColI + 1;
+    let nextRowRight = getTileNRowsAhead(origin, 1, 'right', options);
+    if (nextRowRight && nextRowRight.contents == 'opponent') {
+      let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
+      if (possibleJumpIsValid(possibleJump)) {
+        moves.push(nextRowRight, possibleJump);
+        fork(moves, possibleJump.locale, options);
+      }
+    } else if (nextRowIsOneOutFromRoot(nextRowRight, options) && nextRowRight.contents == 'empty') {
+      moves.push(nextRowRight);
+    } 
+  }
 
-    if (nextRow[colLeft] == opponent) {   
-      let handlePossibleJumpOptions = { 
-        forwardRowI,
-        adjacentColI: colLeft,
-        colDirection: -1,
-      }    
-      handlePossibleJump(moves, paths, { ...options, ...handlePossibleJumpOptions});
-    } else if (options.forkCount == 1 && nextRow[colLeft] != findTeam(opponent)) {       
-      moves.push( (activeRowI + forwardDirection).toString() + (activeColI - 1).toString()); 
-    } else {
-      moves.push(activeRowI.toString() + activeColI.toString());
-    }
-
-    if (nextRow[colRight] == opponent) {
-      let handlePossibleJumpOptions = {
-        forwardRowI,
-        adjacentColI: colRight,
-        colDirection: 1,
-      };
-      handlePossibleJump(moves, paths, { ...options, ...handlePossibleJumpOptions});
-    } else if (options.forkCount == 1 && nextRow[colRight] != findTeam(opponent)) {
-      moves.push((activeRowI + forwardDirection).toString() + (activeColI + 1).toString());
-    } else {
-      moves.push(activeRowI.toString() + activeColI.toString());
-    }
-  };
-
-  const getValidMoves = (clickedPiece, game) => {    
-    let startPosition = clickedPiece.location;
-    let options = {
-      board: game.history.slice(-1)[0],
-      activeRowI: Number(clickedPiece.location[0]),
-      activeColI: Number(clickedPiece.location[1]),
-      forwardDirection: clickedPiece.player == 'p1' ? -1 : 1,
-      opponent: clickedPiece.player == 'p1' ? 2 : 1,
-      forkCount: 0,
+  function getValidMoves(clickedPiece, game) {
+    let origin = clickedPiece.location;
+    const options = {
+      root: origin,
+      board: game.history[game.history.length - 1],
+      player: clickedPiece.player,
+      forkCount: 0, // HELPFUL: track the number of times the fork() method is invoked
     };
-    let moves = [];
-    let paths = [];
-    fork(moves, paths, options);
-    return [...new Set(moves)].filter(move => {
-      return move != startPosition 
-        && Number(move) > -1
-        && Number(move[0]) <= 7
-        && Number(move[1]) <= 7
-      });
-  };
+    const moves = [];
+    fork(moves, origin, options);
+    return moves;
+  }
 
-  const isValidMove = (piece, validMoves) => validMoves.includes(piece.location);  
+  const isValidMove = (piece, validPaths) => {
+    return validPaths.filter(tile => tile.contents == 'empty')
+      .map(tile => tile.locale)
+      .includes(piece.location);
+  };
 
   return {
     getValidMoves,

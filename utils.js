@@ -20,40 +20,8 @@ const utils = ( () => {
     return result;
   }
 
-
-  
-
-
-  const getTileIndex = (traceOrigin, originModifier) => (Number(traceOrigin) + originModifier).toString();
-
-  const isValid = (tileIndex, validMoves) => validMoves.includes(tileIndex);
-
-  const getOriginModifier = (nRows, player, colDirection) => {
-    if (player == 'p1') return (colDirection == 'right' ? 11 : 9) * nRows;
-    if (player == 'p2') return (colDirection == 'right' ? -9 : -11) * nRows;
-  }
-
-  
-
-  const traceBackPath = {
-    examineTile: (nRows, colDirection, options) => {
-      const { traceOrigin, player, validMoves } = options;
-      const originModifier = getOriginModifier(nRows, player, colDirection);      
-      const tileIndex = getTileIndex(traceOrigin, originModifier)      
-      if ( isValid(tileIndex, validMoves) ) {
-        console.log(`The tile at location ${tileIndex} is valid`);
-        
-      } else {
-        console.log(`The tile at location ${tileIndex} is not included in the list of valid moves`);
-        
-      }
-      // return tileContent;
-    },
-  }
-
   return {
     flatten,
-    traceBackPath,
   }
 
 })();

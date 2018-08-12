@@ -1,4 +1,4 @@
-const move = ( ({canvas}, board, moveFinder, bi, jumps) => {  
+const move = ( ({canvas}, board, moveFinder, bi) => {  
 
   const game = board.startNewGame();
   console.log(game);
@@ -34,7 +34,6 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
         bi.removeValidMovesHiliting(validPaths, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
-        // jumps.findPath(clickedPiece, pieceStart, pieceEnd, validMoves, game); // IMPORTANT: must be called after mapGameBoard to provide an up-to-date version of the game board to the functions determining which pieces got jumped (if any)
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
@@ -44,4 +43,4 @@ const move = ( ({canvas}, board, moveFinder, bi, jumps) => {
     }
   }
 
-})(canvas, gameBoard, moveFinderPart2, boardInteraction, whoGotJumped);
+})(canvas, gameBoard, moveFinder, boardInteraction);

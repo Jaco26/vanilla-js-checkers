@@ -1,6 +1,4 @@
-const boardInteraction = ( () => {
-
-
+const boardInteraction = (() => {
 
   const highlightValidPathTiles = (tileType, validPaths, game) => {
     if (tileType != 'opponent' && tileType != 'empty') throw new Error('Invalid value passed as "tileType" argument');
