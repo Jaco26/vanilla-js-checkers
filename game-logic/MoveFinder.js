@@ -36,7 +36,8 @@ const moveFinder = (() => {
     const row = Number(tileIndex[0]);
     const col = Number(tileIndex[1]);
     if (outOfBounds(row) || outOfBounds(col)) return;
-    console.log('Active tile index', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree   
+    // console.log('lookLeft', options.lookLeft, 'lookRight', options.lookRight);
+    // console.log('Now examining tile index', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree       
     const occupant = board[row][col];
     const contents = tileContent(occupant, player);    
     if (contents) {
@@ -50,8 +51,10 @@ const moveFinder = (() => {
   function fork(moves, origin, options) {
     options.forkCount += 1;
 
+    options.lookLeft += 1;
     let nextRowLeft = getTileNRowsAhead(origin, 1, 'left', options);
     if (nextRowLeft && nextRowLeft.contents == 'opponent') {
+      options.lookLeft += 1;
       let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
       if (possibleJumpIsValid(possibleJump)) {
         moves.push(nextRowLeft, possibleJump);
@@ -61,8 +64,10 @@ const moveFinder = (() => {
       moves.push(nextRowLeft);
     } 
 
+    options.lookRight += 1;
     let nextRowRight = getTileNRowsAhead(origin, 1, 'right', options);
     if (nextRowRight && nextRowRight.contents == 'opponent') {
+      options.lookRight += 1;
       let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
       if (possibleJumpIsValid(possibleJump)) {
         moves.push(nextRowRight, possibleJump);
@@ -80,9 +85,11 @@ const moveFinder = (() => {
       board: game.history[game.history.length - 1],
       player: clickedPiece.player,
       forkCount: 0, // HELPFUL: track the number of times the fork() method is invoked
+      lookLeft: 0,
+      lookRight: 0,
     };
     const moves = [];
-    fork(moves, origin, options);
+    fork(moves, origin, options);    
     return moves;
   }
 
@@ -92,8 +99,32 @@ const moveFinder = (() => {
       .includes(piece.location);
   };
 
+
+
+  // EXPERIMENTAL //
+  function pathBuilder(pieceStart, moves) {
+    // create an origin object as point of reference :Important: for when we have kings moving both directions
+    const origin = {
+      contents: 'start',
+      locale: pieceStart, 
+    };
+    // merge the origin into the array of moves
+    const mergedMoves = [...moves, origin];
+    // sort moves by locale number value
+    const sortedMoves = mergedMoves.sort((a, b) => Number(a.locale) > Number(b.locale));
+    // iterate over sorted moves and build a tree based on mathimatically possible "path relations"
+    const result = getRelations(sortedMoves);
+  }
+
+  function getRelations(sortedMoves) {
+    // compare each move's locale against its neighbors 
+    console.log(sortedMoves);
+    
+  }
+
   return {
     getValidMoves,
+    pathBuilder, // EXPERIMENTAL
     isValidMove,
   };
 
