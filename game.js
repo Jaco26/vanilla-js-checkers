@@ -12,7 +12,7 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
          
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
-    moveFinder.pathBuilder(pieceStart.location, validMoves);
+    moveFinder.pathBuilder(clickedPiece, pieceStart.location, validMoves);
 
     if (clickedPiece) {
       clickedPiece.setPathEmpty(); 
