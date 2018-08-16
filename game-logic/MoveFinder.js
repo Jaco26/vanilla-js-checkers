@@ -1,4 +1,4 @@
-const moveFinder = (() => {
+const moveFinder = ((pathBuilder) => {
 
   const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : null;
 
@@ -90,73 +90,77 @@ const moveFinder = (() => {
     };
     const moves = [];
     fork(moves, origin, options);    
-    return moves;
+    const paths = pathBuilder.buildPath(clickedPiece, origin, moves);
+    return {
+      moves,
+      paths,
+    };
   }
 
-  const isValidMove = (piece, validPaths) => {
-    return validPaths.filter(tile => tile.contents == 'empty')
+  const isValidMove = (piece, valid) => {
+    return valid.moves.filter(tile => tile.contents == 'empty')
       .map(tile => tile.locale)
       .includes(piece.location);
   };
 
 
 
-  // EXPERIMENTAL //
-  function pathBuilder(clickedPiece, pieceStart, moves) {
-    const { player } = clickedPiece;
-    // create an origin object as point of reference :Important: for when we have kings moving both directions
-    const origin = {
-      contents: 'start',
-      locale: pieceStart, 
-    };
-    const mergedMoves = [...moves, origin];
-    // sort moves by locale number value
-    const sortedMoves = mergedMoves.sort((a, b) => {
-      return player == 'p1' 
-        ? Number(a.locale) < Number(b.locale)
-        : Number(a.locale) > Number(b.locale);
-    });
+  // // EXPERIMENTAL //
+  // function pathBuilder(clickedPiece, pieceStart, moves) {
+  //   const { player } = clickedPiece;
+  //   // create an origin object as point of reference :Important: for when we have kings moving both directions
+  //   const origin = {
+  //     contents: 'start',
+  //     locale: pieceStart, 
+  //   };
+  //   const mergedMoves = [...moves, origin];
+  //   // sort moves by locale number value
+  //   const sortedMoves = mergedMoves.sort((a, b) => {
+  //     return player == 'p1' 
+  //       ? Number(a.locale) < Number(b.locale)
+  //       : Number(a.locale) > Number(b.locale);
+  //   });
    
-    // iterate over sorted moves and build a tree based on mathimatically possible "path relations"
-    const result = getRelations(player, origin, sortedMoves);
-  }
+  //   // iterate over sorted moves and build a tree based on mathimatically possible "path relations"
+  //   const result = getRelations(player, origin, sortedMoves);
+  // }
 
-  function getRelations(player, origin, sortedMoves) {
-     // configure "forward direction" based on player
-     const forward = {
-       left: player == 'p1' ? -11 : 9,
-       right: player == 'p1' ? -9 : 11,
-     }
-    // compare each move's locale against its neighbors starting with the origin locale
-    const result2 = sortedMoves.reduce((accum, b, i, arr) => {
-      const mappedArr = arr.map(move => Number(move.locale));
-      const mappedAccum = accum.map(move => Number(move.locale));
-      const number = Number(b.locale);
-      const left = number + forward.left;      
-      const right = number + forward.right;
+  // function getRelations(player, origin, sortedMoves) {
+  //    // configure "forward direction" based on player
+  //    const forward = {
+  //      left: player == 'p1' ? -11 : 9,
+  //      right: player == 'p1' ? -9 : 11,
+  //    }
+  //   // compare each move's locale against its neighbors starting with the origin locale
+  //   const result2 = sortedMoves.reduce((accum, b, i, arr) => {
+  //     const mappedArr = arr.map(move => Number(move.locale));
+  //     const mappedAccum = accum.map(move => Number(move.locale));
+  //     const number = Number(b.locale);
+  //     const left = number + forward.left;      
+  //     const right = number + forward.right;
 
        
 
-      if (mappedArr.includes(left)) {
-        const nextPieceIndex = mappedArr.indexOf(left);
-        const tileOfConcern = arr[nextPieceIndex];
-        const dockIndex = mappedAccum.length
-        accum.push(tileOfConcern);
-      }
+  //     if (mappedArr.includes(left)) {
+  //       const nextPieceIndex = mappedArr.indexOf(left);
+  //       const tileOfConcern = arr[nextPieceIndex];
+  //       const dockIndex = mappedAccum.length
+  //       accum.push(tileOfConcern);
+  //     }
 
-      if (mappedArr.includes(right)) {
-        const nextPieceIndex = mappedArr.indexOf(right);
-        const tileOfConcern = arr[nextPieceIndex];
-        accum.push(tileOfConcern);
-      }
+  //     if (mappedArr.includes(right)) {
+  //       const nextPieceIndex = mappedArr.indexOf(right);
+  //       const tileOfConcern = arr[nextPieceIndex];
+  //       accum.push(tileOfConcern);
+  //     }
       
-      console.log('mapped accumulator', accum.map(move => Number(move.locale)), 'iteration', i + 1);
+  //     console.log('mapped accumulator', accum.map(move => Number(move.locale)), 'iteration', i + 1);
 
-      return accum;
-    }, []);
+  //     return accum;
+  //   }, []);
 
-    console.log(result2);
-  }
+  //   console.log(result2);
+  // }
 
   return {
     getValidMoves,
@@ -164,4 +168,4 @@ const moveFinder = (() => {
     isValidMove,
   };
 
-})();
+})(PATH_BUILDER);
