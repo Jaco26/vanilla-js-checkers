@@ -13,9 +13,15 @@ const PATH_BUILDER = (() => {
     right: player == 'p1' ? -9 : 11,
   });
 
+  const checkNextExists(tileIndex, moves) {
+    return moves.map(move => Number(move.locale)).includes(Number(tileIndex));
+  }
+
   function getRelations(player, sortedMoves) {
     const forward = getForwardModifier(player);
-    return 'This is the result!';
+    
+    
+    // return 'This is the result!';
   }
 
   function buildPath(clickedPiece, pieceStart, moves) {

@@ -12,6 +12,8 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
          
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
+    console.log(valid);
+    
     
     // moveFinder.pathBuilder(clickedPiece, pieceStart.location, validMoves);
 
