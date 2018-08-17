@@ -13,15 +13,41 @@ const PATH_BUILDER = (() => {
     right: player == 'p1' ? -9 : 11,
   });
 
-  const checkNextExists(tileIndex, moves) {
-    return moves.map(move => Number(move.locale)).includes(Number(tileIndex));
+  const getPathEnds = (paths) => {
+    return paths.reduce((a, path) => {
+      a.push(path[path.length - 1]);
+      return a;
+    }, []);
   }
 
   function getRelations(player, sortedMoves) {
     const forward = getForwardModifier(player);
-    
-    
-    // return 'This is the result!';
+    const numLocales = sortedMoves.map(move => Number(move.locale));    
+    const paths = [];
+    numLocales.forEach((locale, i, arr) => {
+      const forwardLeft = locale + forward.left;
+      const forwardRight = locale + forward.right;
+      const pathEnds = getPathEnds(paths);      
+      if (arr.includes(forwardLeft)) {        
+        const localePathIndex = pathEnds.indexOf(locale);
+        if (localePathIndex >= 0) {
+          paths[localePathIndex].push(forwardLeft);
+        } else {
+          paths.push([locale, forwardLeft]);
+        }
+      }
+
+      if (arr.includes(forwardRight)) {
+        const localePathIndex = pathEnds.indexOf(locale);
+        if (localePathIndex >= 0) {
+          paths[localePathIndex].push(forwardRight);
+        } else {
+          paths.push([locale, forwardRight]);
+        }
+      }
+
+    });
+    return paths;
   }
 
   function buildPath(clickedPiece, pieceStart, moves) {
