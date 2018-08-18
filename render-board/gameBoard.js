@@ -1,7 +1,7 @@
 const gameBoard = ((canvas, tiles, pieces) => {
 
   class Game {
-    constructor(canvas, tilesModule, piecesModule) {
+    constructor(canvas, setupTemplate, tilesModule, piecesModule) {
       this.canvas = canvas;
       this.yLabs = [7, 6, 5, 4, 3, 2, 1, 0];
       this.xLabs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -9,8 +9,8 @@ const gameBoard = ((canvas, tiles, pieces) => {
       this.pieceClrs = { light: 'orange', dark: 'green' };
 
       this.tiles = tilesModule.createTiles(canvas, this.xLabs, this.yLabs, this.tileClrs);
-      this.p1Pieces = piecesModule.createPlayerPieces(this.tiles, this.tileClrs, this.pieceClrs, 'light');
-      this.p2Pieces = piecesModule.createPlayerPieces(this.tiles, this.tileClrs, this.pieceClrs, 'dark');
+      this.p1Pieces = piecesModule.createPlayerPieces(this.tiles, setupTemplate, this.pieceClrs, 1);
+      this.p2Pieces = piecesModule.createPlayerPieces(this.tiles, setupTemplate, this.pieceClrs, 2);
       this.history = [];
 
       this.createTiles = tilesModule.createTiles;
@@ -80,7 +80,7 @@ const gameBoard = ((canvas, tiles, pieces) => {
     }
   }
 
-  const startNewGame = () => new Game(canvas, tiles, pieces);
+  const startNewGame = (template) => new Game(canvas, template, tiles, pieces);
 
   return {
     startNewGame

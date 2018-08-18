@@ -1,6 +1,6 @@
-const move = ( ({canvas}, board, moveFinder, bi) => {  
+const move = ( ({canvas}, templates, board, moveFinder, bi) => {  
 
-  const game = board.startNewGame();
+  const game = board.startNewGame(templates.extremeConvergeDiverge);
   console.log(game);
   
   canvas.addEventListener('mousedown', handleMouseDown);
@@ -48,4 +48,4 @@ const move = ( ({canvas}, board, moveFinder, bi) => {
     }
   }
 
-})(canvas, gameBoard, moveFinder, boardInteraction);
+})(canvas, SETUP_TEMPLATES, gameBoard, moveFinder, boardInteraction);

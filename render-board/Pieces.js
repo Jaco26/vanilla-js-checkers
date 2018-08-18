@@ -60,40 +60,29 @@ const gameBoardPieces = (() => {
     }, []);
   };
 
-  const piecesTemplate = [
-    [0, 2, 0, 2, 0, 2, 0, 2],
-    [2, 0, 2, 0, 2, 0, 2, 0],
-    [0, 2, 0, 2, 0, 2, 0, 2],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-  ];
-
-  const mapTemplate = (template, player) => {
-    return flattenArray(template).reduce((a, b, i) => {      
-      if (b === player) a.push({player: player === 1 ? 'p1' : 'p2', i});
+  const mapTemplate = (template, playerNum) => {
+    return flattenArray(template).reduce((a, b, i) => {            
+      if (b === playerNum) a.push({playerNum, i});
       return a;
     }, []);
   }
 
-  const getTemplateIndexes = (template) => ({
-    p1: mapTemplate(template, 1),
-    p2: mapTemplate(template, 2),
-  });
+  const getTemplateIndexes = (template, playerNum) => mapTemplate(template, playerNum);
 
-  const createPlayerPieces = (tilesArray, tileClrObj, pieceColors, clr) => {
+  const createPlayerPieces = (tilesArray, setupTemplate, pieceColors, playerNum) => {
     let tiles = flattenArray(tilesArray);
     let id = 1;
-    let pieceIndexes = getTemplateIndexes(piecesTemplate);    
-    return tiles.reduce((accumulator, tile, index) => {
-      if (pieceIndexes.p1.includes(index)) {
+    let piecePlayerIndexes = getTemplateIndexes(setupTemplate, playerNum);
+    let pieceIndexes = piecePlayerIndexes.map(piece => piece.i);
+    return tiles.reduce((accumulator, tile, i) => {
+      if (pieceIndexes.includes(i)) {
         let x = (tile.x + (tile.width / 2));
         let y = (tile.y + (tile.height / 2));
         let radius = (tile.width / 2) - (tile.width * 0.1);   
         let location = tile.index2d;
-        let piece = new Piece('p1', location, id, x, y, radius, pieceColors[clr]);
+        let player = playerNum == 1 ? 'p1' : 'p2';
+        let color = player == 'p1' ? 'dark' : 'light';
+        let piece = new Piece(player, location, id, x, y, radius, pieceColors[color]);
         accumulator.push(piece);
         id += 1;
       }
