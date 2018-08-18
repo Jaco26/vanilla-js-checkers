@@ -2,9 +2,11 @@ const PATH_BUILDER = (() => {
 
   const sortMoves = (player, moves) => {
     return moves.sort((a, b) => {
-      return player == 'p1' ?
-        Number(a.locale) < Number(b.locale) :
-        Number(a.locale) > Number(b.locale);
+      if (player == 'p1') {
+        return Number(a.locale) > Number(b.locale) ? -1 : 1
+      } else {
+        return Number(a.locale) < Number(b.locale) ? -1 : 1
+      }
     });
   };
 
@@ -22,7 +24,7 @@ const PATH_BUILDER = (() => {
 
   function getRelations(player, sortedMoves) {
     const forward = getForwardModifier(player);
-    const numLocales = sortedMoves.map(move => Number(move.locale));    
+    const numLocales = sortedMoves.map(move => Number(move.locale));   
     const paths = [];
     numLocales.forEach((locale, i, arr) => {
       const forwardLeft = locale + forward.left;
@@ -30,6 +32,7 @@ const PATH_BUILDER = (() => {
       const pathEnds = getPathEnds(paths);
       if (arr.includes(forwardLeft)) {        
         const localePathIndex = pathEnds.indexOf(locale);
+        // console.log('i', i, 'locale', locale, 'locale exists as end of other path', localePathIndex, 'forwardLeft', forwardLeft);
         if (localePathIndex >= 0) {
           paths[localePathIndex].push(forwardLeft);
         } else {
@@ -39,6 +42,9 @@ const PATH_BUILDER = (() => {
 
       if (arr.includes(forwardRight)) {
         const localePathIndex = pathEnds.indexOf(locale);
+        // console.log('pathEnds', pathEnds);
+        
+        // console.log('i', i, 'locale', locale, 'locale exists as end of other path', localePathIndex, 'forwardRight', forwardRight);
         if (localePathIndex >= 0) {
           paths[localePathIndex].push(forwardRight);
         } else {

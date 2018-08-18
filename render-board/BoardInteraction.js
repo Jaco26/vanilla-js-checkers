@@ -5,10 +5,10 @@ const boardInteraction = (() => {
     valid.moves.filter(tile => tile.contents == tileType)
       .map(tile => tile.locale)
       .forEach(locale => {
-         let rowI = Number(locale[0]);
-         let colI = Number(locale[1]);
-         let tile = game.tiles[rowI][colI];
-         tile.color = tileType == 'empty' ? '#44aa99' : '#992288';
+        let rowI = Number(locale[0]);
+        let colI = Number(locale[1]);
+        let tile = game.tiles[rowI][colI];
+        tile.color = tileType == 'empty' ? '#44aa99' : '#992288';
       });
     game.reRenderPieces(); // IMPORTANT: redraws pieces to reflect tiles' color change immediatly
   }

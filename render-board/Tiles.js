@@ -43,7 +43,7 @@ const gameBoardTiles = (() => {
     }, [])
   };
 
-  const drawTile = ({ ctx }, { x, y, width, height, color, label, outline = '' }) => {
+  const drawTile = ({ ctx }, { x, y, width, height, color, label, outline = '' }) => {    
     ctx.beginPath();
     ctx.rect(x, y, width, height);
     ctx.fillStyle = color;
@@ -55,8 +55,8 @@ const gameBoardTiles = (() => {
 
   const drawTiles = (canvas, outerArr) => {
     outerArr.forEach(innerArr => innerArr.forEach(tile => {
-      drawTile(canvas, tile)
-    }))
+      drawTile(canvas, tile);
+    }));
   };
 
   return {
