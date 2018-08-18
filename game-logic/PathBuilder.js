@@ -27,7 +27,7 @@ const PATH_BUILDER = (() => {
     numLocales.forEach((locale, i, arr) => {
       const forwardLeft = locale + forward.left;
       const forwardRight = locale + forward.right;
-      const pathEnds = getPathEnds(paths);      
+      const pathEnds = getPathEnds(paths);
       if (arr.includes(forwardLeft)) {        
         const localePathIndex = pathEnds.indexOf(locale);
         if (localePathIndex >= 0) {
@@ -47,6 +47,7 @@ const PATH_BUILDER = (() => {
       }
 
     });
+    
     return paths;
   }
 

@@ -52,30 +52,48 @@ const gameBoardPieces = (() => {
       this.y = this.tile.y + (this.tile.height / 2);
     }
   };
-
+ 
   const flattenArray = (array) => {
     return array.reduce( (a, b) => {
       a = [...a, ...b];
       return a;
     }, []);
+  };
+
+  const piecesTemplate = [
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+  ];
+
+  const mapTemplate = (template, player) => {
+    return flattenArray(template).reduce((a, b, i) => {      
+      if (b === player) a.push({player: player === 1 ? 'p1' : 'p2', i});
+      return a;
+    }, []);
   }
+
+  const getTemplateIndexes = (template) => ({
+    p1: mapTemplate(template, 1),
+    p2: mapTemplate(template, 2),
+  });
 
   const createPlayerPieces = (tilesArray, tileClrObj, pieceColors, clr) => {
     let tiles = flattenArray(tilesArray);
     let id = 1;
-    let player = 'p2';
-    if (pieceColors[clr] == pieceColors.dark) {
-      tiles.reverse();
-      player = 'p1';
-    }
+    let pieceIndexes = getTemplateIndexes(piecesTemplate);    
     return tiles.reduce((accumulator, tile, index) => {
-      if (index < 24 && tile.color == tileClrObj.black) {
+      if (pieceIndexes.p1.includes(index)) {
         let x = (tile.x + (tile.width / 2));
         let y = (tile.y + (tile.height / 2));
-        let { label } = tile
         let radius = (tile.width / 2) - (tile.width * 0.1);   
         let location = tile.index2d;
-        let piece = new Piece(player, location, id, x, y, radius, pieceColors[clr]);
+        let piece = new Piece('p1', location, id, x, y, radius, pieceColors[clr]);
         accumulator.push(piece);
         id += 1;
       }
