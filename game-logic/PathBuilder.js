@@ -34,8 +34,6 @@ const PATH_BUILDER = (() => {
       }
       return embeddedIndexes;
     }, []);
-    
-    
   }
 
   function getRelations(player, sortedMoves) {
@@ -46,39 +44,63 @@ const PATH_BUILDER = (() => {
       const forwardLeft = locale + forward.left;
       const forwardRight = locale + forward.right;
       const localeMatchPreexistingEmbeddedPathIndexes = doesLocaleMatchEmbeddedIndex(locale, paths);
-      if (arr.includes(forwardLeft)) {     
+      if (arr.includes(forwardLeft)) {
+        // get array of the end items of each of "paths" sub-arrays     
         const pathEnds = getPathEnds(paths);
-        const localeMatchPathEndIndex = pathEnds.indexOf(locale);
-        if (localeMatchPathEndIndex >= 0) {
-          paths[localeMatchPathEndIndex].push(forwardLeft);
+        // get the index of the path-end value that matches "locale"
+        const pathEndIndexOfLocale = pathEnds.indexOf(locale);
+        // check to see if pathEndIndexOfLocale exists –– does locale match a path's end value?
+        if (pathEndIndexOfLocale >= 0) {
+          // if it does, push "forwardLeft" onto the end of the subarray of paths at index "pathEndIndexOfLocale"
+          paths[pathEndIndexOfLocale].push(forwardLeft);
+        // otherwise, check if the locale exists embedded in one or more already-built paths
         } else if (localeMatchPreexistingEmbeddedPathIndexes[0]) {
-          /*
-          * Find indexes of all paths which have the locale value embedded
-          * For each of those, find the index of the locale.
-          * 
-          * make a copy of each array ending at the embedded-locale index
-          * push to those arrays
-          */
-          localeMatchPreexistingEmbeddedPathIndexes.forEach(item => {            
+          // if it does,
+          localeMatchPreexistingEmbeddedPathIndexes.forEach(item => {
+            // for each matching path index, create a copy of that path ending at the locale-index
             const newPathWithCopiedBase = paths[item.pathI].slice(0, item.localeIndex);
+            // then, push the merged copy and locale array to paths
             paths.push([...newPathWithCopiedBase, locale]);
           });
+          // otherwise, if we are more than one out from the start
+        } else if (forwardLeft - forward.left != arr[0]) {
+          // create a new copy and push forwardLeft onto it
+          // TODO: account for multiple paths to slicegi
+          const newPathWithCopiedBase = paths[0].slice(0, -1);
+          paths.push([...newPathWithCopiedBase, locale, forwardLeft]);
         } else {
+          // push a new array [0] = locale, [1] = forwardLeft to paths
           paths.push([locale, forwardLeft]);
         }
+        
       }
 
       if (arr.includes(forwardRight)) {
+        // get array of the end items of each of "paths" sub-arrays     
         const pathEnds = getPathEnds(paths);
-        const localeMatchPathEndIndex = pathEnds.indexOf(locale);  
-        if (localeMatchPathEndIndex >= 0) {          
-          paths[localeMatchPathEndIndex].push(forwardRight);
+        // get the index of the path-end value that matches "locale"
+        const pathEndIndexOfLocale = pathEnds.indexOf(locale);
+        // check to see if pathEndIndexOfLocale exists –– does locale match a path's end value?
+        if (pathEndIndexOfLocale >= 0) {
+          // if it does, push "forwardLeft" onto the end of the subarray of paths at index "pathEndIndexOfLocale"
+          paths[pathEndIndexOfLocale].push(forwardRight);
+          // otherwise, check if the locale exists embedded in one or more already-built paths
         } else if (localeMatchPreexistingEmbeddedPathIndexes[0]) {
+          // if it does,
           localeMatchPreexistingEmbeddedPathIndexes.forEach(item => {
+            // for each matching path index, create a copy of that path ending at the locale-index
             const newPathWithCopiedBase = paths[item.pathI].slice(0, item.localeIndex);
+            // then, push the merged copy and locale array to paths
             paths.push([...newPathWithCopiedBase, locale]);
           });
+          // otherwise, if we are more than one out from the start
+        } else if (forwardLeft - forward.left != arr[0]) {
+          // create a new copy and push forwardLeft onto it
+          // TODO: account for multiple paths to slice
+          const newPathWithCopiedBase = paths[0].slice(0, -1);
+          paths.push([...newPathWithCopiedBase, forwardRight]);
         } else {
+          // push a new array [0] = locale, [1] = forwardLeft to paths
           paths.push([locale, forwardRight]);
         }
       }
