@@ -1,7 +1,7 @@
 const move = ( ({canvas}, templates, board, moveFinder, bi) => {  
 
-  const game = board.startNewGame(templates.extremeConvergeDiverge);
-  console.log(game);
+  const game = board.startNewGame(templates.standard);
+  // console.log(game);
   
   canvas.addEventListener('mousedown', handleMouseDown);
 
@@ -33,13 +33,13 @@ const move = ( ({canvas}, templates, board, moveFinder, bi) => {
       const validMove = moveFinder.isValidMove(pieceEnd, valid);
       if (validMove) {
         clickedPiece.snapToTile(pieceEnd.tile);
-        // bi.removeValidMovesHiliting(valid, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
+        bi.removeValidMovesHiliting(valid, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
         game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-        // bi.removeValidMovesHiliting(valid, game);
+        bi.removeValidMovesHiliting(valid, game);
       } 
       
     }
