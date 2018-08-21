@@ -75,12 +75,9 @@ const PATH_BUILDER = (() => {
           const newPathWithCopiedBase = paths[0].slice(0, -1);
           paths.push([...newPathWithCopiedBase, locale, forwardLeft]);
         } else {
-          // push a new array [0] = locale, [1] = forwardLeft to paths
-          
-          
+          // push a new array [0] = locale, [1] = forwardLeft to paths 
           paths.push([locale, forwardLeft]);
         }
-        
       }
 
       if (arr.includes(forwardRight)) {
@@ -118,9 +115,7 @@ const PATH_BUILDER = (() => {
           paths.push([locale, forwardRight]);
         }
       }
-
     });
-    
     return paths;
   }
 
