@@ -47,9 +47,9 @@ const PATH_BUILDER = (() => {
       if (arr.includes(forwardLeft)) {
         // get array of the end items of each of "paths" sub-arrays     
         const pathEnds = getPathEnds(paths);
-        // get the index of the path-end value that matches "locale"
+        // get the index of the pathEnds value that matches "locale"
         const pathEndIndexOfLocale = pathEnds.indexOf(locale);
-        // check to see if pathEndIndexOfLocale exists –– does locale match a path's end value?
+        // check to see if pathEndIndexOfLocale exists –– does "locale" match a path's end value?
         if (pathEndIndexOfLocale >= 0) {
           // if it does, push "forwardLeft" onto the end of the subarray of paths at index "pathEndIndexOfLocale"
           paths[pathEndIndexOfLocale].push(forwardLeft);
@@ -59,8 +59,14 @@ const PATH_BUILDER = (() => {
           localeMatchPreexistingEmbeddedPathIndexes.forEach(item => {
             // for each matching path index, create a copy of that path ending at the locale-index
             const newPathWithCopiedBase = paths[item.pathI].slice(0, item.localeIndex);
-            // then, push the merged copy and locale array to paths
-            paths.push([...newPathWithCopiedBase, locale]);
+            // check if the last item in the merged copy plus "forward.right" equals the "locale" value
+            if (newPathWithCopiedBase.slice(-1)[0] + forward.left == locale) {
+               // if it does, push an array containing the merged copy, "locale" and "forwardLeft" values on the end to paths
+              paths.push([...newPathWithCopiedBase, locale, forwardLeft]);
+            } else {
+              // otherwise, push an array containing the merged copy and locale on the end to paths
+              paths.push([...newPathWithCopiedBase, locale]);
+            }
           });
           // otherwise, if we are more than one out from the start
         } else if (forwardLeft - forward.left != arr[0]) {
@@ -70,6 +76,8 @@ const PATH_BUILDER = (() => {
           paths.push([...newPathWithCopiedBase, locale, forwardLeft]);
         } else {
           // push a new array [0] = locale, [1] = forwardLeft to paths
+          
+          
           paths.push([locale, forwardLeft]);
         }
         
@@ -78,7 +86,7 @@ const PATH_BUILDER = (() => {
       if (arr.includes(forwardRight)) {
         // get array of the end items of each of "paths" sub-arrays     
         const pathEnds = getPathEnds(paths);
-        // get the index of the path-end value that matches "locale"
+        // get the index of the pathEnds value that matches "locale"
         const pathEndIndexOfLocale = pathEnds.indexOf(locale);
         // check to see if pathEndIndexOfLocale exists –– does locale match a path's end value?
         if (pathEndIndexOfLocale >= 0) {
@@ -90,8 +98,14 @@ const PATH_BUILDER = (() => {
           localeMatchPreexistingEmbeddedPathIndexes.forEach(item => {
             // for each matching path index, create a copy of that path ending at the locale-index
             const newPathWithCopiedBase = paths[item.pathI].slice(0, item.localeIndex);
-            // then, push the merged copy and locale array to paths
-            paths.push([...newPathWithCopiedBase, locale]);
+            // check if the last item in the merged copy plus "forward.right" equals the "locale" value
+            if (newPathWithCopiedBase.slice(-1)[0] + forward.right == locale) {    
+              // if it does, push an array containing the merged copy, "locale" and "forwardRight" values on the end to paths
+              paths.push([...newPathWithCopiedBase, locale, forwardRight]);
+            } else {
+              // otherwise, push an array containing the merged copy and locale on the end to paths              
+              paths.push([...newPathWithCopiedBase, locale]);
+            }
           });
           // otherwise, if we are more than one out from the start
         } else if (forwardLeft - forward.left != arr[0]) {
