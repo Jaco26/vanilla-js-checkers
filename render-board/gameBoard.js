@@ -1,4 +1,4 @@
-const gameBoard = ((canvas, tiles, pieces) => {
+const GAMEBOARD = ((canvas, tiles, pieces) => {
 
   class Game {
     constructor(canvas, setupTemplate, tilesModule, piecesModule) {
@@ -86,4 +86,4 @@ const gameBoard = ((canvas, tiles, pieces) => {
     startNewGame
   }
 
-})(canvas, gameBoardTiles, gameBoardPieces);
+})(canvas, GAMEBOARD_TILES, gameBoardPieces);

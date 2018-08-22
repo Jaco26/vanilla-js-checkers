@@ -1,4 +1,4 @@
-const move = ( ({canvas}, templates, board, moveFinder, bi) => {  
+const move = ( ({canvas}, templates, board, moveFinder, bi, moveResults) => {  
 
   const game = board.startNewGame(templates.standard);
   console.log(game);
@@ -32,6 +32,7 @@ const move = ( ({canvas}, templates, board, moveFinder, bi) => {
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
       const validMove = moveFinder.isValidMove(pieceEnd, valid);
       if (validMove) {
+        moveResults.getValidPathTraveled(clickedPiece, valid, game); // determine which path the piece took
         clickedPiece.snapToTile(pieceEnd.tile);
         bi.removeValidMovesHiliting(valid, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
         game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
@@ -45,4 +46,4 @@ const move = ( ({canvas}, templates, board, moveFinder, bi) => {
     }
   }
 
-})(canvas, SETUP_TEMPLATES, gameBoard, moveFinder, boardInteraction);
+})(canvas, SETUP_TEMPLATES, GAMEBOARD, moveFinder, boardInteraction, MOVE_RESULTS);

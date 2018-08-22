@@ -1,6 +1,16 @@
-const tilesTraveled = ((utils, SimplePath) => {
+const TILES_TRAVELED = ((utils) => {
   const { flatten } = utils;
   
+  const tileIsDark = (tile) => {
+    return (tile 
+      && Number(tile.index2d[0]) % 2 !== 0
+      && Number(tile.index2d[1]) % 2 === 0) 
+      || (tile 
+      && Number(tile.index2d[0]) % 2 === 0 
+      && Number(tile.index2d[1]) % 2 !== 0);
+  }
+      
+
   function getTilesPerPathPoint(path, tiles) {
      let flatTiles = flatten(tiles);
      return path.reduce((a, point) => {
@@ -16,30 +26,24 @@ const tilesTraveled = ((utils, SimplePath) => {
   }
 
   function getTileLocations(tilesPerPathPoint) {
-    return tilesPerPathPoint.map(tile => {
-      return tile && tile.color == '#444444' ? tile.index2d : null;
-    }).filter(item => item);
+    const result = tilesPerPathPoint
+      .map(tile => tileIsDark(tile) ? tile.index2d : '')
+      .filter(item => item);
+    return [...new Set(result)];
   }
 
   function getTilesTraveled(path, tiles) {
      let tilesPerPathPoint = getTilesPerPathPoint(path, tiles);
      let tileLocations = getTileLocations(tilesPerPathPoint);
-     let tilesTraveled = tileLocations.reduce((a, tile, index, arr) => {
-       if (tile == arr[index + 1]) {
-         return a;
-       }
+     return tileLocations.reduce((a, tile, index, arr) => {
        a.push(tile);
        return a;
      }, []);
-     let simplePath = SimplePath.getSimplePath(tilesTraveled, tiles);
-     return {
-       tilesTraveled,
-       simplePath
-     }
+   
   }
 
   return {
     getTilesTraveled
   };
 
-})(utils, SimplePath);
+})(utils);

@@ -1,4 +1,4 @@
-const gameBoardTiles = (() => {
+const GAMEBOARD_TILES = (() => {
   
   class Tile {
     constructor(x, y, canvasWidth, canvasHeight, color, label, index2d) {
