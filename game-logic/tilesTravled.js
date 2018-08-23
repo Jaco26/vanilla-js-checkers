@@ -10,7 +10,6 @@ const TILES_TRAVELED = ((utils) => {
       && Number(tile.index2d[1]) % 2 !== 0);
   }
       
-
   function getTilesPerPathPoint(path, tiles) {
      let flatTiles = flatten(tiles);
      return path.reduce((a, point) => {
