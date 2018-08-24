@@ -1,6 +1,6 @@
 const move = ( ({canvas}, templates, board, moveFinder, bi, moveResults) => {  
 
-  const game = board.startNewGame(templates.standard);
+  const game = board.startNewGame(templates.cornerLeft);
   console.log(game);
   
   canvas.addEventListener('mousedown', handleMouseDown);

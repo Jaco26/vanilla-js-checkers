@@ -116,7 +116,7 @@ const PATH_BUILDER = (() => {
         }
       }
     });
-    return paths;
+    return paths.map(path => path.map(item => item.toString()));
   }
 
   function buildPath(clickedPiece, pieceStart, moves) {

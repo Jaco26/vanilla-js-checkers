@@ -2,12 +2,15 @@ const MOVE_RESULTS = ((tilesTraveled) => {
 
   function comparePaths(realPath, validPaths) {
     console.log('tiles traveled', realPath);
-    // console.log(validPaths);
-    const bestPath = validPaths.reduce((bestPathSoFar, potentialPath) => {
-      realPath.forEach(tile => {
-
-      });
+    const bestPath = realPath.reduce((possiblePaths, tile) => {
+      if (possiblePaths[0]) {
+        possiblePaths = possiblePaths.filter(path => path.indexOf(tile) >= 0);
+      } else {
+        possiblePaths = validPaths.filter(path => path.indexOf(tile) >= 0);
+      }
+      return possiblePaths;
     }, []);
+    console.log('best path', bestPath);
   }
 
   function getValidPathTraveled(clickedPiece, valid, game) {
