@@ -52,14 +52,19 @@ const MOVE_RESULTS = ((tilesTraveled) => {
     // slice all possibly-intended paths at the index of the end value of the realPath
     const slicedBestPaths = bestPaths.map(path => path.slice(0, path.indexOf(realPath[realPath.length - 1]) + 1));
     console.log('sliced possible paths intended by the user \n', slicedBestPaths);
-    
-    // then, compare the sliced best paths to get the actual valid path intended...
-    
-    // if there is only one "bestPath", return the portion of it that was traveled
-    if (bestPaths.length === 1) {
-
+    // then, out of the slicedBestPaths, find the unique ones
+    const pathsToStrings = slicedBestPaths.map(path => path.toString());
+    const uniquePaths = [...new Set(pathsToStrings)];
+    // if there is only one "bestPath", remove opponents pieces that lay along it
+    if (uniquePaths.length === 1) {
+      const joinedPath = uniquePaths[0].split(',');
+      console.log(joinedPath);
+      
     } else {
-
+      // handle multiple possible intended paths...
+      // - prompt the user for clarification...somehow
+      alert(`Oops sorry! We\'re not quite sure which path you meant to take!\n 
+      Please redo your move and move the piece more closely along the path you intend`)
     }
     
   }
