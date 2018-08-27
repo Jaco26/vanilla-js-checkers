@@ -46,8 +46,13 @@ const MOVE_RESULTS = ((tilesTraveled) => {
     const matchScore = getMatchScore(realPath, validPaths);
     // get the best-match paths based on the "matchScore"
     const bestPaths = getBestPaths(matchScore, validPaths);
-    console.log('possible valid path(s) intended', bestPaths);
-    
+    console.log('real path traveled', realPath)
+    console.log('possible valid path(s) intended by user \n', bestPaths);
+
+    // slice all possibly-intended paths at the index of the end value of the realPath
+    const slicedBestPaths = bestPaths.map(path => path.slice(0, path.indexOf(realPath[realPath.length - 1]) + 1));
+    // then, compare the sliced best paths to get the actual valid path intended...
+      
     // if there is only one "bestPath", return the portion of it that was traveled
     if (bestPaths.length === 1) {
 
