@@ -51,8 +51,10 @@ const MOVE_RESULTS = ((tilesTraveled) => {
 
     // slice all possibly-intended paths at the index of the end value of the realPath
     const slicedBestPaths = bestPaths.map(path => path.slice(0, path.indexOf(realPath[realPath.length - 1]) + 1));
+    console.log('sliced possible paths intended by the user \n', slicedBestPaths);
+    
     // then, compare the sliced best paths to get the actual valid path intended...
-      
+    
     // if there is only one "bestPath", return the portion of it that was traveled
     if (bestPaths.length === 1) {
 
