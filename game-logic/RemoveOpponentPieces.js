@@ -5,7 +5,7 @@ const REMOVE_OPPONENT_PIECES = (() => {
     const opponentPiecesToRemove = validPathTaken.filter(tile => {
       return possible.moves.filter(move => move.locale === tile && move.contents === 'opponent');
     }); 
-    game.removePieces(player, opponentPiecesToRemove);
+    game.removeOpponentPieces(player, opponentPiecesToRemove);
   }
 
   return {

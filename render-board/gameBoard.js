@@ -67,19 +67,14 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       })[0];
     }
 
-    removePieces(player, opponentPiecesToRemove) {
-      const opponentPieces = player === 'p1' ? this.p2Pieces : this.p1Pieces;  
-      opponentPieces.forEach((piece, i) => {
-        if (opponentPiecesToRemove.includes(piece.location)) {
-          opponentPieces.splice(i, 1);
+    removeOpponentPieces(player, opponentPiecesToRemove) {      
+      const opponentPieces = player === 'p1' ? this.p2Pieces : this.p1Pieces;
+      opponentPiecesToRemove.forEach(piece => {
+        const indexOfPieceToRemove = opponentPieces.map(piece => piece.location).indexOf(piece);
+        if (indexOfPieceToRemove > -1) {
+          opponentPieces.splice(indexOfPieceToRemove, 1);
         }
       });
-      // const playersPieces = pieceColors[color] == pieceColors.dark
-      //   ? 'p2Pieces'
-      //   : 'p1Pieces';
-      // this[playersPieces] = this[playersPieces].filter(piece => {
-      //   return piece.id != id;
-      // });
     }
 
     reRenderPieces() {
