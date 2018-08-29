@@ -1,6 +1,6 @@
 const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOppPcs) => {  
 
-  const game = board.startNewGame(templates.extremeConvergeDiverge);
+  const game = board.startNewGame(templates.standard);
   console.log(game);
   
   canvas.addEventListener('mousedown', handleMouseDown);
