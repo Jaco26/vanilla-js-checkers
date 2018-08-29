@@ -67,8 +67,8 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       })[0];
     }
 
-    removeOpponentPieces(player, opponentPiecesToRemove) {      
-      const opponentPieces = player === 'p1' ? this.p2Pieces : this.p1Pieces;
+    removeOpponentPieces(movedPiece, opponentPiecesToRemove) {      
+      const opponentPieces = movedPiece.player === 'p1' ? this.p2Pieces : this.p1Pieces;
       opponentPiecesToRemove.forEach(piece => {
         const indexOfPieceToRemove = opponentPieces.map(piece => piece.location).indexOf(piece);
         if (indexOfPieceToRemove > -1) {

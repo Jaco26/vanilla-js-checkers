@@ -7,12 +7,12 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
-    const valid = moveFinder.getValidMoves(clickedPiece, game);  
-    bi.highlightValidPaths(valid, game);
+    const possible = moveFinder.getValidMoves(clickedPiece, game);  
+    bi.highlightValidPaths(possible, game);
          
     const pieceStart = clickedPiece.getCurrentLocation(game);
 
-    console.log(valid);
+    console.log(possible);
     
     if (clickedPiece) {
       clickedPiece.setPathEmpty(); 
@@ -30,25 +30,26 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
       const pieceEnd = clickedPiece.getCurrentLocation(game);    
-      const validMove = moveFinder.isValidMove(pieceEnd, valid);
+      const validMove = moveFinder.isValidMove(pieceEnd, possible);
       if (validMove) {
-        const pathTaken = validPathTaken.getValidPathTraveled(clickedPiece, valid, game); // determine which path the piece took
+        const pathTaken = validPathTaken.getValidPathTraveled(clickedPiece, possible, game); // determine which path the piece took
         if (pathTaken) {
-          rmOppPcs.removeOpponentPieces(clickedPiece, pathTaken, valid, game);
+          const piecesToRemove = rmOppPcs.getOpponentPiecesToRemove(pathTaken, possible);
+          game.removeOpponentPieces(clickedPiece, piecesToRemove)
           clickedPiece.snapToTile(pieceEnd.tile);
-          bi.removeValidMovesHiliting(valid, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
+          bi.removeValidMovesHiliting(possible, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
           game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
           game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
         } else {
           // TODO: find way to get rid of this repeating code. Me want DRY not WET
           clickedPiece.snapToTile(pieceStart.tile);
           clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-          bi.removeValidMovesHiliting(valid, game);
+          bi.removeValidMovesHiliting(possible, game);
         }
       } else {
         clickedPiece.snapToTile(pieceStart.tile);
         clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-        bi.removeValidMovesHiliting(valid, game);
+        bi.removeValidMovesHiliting(possible, game);
       } 
       
     }
