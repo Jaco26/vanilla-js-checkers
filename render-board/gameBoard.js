@@ -21,6 +21,10 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       piecesModule.drawPieces(canvas, [...this.p1Pieces, ...this.p2Pieces]);
       this.mapGameBoard();
     }
+
+    mergePlayerPieceArrays() {
+      return [...this.p1Pieces, ...this.p2Pieces];
+    }
     
     mapGameBoard() {
       const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
@@ -54,10 +58,8 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       });
     }
 
-
-
     clickedPiece(e) {
-      return [...this.p1Pieces, ...this.p2Pieces].filter(piece => {
+      return this.mergePlayerPieceArrays().filter(piece => {
         return piece.x + piece.radius > e.offsetX
           && piece.x - piece.radius < e.offsetX
           && piece.y + piece.radius > e.offsetY
@@ -65,13 +67,19 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       })[0];
     }
 
-    removePiece({ id }) {
-      const playersPieces = pieceColors[color] == pieceColors.dark
-        ? 'p2Pieces'
-        : 'p1Pieces';
-      this[playersPieces] = this[playersPieces].filter(piece => {
-        return piece.id != id;
+    removePieces(player, opponentPiecesToRemove) {
+      const opponentPieces = player === 'p1' ? this.p2Pieces : this.p1Pieces;  
+      opponentPieces.forEach((piece, i) => {
+        if (opponentPiecesToRemove.includes(piece.location)) {
+          opponentPieces.splice(i, 1);
+        }
       });
+      // const playersPieces = pieceColors[color] == pieceColors.dark
+      //   ? 'p2Pieces'
+      //   : 'p1Pieces';
+      // this[playersPieces] = this[playersPieces].filter(piece => {
+      //   return piece.id != id;
+      // });
     }
 
     reRenderPieces() {

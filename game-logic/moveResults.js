@@ -1,4 +1,4 @@
-const MOVE_RESULTS = ((tilesTraveled) => {
+const VALID_PATH_TAKEN = ((tilesTraveled) => {
   
   function getBestPaths(matchScoreObj, validPaths) {    
     const highScore = Math.max(...Object.values(matchScoreObj));
@@ -46,20 +46,20 @@ const MOVE_RESULTS = ((tilesTraveled) => {
     const matchScore = getMatchScore(realPath, validPaths);
     // get the best-match paths based on the "matchScore"
     const bestPaths = getBestPaths(matchScore, validPaths);
-    console.log('real path traveled', realPath)
-    console.log('possible valid path(s) intended by user \n', bestPaths);
+    // console.log('real path traveled', realPath)
+    // console.log('possible valid path(s) intended by user \n', bestPaths);
 
     // slice all possibly-intended paths at the index of the end value of the realPath
     const slicedBestPaths = bestPaths.map(path => path.slice(0, path.indexOf(realPath[realPath.length - 1]) + 1));
-    console.log('sliced possible paths intended by the user \n', slicedBestPaths);
+    // console.log('sliced possible paths intended by the user \n', slicedBestPaths);
     // then, out of the slicedBestPaths, find the unique ones
     const pathsToStrings = slicedBestPaths.map(path => path.toString());
     const uniquePaths = [...new Set(pathsToStrings)];
     // if there is only one "bestPath", remove opponents pieces that lay along it
     if (uniquePaths.length === 1) {
       const joinedPath = uniquePaths[0].split(',');
-      console.log(joinedPath);
-      
+      // console.log(joinedPath);
+      return joinedPath;
     } else {
       // handle multiple possible intended paths...
       // - prompt the user for clarification...somehow
