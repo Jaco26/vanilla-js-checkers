@@ -39,6 +39,7 @@ const gameBoardPieces = (() => {
             && this.y > tile.y
             && this.y < tile.y + tile.height
       })[0];
+      if (!this.tile) return; // IMPORTANT: handle pieces being dropped on the exact intersection of two or more tiles
       this.location = this.tile.index2d;
       return {
         location: this.location, 
