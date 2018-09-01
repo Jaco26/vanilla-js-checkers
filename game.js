@@ -46,6 +46,7 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
             bi.removeValidMovesHiliting(possible, game); // IMPORTANT: remove valid-tile hilighting and redraw the game pieces to see the dropped piece "snap" to tile
             game.drawPath(clickedPiece.path); // draw small squares reperesenting the piece's path as it was dragged along the board
             game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
+            game.saveTurn(clickedPiece, pathTaken);
           } else {
             // TODO: find way to get rid of this repeating code. Me want DRY not WET
             clickedPiece.snapToTile(pieceStart.tile);

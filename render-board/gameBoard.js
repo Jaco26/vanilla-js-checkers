@@ -12,6 +12,7 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       this.p1Pieces = piecesModule.createPlayerPieces(this.tiles, setupTemplate, this.pieceClrs, 1);
       this.p2Pieces = piecesModule.createPlayerPieces(this.tiles, setupTemplate, this.pieceClrs, 2);
       this.history = [];
+      this.turns = [];
 
       this.createTiles = tilesModule.createTiles;
       this.drawTiles = tilesModule.drawTiles;
@@ -22,12 +23,25 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       this.mapGameBoard();
     }
 
+    saveTurn({ player, id }, move) {      
+      const piecesRemaining = this[`${player}Pieces`].map(piece => ({
+        id: piece.id,
+        pieceLocation: piece.location,
+      }));
+      this.turns.push({
+        player,
+        move,
+        pieceId: id,
+        piecesRemaining,
+      });
+    }
+
     mergePlayerPieceArrays() {
       return [...this.p1Pieces, ...this.p2Pieces];
     }
     
     mapGameBoard() {
-      const allPieces = [...this.p1Pieces, ...this.p2Pieces];      
+      const allPieces = this.mergePlayerPieceArrays();      
       const currentMap = this.tiles.reduce((outerArray, innerTileArr) => {        
         outerArray = [...outerArray, innerTileArr.reduce((a, currentTile, index) => {
           let piece = currentTile.hasPiece(allPieces);
