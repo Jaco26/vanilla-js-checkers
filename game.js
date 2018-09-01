@@ -32,9 +32,7 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
       const pieceEnd = clickedPiece.getCurrentLocation(game);
       if (!pieceEnd) { // if piece is dropped on the exact intersection of two or more tiles
         console.log('Piece was dropped on exact intersection of tiles')
-        clickedPiece.snapToTile(pieceStart.tile);
-        clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-        bi.removeValidMovesHiliting(possible, game);
+        handleInvalidMove(clickedPiece, pieceStart, possible);
       } else {
         const validMove = moveFinder.isValidMove(pieceEnd, possible);
         if (validMove) {
@@ -48,18 +46,19 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
             game.mapGameBoard(); // IMPORTANT: must be called after clickedPiece position-change is registered by clickedPiece.snapToTile
             game.saveTurn(clickedPiece, pathTaken);
           } else {
-            // TODO: find way to get rid of this repeating code. Me want DRY not WET
-            clickedPiece.snapToTile(pieceStart.tile);
-            clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-            bi.removeValidMovesHiliting(possible, game);
+            handleInvalidMove(clickedPiece, pieceStart, possible);
           }
         } else {
-          clickedPiece.snapToTile(pieceStart.tile);
-          clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
-          bi.removeValidMovesHiliting(possible, game);
+          handleInvalidMove(clickedPiece, pieceStart, possible);
         } 
       }   
     }
+  }
+
+  function handleInvalidMove(clickedPiece, pieceStart, possibleMoves) {
+    clickedPiece.snapToTile(pieceStart.tile);
+    clickedPiece.getCurrentLocation(game); // IMPORTANT: reset location of clicked piece
+    bi.removeValidMovesHiliting(possibleMoves, game);
   }
 
 })(canvas, SETUP_TEMPLATES, GAMEBOARD, moveFinder, boardInteraction, VALID_PATH_TAKEN, REMOVE_OPPONENT_PIECES);
