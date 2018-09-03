@@ -7,18 +7,20 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
-    const possible = moveFinder.getValidMoves(clickedPiece, game);  
-    bi.highlightValidPaths(possible, game);
-         
-    const pieceStart = clickedPiece.getCurrentLocation(game);
-
-    console.log(possible);
     
-    if (clickedPiece) {
+    let possible, pieceStart;
+
+    if (clickedPiece && clickedPiece.player === game.whoseTurn()) {
       clickedPiece.setPathEmpty(); 
       canvas.addEventListener('mousemove', handleMousemove);
       canvas.addEventListener('mouseup', handleMouseup);
+      possible = moveFinder.getValidMoves(clickedPiece, game);
+      pieceStart = clickedPiece.getCurrentLocation(game);
+
+      bi.highlightValidPaths(possible, game);
     }   
+
+    console.log(possible);
 
     function handleMousemove(e) {
       clickedPiece.changePosition(e);

@@ -23,6 +23,15 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
       this.mapGameBoard();
     }
 
+    whoseTurn() {
+      if (this.turns.length > 0) {
+        return this.turns[this.turns.length - 1].player === 'p1'
+          ? 'p2'
+          : 'p1'
+      }
+      return 'p1';
+    }
+
     saveTurn({ player, id }, move) {      
       const piecesRemaining = this[`${player}Pieces`].map(piece => ({
         id: piece.id,
