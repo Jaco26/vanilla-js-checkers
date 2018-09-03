@@ -63,8 +63,7 @@ const VALID_PATH_TAKEN = ((tilesTraveled) => {
     } else {
       // handle multiple possible intended paths...
       // - prompt the user for clarification...somehow
-      alert(`Oops sorry! We\'re not quite sure which path you meant to take!\n 
-      Please redo your move and move the piece more closely along the path you intend`)
+      alert(`Oops sorry! We\'re not quite sure which path you meant to take!\n\nPlease redo your move and move the piece more closely along the path you intend.`)
     }
     
   }

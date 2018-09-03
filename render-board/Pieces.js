@@ -1,4 +1,12 @@
-const gameBoardPieces = (() => {
+const gameBoardPieces = ((utils) => {
+  
+  const flattenArray = (array) => {
+    return array.reduce((a, b) => {
+      a = [...a, ...b];
+      return a;
+    }, []);
+  };
+  
   class Piece {
     constructor(player, location, id, x, y, radius, color) {
       this.player = player;
@@ -52,13 +60,6 @@ const gameBoardPieces = (() => {
       this.x = this.tile.x + (this.tile.width / 2);
       this.y = this.tile.y + (this.tile.height / 2);
     }
-  };
- 
-  const flattenArray = (array) => {
-    return array.reduce( (a, b) => {
-      a = [...a, ...b];
-      return a;
-    }, []);
   };
 
   const mapTemplate = (template, playerNum) => {

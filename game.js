@@ -1,6 +1,6 @@
 const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOppPcs) => {  
 
-  const game = board.startNewGame(templates.standard);
+  const game = board.startNewGame(templates.extremeConvergeDiverge);
   console.log(game);
   
   canvas.addEventListener('mousedown', handleMouseDown);
@@ -16,11 +16,15 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
       canvas.addEventListener('mouseup', handleMouseup);
       possible = moveFinder.getValidMoves(clickedPiece, game);
       pieceStart = clickedPiece.getCurrentLocation(game);
-
       bi.highlightValidPaths(possible, game);
     }   
-
-    console.log(possible);
+    
+    if (possible) {
+      console.log(`Possible moves and paths for ${clickedPiece.player}:`, possible);
+    } else if (clickedPiece) {
+      console.log(`It is not ${clickedPiece.player}'s turn!`);
+    }
+   
 
     function handleMousemove(e) {
       clickedPiece.changePosition(e);

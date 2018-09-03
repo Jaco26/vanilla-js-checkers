@@ -45,4 +45,4 @@ const TILES_TRAVELED = ((utils) => {
     getTilesTraveled
   };
 
-})(utils);
+})(UTILS);

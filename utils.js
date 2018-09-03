@@ -1,4 +1,4 @@
-const utils = ( () => {
+const UTILS = ( () => {
 
   const flatten = (array, nLevels = 1) => {
     if (array.constructor != Array) throw new Error('The value provided as the `array` argument is not an Array, please pass in an Array');

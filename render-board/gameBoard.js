@@ -25,7 +25,7 @@ const GAMEBOARD = ((canvas, tiles, pieces) => {
 
     whoseTurn() {
       if (this.turns.length > 0) {
-        return this.turns[this.turns.length - 1].player === 'p1'
+        return this.turns.slice(-1)[0].player === 'p1'
           ? 'p2'
           : 'p1'
       }
