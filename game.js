@@ -35,7 +35,7 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
     function handleMouseup(e) {
       canvas.removeEventListener('mousemove', handleMousemove);
       canvas.removeEventListener('mouseup', handleMouseup);
-      const pieceEnd = clickedPiece.getCurrentLocation(game);
+      const pieceEnd = clickedPiece.getCurrentLocation(game);      
       if (!pieceEnd) { // if piece is dropped on the exact intersection of two or more tiles
         console.log('Piece was dropped on exact intersection of tiles')
         handleInvalidMove(clickedPiece, pieceStart, possible);

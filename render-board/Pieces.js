@@ -49,10 +49,19 @@ const gameBoardPieces = ((utils) => {
       })[0];
       if (!this.tile) return; // IMPORTANT: handle pieces being dropped on the exact intersection of two or more tiles
       this.location = this.tile.index2d;
+      this.checkIfOnBackRow();
       return {
         location: this.location, 
         tile: this.tile
       };
+    }
+
+    checkIfOnBackRow() {
+      if (this.isKing) return;
+      const kingCondition = this.player === 'p1' ? '0' : '7';
+      if (this.location.startsWith(kingCondition)) {
+        this.isKing = true;
+      }
     }
 
     snapToTile (tile = {}) {      
