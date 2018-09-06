@@ -36,8 +36,6 @@ const moveFinder = ((pathBuilder) => {
     const row = Number(tileIndex[0]);
     const col = Number(tileIndex[1]);
     if (outOfBounds(row) || outOfBounds(col)) return;
-    // console.log('lookLeft', options.lookLeft, 'lookRight', options.lookRight);
-    // console.log('Now examining tile index', tileIndex, 'forkcount', options.forkCount); // IMPORTANT: Keep this here, info could be helpful in building path tree       
     const occupant = board[row][col];
     const contents = tileContent(occupant, player);    
     if (contents) {
@@ -49,12 +47,10 @@ const moveFinder = ((pathBuilder) => {
   }
 
   function fork(moves, origin, options) {
-    options.forkCount += 1;
-
-    options.lookLeft += 1;
+    console.log(options);
+    
     let nextRowLeft = getTileNRowsAhead(origin, 1, 'left', options);
     if (nextRowLeft && nextRowLeft.contents == 'opponent') {
-      options.lookLeft += 1;
       let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
       if (possibleJumpIsValid(possibleJump)) {
         moves.push(nextRowLeft, possibleJump);
@@ -64,10 +60,8 @@ const moveFinder = ((pathBuilder) => {
       moves.push(nextRowLeft);
     } 
 
-    options.lookRight += 1;
     let nextRowRight = getTileNRowsAhead(origin, 1, 'right', options);
     if (nextRowRight && nextRowRight.contents == 'opponent') {
-      options.lookRight += 1;
       let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
       if (possibleJumpIsValid(possibleJump)) {
         moves.push(nextRowRight, possibleJump);
@@ -84,9 +78,7 @@ const moveFinder = ((pathBuilder) => {
       root: origin,
       board: game.history[game.history.length - 1],
       player: clickedPiece.player,
-      forkCount: 0, // HELPFUL: track the number of times the fork() method is invoked
-      lookLeft: 0,
-      lookRight: 0,
+      isKing: clickedPiece.isKing,
     };
     const moves = [];
     fork(moves, origin, options);    
