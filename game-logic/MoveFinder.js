@@ -18,20 +18,27 @@ const moveFinder = ((pathBuilder) => {
     }
   }
 
-  function getOriginModifier(nRows, player, colDirection) {
+  function getOriginModifierForward(nRows, player, colDirection) {
     if (player == 'p1') return (colDirection == 'right' ? -9 : -11) * nRows;
     if (player == 'p2') return (colDirection == 'right' ? 11 : 9) * nRows;
   }
 
-  function getTileIndex(origin, nRows, player, colDirection) {
-    let initial = (Number(origin) + getOriginModifier(nRows, player, colDirection)).toString();
+  function getOriginModifierBackward(nRows, player, colDirection) {
+    if (player == 'p1') return (colDirection == 'right' ? -11 : -9) * nRows;
+    if (player == 'p2') return (colDirection == 'right' ? 9 : 11) * nRows;
+  }
+
+  function getTileIndex(origin, nRows, player, colDirection, forward) {
+    let initial = forward
+      ? (Number(origin) + getOriginModifierForward(nRows, player, colDirection)).toString()
+      : (Number(origin) + getOriginModifierBackward(nRows, player, colDirection)).toString();    
     let secondary = initial.length == 2 ? initial : '0' + initial;
     return Number(secondary) > 0 ? secondary : null;
   }
 
-  function getTileNRowsAhead(origin, nRows, colDirection, options) {
+  function getTileNRowsAhead(origin, nRows, colDirection, options, forward) {
     const { board, player } = options;
-    const tileIndex = getTileIndex(origin, nRows, player, colDirection);   
+    const tileIndex = getTileIndex(origin, nRows, player, colDirection, forward);    
     if (!tileIndex) return; 
     const row = Number(tileIndex[0]);
     const col = Number(tileIndex[1]);
@@ -46,9 +53,7 @@ const moveFinder = ((pathBuilder) => {
     }
   }
 
-  function fork(moves, origin, options) {
-    console.log(options);
-    
+  function fork(moves, origin, options) {    
     let nextRowLeft = getTileNRowsAhead(origin, 1, 'left', options);
     if (nextRowLeft && nextRowLeft.contents == 'opponent') {
       let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
@@ -60,6 +65,18 @@ const moveFinder = ((pathBuilder) => {
       moves.push(nextRowLeft);
     } 
 
+    // let backRowLeft = getTileNRowsAhead(origin, -1, 'left', options);
+    // if (backRowLeft && backRowLeft.contents == 'opponent') {
+    //   let possibleJump = getTileNRowsAhead(origin, 2, 'left', options);
+    //   if (possibleJumpIsValid(possibleJump)) {
+    //     moves.push(backRowLeft, possibleJump);
+    //     fork(moves, possibleJump.locale, options);
+    //   }
+    // } else if (nextRowIsOneOutFromRoot(backRowLeft, options) && backRowLeft.contents == 'empty') {
+    //   moves.push(backRowLeft);
+    // } 
+
+
     let nextRowRight = getTileNRowsAhead(origin, 1, 'right', options);
     if (nextRowRight && nextRowRight.contents == 'opponent') {
       let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
@@ -70,6 +87,18 @@ const moveFinder = ((pathBuilder) => {
     } else if (nextRowIsOneOutFromRoot(nextRowRight, options) && nextRowRight.contents == 'empty') {
       moves.push(nextRowRight);
     } 
+
+    // let backRowRight = getTileNRowsAhead(origin, -1, 'right', options);
+    // if (backRowRight && backRowRight.contents == 'opponent') {
+    //   let possibleJump = getTileNRowsAhead(origin, 2, 'right', options);
+    //   if (possibleJumpIsValid(possibleJump)) {
+    //     moves.push(backRowRight, possibleJump);
+    //     fork(moves, possibleJump.locale, options);
+    //   }
+    // } else if (nextRowIsOneOutFromRoot(backRowRight, options) && backRowRight.contents == 'empty') {
+    //   moves.push(backRowRight);
+    // } 
+
   }
 
   function getValidMoves(clickedPiece, game) {
