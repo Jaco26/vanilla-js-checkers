@@ -1,18 +1,12 @@
 const STARFISH = (() => {
 
-  function Base10MatrixNode(value) {
-    this.value = value;
-    this.downLeft = {
-      value: value + 9,
-    };
-    this.downRight = {
-      value: value + 11,
-    };
-    this.upLeft = {
-      value: value - 11,
-    };
-    this.upRight = {
-      value: value - 9,
+  function makeMatrixNode(value) {
+    return {
+      downLeft: { value: value + 9 },
+      downRight: { value: value + 11 },
+      upLeft: { value: value - 11 },
+      upRight: { value: value - 9 },
+      value: value,
     };
   }
 
@@ -23,27 +17,27 @@ const STARFISH = (() => {
       // go down again
       injectAtLowestLevelOf(thisLevel, targetPropName);
     } else {
-      // we're at the bottom. set the new prop with the passed-in value
-      console.log(thisLevel);
+      // we're at the bottom. set the new prop with the passed-in value     
+      // console.log(thisLevel);
+      thisLevel[targetPropName] = makeMatrixNode(thisLevel.value);
       
-      thisLevel[targetPropName] = new Base10MatrixNode(thisLevel.value);
     }
   } 
 
-  var test = {
-    h: {
-      h: {
-        h: {
-          h: {
+  // var test = {
+  //   h: {
+  //     h: {
+  //       h: {
+  //         h: {
 
-          }
-        }
-      }
-    }
-  }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-  injectAtLowestLevelOf(test, 'h', 44);
-  console.log(test);
+  // injectAtLowestLevelOf(test, 'h', 44);
+  // console.log(test);
   
   
 
@@ -51,10 +45,10 @@ const STARFISH = (() => {
     let accum = {}, startPos = Number(startXYStr);
     let control = 0;
     function tenticle(start) {
-      if (control === 10) return;
+      if (control === 10) return accum;
       if (start) {
         // if this is the first invokation of `tenticle` (tenticle only gets passed a param the first time)
-        accum = new Base10MatrixNode(start);
+        accum = makeMatrixNode(start);
         control += 1
         tenticle();
       } else {
@@ -63,12 +57,17 @@ const STARFISH = (() => {
         prevResultKeys.forEach(key => {
           injectAtLowestLevelOf(accum, key)          
         });
-        
+        control += 1;
+        tenticle();
       }
     }
 
     tenticle(startPos)
-
+    setTimeout(() => {
+      console.log(accum);
+    }, 500)
+    
+    
   }
 
   return {
