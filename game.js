@@ -1,8 +1,10 @@
-const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOppPcs) => {  
+const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOppPcs, starfish) => {  
 
-  const game = board.startNewGame(templates.extremeConvergeDiverge);
+  const game = board.startNewGame(templates.standard);
   console.log(game);
   
+  starfish.starfish(game.board, '34')
+
   canvas.addEventListener('mousedown', handleMouseDown);
 
   function handleMouseDown (e) {
@@ -67,4 +69,4 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
     bi.removeValidMovesHiliting(possibleMoves, game);
   }
 
-})(canvas, SETUP_TEMPLATES, GAMEBOARD, moveFinder, boardInteraction, VALID_PATH_TAKEN, REMOVE_OPPONENT_PIECES);
+})(canvas, SETUP_TEMPLATES, GAMEBOARD, moveFinder, boardInteraction, VALID_PATH_TAKEN, REMOVE_OPPONENT_PIECES, STARFISH);
