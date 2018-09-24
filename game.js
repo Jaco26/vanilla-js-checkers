@@ -3,7 +3,10 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
   const game = board.startNewGame(templates.standard);
   console.log(game);
   
-  starfish.starfish(game.board, '34')
+  const starfishResult = starfish.starfish(game.history[game.history.length - 1], '34');
+
+  console.log(starfishResult);
+  
 
   canvas.addEventListener('mousedown', handleMouseDown);
 

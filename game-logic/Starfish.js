@@ -1,5 +1,9 @@
 const STARFISH = (() => {
 
+  function isOutOfBounds(x, y) {
+    return x > 7 || x < 0 || y > 7 || y < 0;
+  }
+
   function makeMatrixNode(value) {
     return {
       downLeft: { value: value + 9 },
@@ -10,42 +14,43 @@ const STARFISH = (() => {
     };
   }
 
-  function injectAtLowestLevelOf(obj, targetPropName) {
-    let thisLevel = obj[targetPropName];
-    if (typeof thisLevel[targetPropName] === 'object') {
+  function makeEnhancedMatrixNode(value, matrix) {
+    const coord = value.toString().length === 2
+      ? value.toString() 
+      : '0' + value.toString();
+
+    const y = Number(coord[0]), x = Number(coord[1]);
+
+    if (isOutOfBounds(x, y) || value < 0) return;
+
+    console.log(y, x, matrix);
+    
+    const matrixVal = matrix[y][x];
+    console.log(matrixVal);
+    
+ 
+    
+  }
+
+  function injectAtLowestLevelOf(obj, key, matrix) {
+    let thisLevel = obj[key];
+    if (typeof thisLevel[key] === 'object') {
       // if value at obj[targetPropName] is an objec that itself has a prop of the same name...
       // go down again
-      injectAtLowestLevelOf(thisLevel, targetPropName);
+      injectAtLowestLevelOf(thisLevel, key);
     } else {
       // we're at the bottom. set the new prop with the passed-in value     
-      // console.log(thisLevel);
-      thisLevel[targetPropName] = makeMatrixNode(thisLevel.value);
-      
+      makeEnhancedMatrixNode(thisLevel.value, matrix);
+      Object.assign(thisLevel, makeMatrixNode(thisLevel.value));
     }
   } 
 
-  // var test = {
-  //   h: {
-  //     h: {
-  //       h: {
-  //         h: {
-
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-  // injectAtLowestLevelOf(test, 'h', 44);
-  // console.log(test);
-  
-  
 
   function starfish(matrix, startXYStr) {
     let accum = {}, startPos = Number(startXYStr);
     let control = 0;
-    function tenticle(start) {
-      if (control === 10) return accum;
+    function tenticle(start) {      
+      if (control === 5) return accum;
       if (start) {
         // if this is the first invokation of `tenticle` (tenticle only gets passed a param the first time)
         accum = makeMatrixNode(start);
@@ -55,7 +60,7 @@ const STARFISH = (() => {
         // If tenticle has been invoked more than once
         const prevResultKeys = Object.keys(accum).filter(key => key !== 'value');
         prevResultKeys.forEach(key => {
-          injectAtLowestLevelOf(accum, key)          
+          injectAtLowestLevelOf(accum, key, matrix)          
         });
         control += 1;
         tenticle();
@@ -63,11 +68,8 @@ const STARFISH = (() => {
     }
 
     tenticle(startPos)
-    setTimeout(() => {
-      console.log(accum);
-    }, 500)
-    
-    
+
+    return accum;
   }
 
   return {
