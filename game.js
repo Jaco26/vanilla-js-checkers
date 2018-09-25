@@ -3,15 +3,17 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
   const game = board.startNewGame(templates.standard);
   console.log(game);
   
-  const starfishResult = starfish.starfish(game.history[game.history.length - 1], '34');
 
-  console.log(starfishResult);
   
 
   canvas.addEventListener('mousedown', handleMouseDown);
 
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
+
+    const starfishResult = starfish.starfish(game.history[game.history.length - 1], clickedPiece.getCurrentLocation(game).location);
+
+    console.log('starfish results for clicked piece\n', starfishResult);
     
     let possible, pieceStart;
 
