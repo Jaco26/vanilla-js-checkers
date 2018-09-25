@@ -15,20 +15,17 @@ const STARFISH = (() => {
   }
 
   function makeEnhancedMatrixNode(value, matrix) {
-    const coord = value.toString().length === 2
-      ? value.toString() 
-      : '0' + value.toString();
+    const coord = value.toString().length === 2 ? value.toString() : '0' + value.toString(),
+          y = Number(coord[0]), 
+          x = Number(coord[1]);
 
-    const y = Number(coord[0]), x = Number(coord[1]);
-
-    if (isOutOfBounds(x, y) || value < 0) return;
-
-    console.log(y, x, matrix);
-    
+    if (isOutOfBounds(x, y) || value < 0) return;      
     const matrixVal = matrix[y][x];
-    console.log(matrixVal);
+    // console.log(matrixVal, coord);
+    const newMatrixNode = makeMatrixNode(value);
+    // console.log(matrixVal, newMatrixNode);
     
- 
+    
     
   }
 
@@ -37,7 +34,7 @@ const STARFISH = (() => {
     if (typeof thisLevel[key] === 'object') {
       // if value at obj[targetPropName] is an objec that itself has a prop of the same name...
       // go down again
-      injectAtLowestLevelOf(thisLevel, key);
+      injectAtLowestLevelOf(thisLevel, key, matrix);
     } else {
       // we're at the bottom. set the new prop with the passed-in value     
       makeEnhancedMatrixNode(thisLevel.value, matrix);
