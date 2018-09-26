@@ -11,7 +11,7 @@ const move = ( ({canvas}, templates, board, moveFinder, bi, validPathTaken, rmOp
   function handleMouseDown (e) {
     const clickedPiece = game.clickedPiece(e);
 
-    const starfishResult = starfish.starfish(game.history[game.history.length - 1], clickedPiece.getCurrentLocation(game).location);
+    const starfishResult = starfish.starfish(game.history[game.history.length - 1], clickedPiece);
 
     console.log('starfish results for clicked piece\n', starfishResult);
     

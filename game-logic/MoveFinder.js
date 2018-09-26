@@ -1,4 +1,4 @@
-const moveFinder = ((pathBuilder) => {
+  const moveFinder = ((pathBuilder) => {
 
   const outOfBounds = (i) => i ? (!Number(i) && Number(i) != 0) || Number(i) > 7 : null;
 

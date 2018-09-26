@@ -1,5 +1,17 @@
 const STARFISH = (() => {
 
+  function tileContent(occupant, player) {
+    const playerOpponent = player == 'p1' ? 2 : 1;
+    switch (occupant) {
+      case playerOpponent:
+        return 'opponent';
+      case 0:
+        return 'empty';
+      default:
+        return 'team';
+    }
+  }
+
   function isOutOfBounds(x, y) {
     return x > 7 || x < 0 || y > 7 || y < 0;
   }
@@ -18,7 +30,6 @@ const STARFISH = (() => {
     const coord = value.toString().length === 2 ? value.toString() : '0' + value.toString(),
           y = Number(coord[0]), 
           x = Number(coord[1]);
-
     if (isOutOfBounds(x, y) || value < 0) return;      
     const matrixVal = matrix[y][x];
     // console.log(matrixVal, coord);
@@ -26,15 +37,16 @@ const STARFISH = (() => {
     // console.log(matrixVal, newMatrixNode);
     
     
-    
   }
 
-  function injectAtLowestLevelOf(obj, key, matrix) {
+  function injectAtLowestLevelOf(obj, key, matrix, player) {
+    console.log(player);
+    
     let thisLevel = obj[key];
     if (typeof thisLevel[key] === 'object') {
       // if value at obj[targetPropName] is an objec that itself has a prop of the same name...
       // go down again
-      injectAtLowestLevelOf(thisLevel, key, matrix);
+      injectAtLowestLevelOf(thisLevel, key, matrix, player);
     } else {
       // we're at the bottom. set the new prop with the passed-in value     
       makeEnhancedMatrixNode(thisLevel.value, matrix);
@@ -43,7 +55,11 @@ const STARFISH = (() => {
   } 
 
 
-  function starfish(matrix, startXYStr) {
+  function starfish(matrix, clickedPiece) {
+    console.log(clickedPiece);
+    
+    const startXYStr = Number(clickedPiece.location);
+    const player = clickedPiece.player;
     let accum = {}, startPos = Number(startXYStr);
     let control = 0;
     function tenticle(start) {      
@@ -57,7 +73,7 @@ const STARFISH = (() => {
         // If tenticle has been invoked more than once
         const prevResultKeys = Object.keys(accum).filter(key => key !== 'value');
         prevResultKeys.forEach(key => {
-          injectAtLowestLevelOf(accum, key, matrix)          
+          injectAtLowestLevelOf(accum, key, matrix, player)          
         });
         control += 1;
         tenticle();
