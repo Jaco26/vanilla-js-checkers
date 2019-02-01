@@ -1,4 +1,4 @@
-const TILE_MODEL = (function() {
+const TILE_MODULE = (function() {
 
   const util = {
     generateNeighbors() {

@@ -1,3 +1,5 @@
+const out = console.log.bind(console);
+
 const UTILS = ( () => {
 
   const flatten = (array, nLevels = 1) => {
