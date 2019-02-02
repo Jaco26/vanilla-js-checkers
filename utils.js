@@ -1,4 +1,4 @@
-const out = console.log.bind(console);
+const clog = console.log.bind(console);
 
 const UTILS = ( () => {
 

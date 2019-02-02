@@ -4,7 +4,7 @@ const TILE_MODULE = (function() {
     generateNeighbors() {
       const rowColNumber = Number(this.row.toString() + this.col.toString());
       let upLeft = (rowColNumber - 11).toString();
-      let upRight = (colRowNumber - 9).toString();
+      let upRight = (rowColNumber - 9).toString();
       let downLeft = (rowColNumber + 9).toString();
       let downRight =  (rowColNumber + 11).toString();
       if (this.row === 0) {
