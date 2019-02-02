@@ -5,13 +5,17 @@ const PIECE_MODULE = (function() {
   };
 
   class Piece {
-    constructor(x, y, radius, color, player) {
+    constructor(x, y, r, row, col, color, player) {
       this.x = x;
       this.y = y;
-      this.radius = radius;
-      this.color = color;
-      this.player = player;
+      this.radius = r;
+      this.row = row;
+      this.col = col;
+
+      this.color = color
+      this.player = color
     }
+
 
     changePosition(e) {
       this.x = e.offsetX;
