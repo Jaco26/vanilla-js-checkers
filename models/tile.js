@@ -28,7 +28,9 @@ const TILE_MODULE = (function() {
   }
 
   class Tile {
-    constructor(x, y, width, height, row, col) {
+    constructor(x, y, width, height, row, col, isRed) {
+      this.isRed = isRed;
+      this.color = isRed ? '#FFA' : '#444444';
       this.x = x;
       this.y = y;
       this.width = width;
