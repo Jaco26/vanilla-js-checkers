@@ -11,7 +11,8 @@ const templates = {
   ],
 };
 
-const game = new GAME_MODULE.Game({
+
+const game = new GAME_MODEL.Game({
   board: {
     canvasId: 'checkers-game',
     width: 700,
@@ -25,10 +26,12 @@ game.canvas.addEventListener('mousedown', handleMouseDown);
 function handleMouseDown(e) {
   const clickedTile = game.findTile(e);
   const clickedPiece = clickedTile.hasPiece;
+  let validPaths;
 
   if (clickedPiece) {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    validPaths = PATH_CONTROLLER.findValidPaths(clickedTile, game.tiles);
   }
 
   function handleMouseMove(e) {    
@@ -41,6 +44,8 @@ function handleMouseDown(e) {
     document.removeEventListener('mouseup', handleMouseUp);
     try {
       const newTile = game.findTile(e);
+      console.log(validPaths);
+      
       if (!newTile.hasPiece && !newTile.isRed) {
         clickedTile.hasPiece = null;
         newTile.hasPiece = clickedPiece;

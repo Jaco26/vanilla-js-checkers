@@ -1,4 +1,4 @@
-const BOARD_MODULE = (function(pieceMod, tileMod) {
+const BOARD_MODEL = (function(pieceMod, tileMod) {
 
   const { Piece } = pieceMod;
   const { Tile } = tileMod;
@@ -106,4 +106,4 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
 
   return { Board };
 
-})(PIECE_MODULE, TILE_MODULE);
+})(PIECE_MODEL, TILE_MODEL);

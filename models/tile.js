@@ -1,4 +1,4 @@
-const TILE_MODULE = (function() {
+const TILE_MODEL = (function() {
 
   const util = {
     toCoods(rowColNum, direction) {

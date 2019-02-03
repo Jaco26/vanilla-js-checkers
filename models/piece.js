@@ -1,4 +1,4 @@
-const PIECE_MODULE = (function() {
+const PIECE_MODEL = (function() {
 
   class Piece {
     constructor(x, y, r, row, col) {
@@ -10,6 +10,7 @@ const PIECE_MODULE = (function() {
 
       this.color = '';
       this.player = '';
+      this.isKing = false;
     }
 
     changePosition(e) {

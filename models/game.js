@@ -1,4 +1,4 @@
-const GAME_MODULE = (function(boardMod) {
+const GAME_MODEL = (function(boardMod) {
 
   const { Board } = boardMod;
 
@@ -41,4 +41,4 @@ const GAME_MODULE = (function(boardMod) {
 
   return { Game };
 
-})(BOARD_MODULE);
+})(BOARD_MODEL);
