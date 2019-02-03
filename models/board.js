@@ -13,15 +13,21 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
       this.p1Pieces = [];
       this.p2Pieces = [];
       this.tiles = [];
-      
+
       this.generateTiles();
-      this.drawTiles()
+      this.renderBoard();
+    }
+
+    get tileDimensions() {
+      return {
+        width: this.width / 8,
+        height: this.height / 8,
+      };
     }
 
     generateTiles() {
-      const { width, height } = this;
-      const tileWidth = width / 8;
-      const tileHeight = height / 8;
+      const tileWidth = this.tileDimensions.width;
+      const tileHeight = this.tileDimensions.height;
       const allRows = [];
       let isRed = false;
       for (let i = 0; i < 8; i++) {
@@ -80,6 +86,12 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
         ctx.fill();
         ctx.closePath();
       });
+    }
+
+    renderBoard() {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.drawTiles();
+      this.drawPieces();
     }
   }
 

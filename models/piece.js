@@ -8,8 +8,8 @@ const PIECE_MODULE = (function() {
       this.row = row;
       this.col = col;
 
-      this.color = color
-      this.player = color
+      this.color = color;
+      this.player = player;
     }
 
     changePosition(e) {
