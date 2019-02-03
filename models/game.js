@@ -5,7 +5,7 @@ const GAME_MODULE = (function(boardMod) {
   class Game {
     constructor(config) {
       this.board = new Board(config.board);
-      this.history = [config.pieces];
+      this.history = [config.template];
 
       this.board.generatePieces(config.template);
       this.board.drawPieces();
@@ -21,11 +21,26 @@ const GAME_MODULE = (function(boardMod) {
         : [...this.board.p1Pieces, ...this.board.p2Pieces];
     }
 
-    findTile(e) {
+    get tiles() {
+      return this.board.tiles;
+    }
+
+    regenerateBoard() {
+      this.board.generateTiles();
+      this.board.generatePieces(this.history[this.history.length - 1]);
+      this.board.renderBoard();
+    }
+
+    tileCoords(e) {
       const { width, height } = this.board.tileDimensions;
       const rowIndex = Math.floor(e.offsetY / height);
       const colIndex = Math.floor(e.offsetX / width);
       return { rowIndex, colIndex };
+    }
+
+    findTile(e) {
+      const { rowIndex, colIndex } = this.tileCoords(e);
+      return this.tiles[rowIndex][colIndex];
     }
 
   }

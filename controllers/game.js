@@ -23,8 +23,8 @@ const game = new GAME_MODULE.Game({
 game.canvas.addEventListener('mousedown', handleMouseDown);
 
 function handleMouseDown(e) {
-  const tileIndices = game.findTile(e);
-  clog(tileIndices);
+  const tile = game.findTile(e);
+  clog(tile);
   
   
 }

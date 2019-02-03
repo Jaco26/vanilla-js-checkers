@@ -1,15 +1,15 @@
 const PIECE_MODULE = (function() {
 
   class Piece {
-    constructor(x, y, r, row, col, color, player) {
+    constructor(x, y, r, row, col) {
       this.x = x;
       this.y = y;
       this.radius = r;
       this.row = row;
       this.col = col;
 
-      this.color = color;
-      this.player = player;
+      this.color = '';
+      this.player = '';
     }
 
     changePosition(e) {

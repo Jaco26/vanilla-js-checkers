@@ -7,8 +7,8 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
     constructor({ canvasId, width, height }) {
       const canvas = document.getElementById(canvasId);
       this.ctx = canvas.getContext('2d');
-      this.width = canvas.width = width;
-      this.height = canvas.height = height;
+      this._width = canvas.width = width;
+      this._height = canvas.height = height;
 
       this.p1Pieces = [];
       this.p2Pieces = [];
@@ -16,6 +16,22 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
 
       this.generateTiles();
       this.renderBoard();
+    }
+
+    set width(val) {
+      this._width = this.ctx.canvas.width = val;
+    }
+
+    set height(val) {
+      this._height = this.ctx.canvas.height = val;
+    }
+
+    get width() {
+      return this._width;
+    }
+
+    get height() {
+      return this._height;
     }
 
     get tileDimensions() {
@@ -28,6 +44,7 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
     generateTiles() {
       const tileWidth = this.tileDimensions.width;
       const tileHeight = this.tileDimensions.height;
+      clog(tileHeight)
       const allRows = [];
       let isRed = false;
       for (let i = 0; i < 8; i++) {
@@ -58,18 +75,26 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
     }
 
     generatePieces(pieceMatrix) {
-      const { tiles, p1Pieces, p2Pieces } = this;
-      const radius = tiles[0][0].width * 0.4; 
+      const { tileDimensions, tiles, p1Pieces, p2Pieces } = this;
+      const radius = tileDimensions.width * 0.4; 
+      console.log('radius' , radius);
+      
       pieceMatrix.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
             const tile = tiles[i][j];
             const x = tile.x + (tile.width / 2);
             const y = tile.y + (tile.height / 2);
+            const newPiece = new Piece(x, y, radius, i, j);
+            tile.hasPiece = newPiece;
             if (col == 1) {
-              p1Pieces.push(new Piece(x, y, radius, i, j, 'white', 'p1'));
+              newPiece.color = 'white';
+              newPiece.player = 'p1';
+              p1Pieces.push(newPiece);
             } else if (col == 2) {
-              p2Pieces.push(new Piece(x, y, radius, i, j, 'purple', 'p2'));
+              newPiece.color = 'purple';
+              newPiece.player = 'p2';
+              p2Pieces.push(newPiece);
             }
           }
         });
