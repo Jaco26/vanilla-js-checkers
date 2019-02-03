@@ -7,8 +7,8 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
     constructor({ canvasId, width, height }) {
       const canvas = document.getElementById(canvasId);
       this.ctx = canvas.getContext('2d');
-      this._width = canvas.width = width;
-      this._height = canvas.height = height;
+      this.width = canvas.width = width;
+      this.height = canvas.height = height;
 
       this.p1Pieces = [];
       this.p2Pieces = [];
@@ -16,22 +16,6 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
 
       this.generateTiles();
       this.renderBoard();
-    }
-
-    set width(val) {
-      this._width = this.ctx.canvas.width = val;
-    }
-
-    set height(val) {
-      this._height = this.ctx.canvas.height = val;
-    }
-
-    get width() {
-      return this._width;
-    }
-
-    get height() {
-      return this._height;
     }
 
     get tileDimensions() {

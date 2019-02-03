@@ -45,6 +45,14 @@ const TILE_MODULE = (function() {
     get name() {
       return this.row.toString() + this.col.toString();
     }
+
+    centerPiece() {
+      const piece = this.hasPiece;
+      if (piece) {
+        piece.x = this.x + (this.width / 2);
+        piece.y = this.y + (this.height / 2);
+      }
+    }
   }
 
   return { Tile };

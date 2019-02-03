@@ -23,8 +23,37 @@ const game = new GAME_MODULE.Game({
 game.canvas.addEventListener('mousedown', handleMouseDown);
 
 function handleMouseDown(e) {
-  const tile = game.findTile(e);
-  clog(tile);
+  const clickedTile = game.findTile(e);
+  const clickedPiece = clickedTile.hasPiece;
+
+  if (clickedPiece) {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  }
+
+  function handleMouseMove(e) {    
+    clickedPiece.changePosition(e);
+    game.board.renderBoard();
+  }
   
-  
+  function handleMouseUp(e) {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+    try {
+      const newTile = game.findTile(e);
+      if (!newTile.hasPiece && !newTile.isRed) {
+        clickedTile.hasPiece = null;
+        newTile.hasPiece = clickedPiece;
+        newTile.centerPiece();
+      } else {
+        clickedTile.centerPiece();
+      }
+    } catch (err) {
+      clickedTile.centerPiece();
+    }
+    game.board.renderBoard();
+    
+  }
 }
+
+
