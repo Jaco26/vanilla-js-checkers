@@ -1,9 +1,5 @@
 const PIECE_MODULE = (function() {
 
-  const util = {
-
-  };
-
   class Piece {
     constructor(x, y, r, row, col, color, player) {
       this.x = x;
@@ -15,7 +11,6 @@ const PIECE_MODULE = (function() {
       this.color = color
       this.player = color
     }
-
 
     changePosition(e) {
       this.x = e.offsetX;

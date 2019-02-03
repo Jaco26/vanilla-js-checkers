@@ -3,7 +3,21 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
   const { Piece } = pieceMod;
   const { Tile } = tileMod;
 
-  const util = {
+  class Board {
+    constructor({ canvasId, width, height }) {
+      const canvas = document.getElementById(canvasId);
+      this.ctx = canvas.getContext('2d');
+      this.width = canvas.width = width;
+      this.height = canvas.height = height;
+
+      this.p1Pieces = [];
+      this.p2Pieces = [];
+      this.tiles = [];
+      
+      this.generateTiles();
+      this.drawTiles()
+    }
+
     generateTiles() {
       const { width, height } = this;
       const tileWidth = width / 8;
@@ -22,7 +36,8 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
         allRows.push(row);
       }
       this.tiles = allRows;
-    },
+    }
+
     drawTiles() {
       const { ctx, tiles } = this;
       tiles.forEach(row => {
@@ -34,11 +49,12 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
           ctx.closePath();
         });
       });
-    },
-    generatePieces(graph) {
+    }
+
+    generatePieces(pieceMatrix) {
       const { tiles, p1Pieces, p2Pieces } = this;
       const radius = tiles[0][0].width * 0.4; 
-      graph.forEach((row, i) => {
+      pieceMatrix.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {
             const tile = tiles[i][j];
@@ -52,7 +68,8 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
           }
         });
       });
-    },
+    }
+
     drawPieces() {
       const { ctx, p1Pieces, p2Pieces } = this;
       [...p1Pieces, ...p2Pieces].forEach(piece => {
@@ -63,60 +80,8 @@ const BOARD_MODULE = (function(pieceMod, tileMod) {
         ctx.fill();
         ctx.closePath();
       });
-    },
-  };
-
-  class Board {
-    constructor({ canvasId, width, height }) {
-      const canvas = document.getElementById(canvasId);
-      this.ctx = canvas.getContext('2d');
-      this.width = canvas.width = width;
-      this.height = canvas.height = height;
-
-      this.p1Pieces = [];
-      this.p2Pieces = [];
-      this.tiles = [];
-
-      this.history = [];
-      
-      util.generateTiles.call(this);
-      this.drawTiles()
-    }
-
-    drawTiles() {
-      util.drawTiles.call(this);
-    }
-
-    generatePieces(graph) {
-      this.history.push(graph);
-      util.generatePieces.call(this, graph);
-    }
-
-    drawPieces() {
-      util.drawPieces.call(this);
     }
   }
-
-  const board = new Board({
-    canvasId: 'checkers-game', 
-    width: 700, 
-    height: 700,
-  });
-
-  clog(board)
-
-  board.generatePieces([
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [2, 0, 2, 0, 2, 0, 2, 0],
-    [0, 2, 0, 2, 0, 2, 0, 2],
-    [2, 0, 2, 0, 2, 0, 2, 0],
-  ]);
-
-  board.drawPieces();
 
   return { Board };
 

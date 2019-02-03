@@ -1,18 +1,17 @@
 const TILE_MODULE = (function() {
 
-  const toCoordStr = (rowColNum, dir) => rowColNum + dir < 10 
-    ? '0' + (rowColNum + dir).toString() 
-    : (rowColNum + dir).toString();
-
   const util = {
+    toCoordStr(rowColNum, dir) {
+      return rowColNum + dir < 10 
+        ? '0' + (rowColNum + dir).toString() 
+        : (rowColNum + dir).toString();
+    },
     generateNeighbors() {
-      const rowStr = this.row.toString();
-      const colStr = this.col.toString();
-      const rowColNumber = Number(rowStr + colStr);      
-      let upLeft =  toCoordStr(rowColNumber, -11);
-      let upRight = toCoordStr(rowColNumber, -9);
-      let downLeft = toCoordStr(rowColNumber, 9);
-      let downRight =  toCoordStr(rowColNumber, 11);
+      const rowColNumber = Number(this.name);      
+      let upLeft =  util.toCoordStr(rowColNumber, -11);
+      let upRight = util.toCoordStr(rowColNumber, -9);
+      let downLeft = util.toCoordStr(rowColNumber, 9);
+      let downRight =  util.toCoordStr(rowColNumber, 11);
       if (this.row === 0) {
         upLeft = null;
         upRight = null;
