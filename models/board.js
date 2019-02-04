@@ -28,7 +28,6 @@ const BOARD_MODEL = (function(pieceMod, tileMod) {
     generateTiles() {
       const tileWidth = this.tileDimensions.width;
       const tileHeight = this.tileDimensions.height;
-      clog(tileHeight)
       const allRows = [];
       let isRed = false;
       for (let i = 0; i < 8; i++) {
@@ -60,9 +59,7 @@ const BOARD_MODEL = (function(pieceMod, tileMod) {
 
     generatePieces(pieceMatrix) {
       const { tileDimensions, tiles, p1Pieces, p2Pieces } = this;
-      const radius = tileDimensions.width * 0.4; 
-      console.log('radius' , radius);
-      
+      const radius = tileDimensions.width * 0.4;       
       pieceMatrix.forEach((row, i) => {
         row.forEach((col, j) => {
           if (col) {

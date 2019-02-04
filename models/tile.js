@@ -3,15 +3,21 @@ const TILE_MODEL = (function() {
   const util = {
     toCoods(rowColNum, direction) {
       const neighborNum = rowColNum + direction;
-      const neighborStr = neighborNum.toString();
+      let neighborStr = neighborNum.toString();
+      neighborStr = neighborStr[1] ? neighborStr : '0' + neighborStr;
       const coords = {
         row: Number(neighborStr[0]),
         col: Number(neighborStr[1]),
       };
-      if (coords.row > 7 || coords.row < 0) {
+      if (
+        isNaN(coords.row) 
+        || coords.row > 7 
+        || coords.row < 0 
+        || isNaN(coords.col)
+        || coords.col > 7 
+        || coords.col < 0
+      ) {
         coords.row = null;
-      }
-      if (coords.col > 7 || coords.col < 0) {
         coords.col = null;
       }
       return coords;
@@ -44,6 +50,10 @@ const TILE_MODEL = (function() {
 
     get name() {
       return this.row.toString() + this.col.toString();
+    }
+
+    getNeighbors(keys) {
+      return keys.map(key => this.neighbors[key]);
     }
 
     centerPiece() {
