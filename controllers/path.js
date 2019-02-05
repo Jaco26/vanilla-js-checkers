@@ -1,82 +1,72 @@
 const PATH_CONTROLLER = (function() {
 
-  class Node {
+  class TreeNode {
     constructor(tile) {
-      this.name = tile.name;
+      this.value = tile.name;
       this.parent = null;
-      this.children = {};
+      this.children = [];
 
       this.getNeighbors = tile.getNeighbors.bind(tile);
     }
   }
 
-  function DFSBuildPath(start, tiles, keys) {
-    const results = { 
-      root: new Node(start),
+  function buildTree(start, tiles, keys) {
+    const results = {  
+      root: new TreeNode(start),
     };
-    
-    (function innerHelper(node, accum) {
-      const childCoords = node.getNeighbors(keys);
-      childCoords.forEach(coord => {
-        
-      })
-      
-    })(results.root, results); 
+    (function inner(currentNode) {
+      const currentChildren = currentNode.getNeighbors(keys);
+      currentChildren.forEach(childCoords => {
+        const { row, col } = childCoords;
+        if (row !== null && col !== null) {
+          const childTile = tiles[row][col];
+          const childNode = new TreeNode(childTile);
+          childNode.parent = currentNode;
+          currentNode.children.push(childNode);
+        }
+      });
+      currentNode.children.forEach(child => {
+        inner(child);
+      });
+    })(results.root);
     return results;
   }
 
-  // function DFSBuildPath(start, tiles, keys) {
-  //   const results = {};
-  //   (function innerHelper(accum, current) {
-  //     const newNode = new Node(current.name);
-  //     accum[current.name] = newNode;
-  //     keys.forEach(key => {
-  //       const { row, col } = current.neighbors[key];
-  //       const childRow = tiles[row];
-  //       if (childRow) {
-  //         const child = childRow[col];
-  //         if (child) {
-  //           const childNode = new Node(child.name);
-  //           childNode.parent = newNode;
-  //           newNode.children.push(childNode);
-  //           innerHelper(accum[current.name], child)
-  //         }
-  //       }
-  //     });
-  //   })(results, start);
-  //   return results;
-  // }
+  function parseTree(tree) {
+    const queue = [tree.root];
+    const results = [];
+    while (queue.length) {      
+      const node = queue.shift();
+      queue.push(...node.children);
+      if (!node.parent) {
+        // node is root
+        results.push([node.value]);
+      } else {
+        results.forEach((item, i) => {
+          if (item[item.length - 1] === node.parent.value) {
+            results.push([...item, node.value]);
+          }
+        });
+      }
+    }
+    return results;
+  }
 
-  
-
-  // function DFSBuildPath(start, tiles, keys) {
-  //   const results = {};
-  //   (function innerHelper(accum, current) {
-  //     console.log('accum', accum);
-
-  //     accum[current.name] = {};
-  //     keys.forEach(key => {
-  //       const { row, col } = current.neighbors[key];
-  //       const neighborRow = tiles[row];
-  //       if (neighborRow) {
-  //         const neighbor = neighborRow[col];
-  //         if (neighbor) {
-  //           innerHelper(accum[current.name], neighbor);
-  //         }
-  //       }
-  //     });
-  //   })(results, start);
-  //   return results;
-  // }
-
-  function unwrapResults(pathTree) {
-    return pathTree;
+  function eliminateDuplicates(unwrapped) {
+    return unwrapped.reverse().reduce((accum, item) => {
+      const isDuplicate = accum.some(thing => thing.join().includes(item.join()));        
+      if (!isDuplicate) {
+        accum.push(item);
+      }
+      return accum;
+    }, []);
   }
 
   function build(start, tiles, keys) {
-    const pathTree = DFSBuildPath(start, tiles, keys);
-    const unwrapped = unwrapResults(pathTree);
-    return unwrapped;
+    const pathTree = buildTree(start, tiles, keys);    
+    const parsed = parseTree(pathTree);        
+    const noDuplicates = eliminateDuplicates(parsed);
+    return noDuplicates;
   }
 
   function findValidPaths(start, tiles) {

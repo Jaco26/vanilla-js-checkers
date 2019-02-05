@@ -45,7 +45,6 @@ function handleMouseDown(e) {
     try {
       const newTile = game.findTile(e);
       console.log(validPaths);
-      
       if (!newTile.hasPiece && !newTile.isRed) {
         clickedTile.hasPiece = null;
         newTile.hasPiece = clickedPiece;
