@@ -11,9 +11,8 @@ const PATH_CONTROLLER = (function() {
   }
 
   function buildTree(start, tiles, keys) {
-    const results = {  
-      root: new TreeNode(start),
-    };
+    const tree = { root: new TreeNode(start) };
+    const adjacencyList = {};
     (function inner(currentNode) {
       const currentChildren = currentNode.getNeighbors(keys);
       currentChildren.forEach(childCoords => {
@@ -21,15 +20,25 @@ const PATH_CONTROLLER = (function() {
         if (row !== null && col !== null) {
           const childTile = tiles[row][col];
           const childNode = new TreeNode(childTile);
-          childNode.parent = currentNode;
-          currentNode.children.push(childNode);
+          if (!adjacencyList[currentNode.value]) adjacencyList[currentNode.value] = [];
+          if (!adjacencyList[currentNode.value].includes(childNode.value)) {
+            adjacencyList[currentNode.value].push(childNode.value);
+            childNode.parent = { value: currentNode.value };
+            currentNode.children.push(childNode);
+            inner(childNode);
+          }
         }
       });
-      currentNode.children.forEach(child => {
-        inner(child);
-      });
-    })(results.root);
-    return results;
+    })(tree.root);
+    return { tree, adjacencyList };
+  }
+
+  function unzip(adjacencyList) {
+    const visited = {};
+    const results = [];
+    Object.keys(adjacencyList).forEach(key => {
+
+    })
   }
 
   function parseTree(tree) {
@@ -52,21 +61,14 @@ const PATH_CONTROLLER = (function() {
     return results;
   }
 
-  function eliminateDuplicates(unwrapped) {
-    return unwrapped.reverse().reduce((accum, item) => {
-      const isDuplicate = accum.some(thing => thing.join().includes(item.join()));        
-      if (!isDuplicate) {
-        accum.push(item);
-      }
-      return accum;
-    }, []);
-  }
-
   function build(start, tiles, keys) {
-    const pathTree = buildTree(start, tiles, keys);    
-    const parsed = parseTree(pathTree);        
-    const noDuplicates = eliminateDuplicates(parsed);
-    return noDuplicates;
+    const { tree, adjacencyList } = buildTree(start, tiles, keys);
+    return { 
+      parsedTree: parseTree(tree), 
+      unzipped: unzip(adjacencyList),
+      tree,
+      adjacencyList,
+    };
   }
 
   function findValidPaths(start, tiles) {
