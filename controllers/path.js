@@ -1,64 +1,5 @@
 const PATH_CONTROLLER = (function() {
 
-  // class TreeNode {
-  //   constructor(tile) {
-  //     this.value = tile.name;
-  //     this.parent = null;
-  //     this.children = [];
-
-  //     this.getNeighbors = tile.getNeighbors.bind(tile);
-  //   }
-  // }
-
-  // function buildTree(start, tiles, keys) {
-  //   const tree = { root: new TreeNode(start) };
-  //   const adjacencyList = {};
-  //   (function inner(currentNode) {
-  //     const currentChildren = currentNode.getNeighbors(keys);
-  //     currentChildren.forEach(childCoords => {
-  //       const { row, col } = childCoords;
-  //       if (row !== null && col !== null) {
-  //         const childTile = tiles[row][col];
-  //         const childNode = new TreeNode(childTile);
-  //         if (!adjacencyList[currentNode.value]) {
-  //           adjacencyList[currentNode.value] = { 
-  //             isRoot: !currentNode.parent, 
-  //             neighbors: [],
-  //           };
-  //         }
-  //         if (!adjacencyList[currentNode.value].neighbors.includes(childNode.value)) {
-  //           adjacencyList[currentNode.value].neighbors.push(childNode.value);
-  //           childNode.parent = { value: currentNode.value };
-  //           currentNode.children.push(childNode);
-  //           inner(childNode);
-  //         }
-  //       }
-  //     });
-  //   })(tree.root);
-  //   return { tree, adjacencyList };
-  // }
-
-  // function parseTree(tree) {
-  //   const queue = [tree.root];
-  //   const results = [];
-  //   while (queue.length) {      
-  //     const node = queue.shift();
-  //     queue.push(...node.children);
-  //     if (!node.parent) {
-  //       // node is root
-  //       results.push([node.value]);
-  //     } else {
-  //       results.forEach((item, i) => {
-  //         if (item[item.length - 1] === node.parent.value) {
-  //           results.push([...item, node.value]);
-  //         }
-  //       });
-  //     }
-  //   }
-  //   return results;
-  // }
-
-
   function buildAdjacencyList(start, tiles, keys) {
     const adjacencyList = {};
     (function inner(currentNode, isRoot = false) {      
@@ -80,26 +21,55 @@ const PATH_CONTROLLER = (function() {
     return { adjacencyList };
   }
 
+
   function parseAdjacencyList(list) {
     const listKeys = Object.keys(list);    
     const rootKey = listKeys.find(key => list[key].isRoot);
+
     const queue = [];
     const visited = {};
     const results = [];
+    
+    list[rootKey].neighbors.forEach(nbr => {
+      results.push([rootKey, nbr]);
+      queue.push(nbr);
+    });
+
     visited[rootKey] = true;
-    queue.push(...list[rootKey].neighbors)
+
     while (queue.length) {
-      const key = queue.shift();
-      if (!visited[key]) {
-        results.push(key);
+      let key = queue.shift();
+      if (!visited[key]) { 
+        // if key has not been visited, mark it as visited and look for it in the adjacency list
         visited[key] = true;
         if (list[key]) {
-          queue.push(...list[key].neighbors);
+          // look at each of list[key]'s neighbors
+          list[key].neighbors.forEach(nbr => {
+            // look at each item in results
+            results.forEach(item => {
+              // if key is in item
+              if (item[item.length - 1] === key) { // if the last value in item is the key
+                // push neighbor onto it
+                item.push(nbr);
+              } else if (item.includes(key)) { // otherwise, if item includes the key
+                // create a slice of the item from index 0 to indexOf(key) + 1
+                const slice = item.slice(0, item.indexOf(key) + 1);                
+                // push nbr onto it
+                slice.push(nbr);
+                // push the slice onto results
+                results.push(slice);                
+              } 
+            });
+            queue.push(nbr);   
+          });
         }
       }
     }
     return results;
   }
+
+
+
 
   function build(start, tiles, keys) {    
     const { adjacencyList } = buildAdjacencyList(start, tiles, keys);
