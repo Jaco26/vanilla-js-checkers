@@ -31,7 +31,9 @@ function handleMouseDown(e) {
   if (clickedPiece) {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-    if (game.animations.intervalId) clearInterval(game.animations.intervalId);
+
+    game.animations.stop('possiblePaths');
+
     validPaths = PATH_CONTROLLER.findValidPaths(clickedTile, game.tiles);
   }
 
@@ -40,7 +42,7 @@ function handleMouseDown(e) {
   } 
 
   function handleMouseMove(e) { 
-    if (game.animations.intervalId) clearInterval(game.animations.intervalId);   
+    game.animations.stop('possiblePaths')
     clickedPiece.changePosition(e);
     game.board.renderBoard();
   }
@@ -48,20 +50,30 @@ function handleMouseDown(e) {
   function handleMouseUp(e) {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
+    
     try {
+
       const newTile = game.findTile(e);
-      console.log(validPaths);
+
       if (!newTile.hasPiece && !newTile.isRed) {
-        if (game.animations.intervalId) clearInterval(game.animations.intervalId);
+
+        game.animations.stop('possiblePaths');
+
         clickedTile.hasPiece = null;
+
         newTile.hasPiece = clickedPiece;
+
         newTile.centerPiece();
+
       } else {
+
         clickedTile.centerPiece();
       }
+
     } catch (err) {
       clickedTile.centerPiece();
     }
+
     game.board.renderBoard();
     
   }

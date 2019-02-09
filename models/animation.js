@@ -1,34 +1,47 @@
 const ANIMATION_MODEL = (function() {
 
+  const util = {
+    changeTileColor(path, color) {
+      path.forEach(key => {
+        let row = Number(key[0]);
+        let col = Number(key[1]);   
+        this.tiles[row][col].color = color;
+      });
+    },
+  }
+
   class CheckersAnimations {
     constructor() {
-      this.intervalId = null;
+      this.intervalIds = {
+        possiblePaths: null
+      }
+    }
+
+    stop(key) {
+      clearInterval(this.intervalIds[key]);
     }
 
     possiblePaths(pathsList, game) {
-      let listI = 0;      
-
+      let i = 0;      
       const drawList = () => {
-        const path = pathsList[listI];
+        const path = pathsList[i];
         const originalColor = '#444444';
-        path.forEach(key => {
-          let row = Number(key[0]);
-          let col = Number(key[1]);          
-          game.tiles[row][col].color = 'green'
-        });
+
+        util.changeTileColor.call(game, path, 'green');
         game.board.renderBoard();
-        path.forEach(key => {
-          let row = Number(key[0]);
-          let col = Number(key[1]);
-          game.tiles[row][col].color = originalColor
-        });
-        listI++;
-        if (listI === pathsList.length) {
-          game.board.renderBoard();
-          return clearInterval(this.intervalId);
+        util.changeTileColor.call(game, path, originalColor);
+
+        if (i === pathsList.length - 1) {
+          setTimeout(() => {
+            game.board.renderBoard();
+          }, 500);
+          this.stop('possiblePaths');
         }
+        
+        i++;
       }
-      this.intervalId = setInterval(drawList, 500);
+
+      this.intervalIds.possiblePaths = setInterval(drawList, 500);
     }
   }
 
