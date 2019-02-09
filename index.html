@@ -8,6 +8,13 @@
 </head>
 <body style="background-color: #222">
 
+  <fieldset>
+    <label style="color: beige" for="should-animate">
+      Animate possible paths of a clicked piece
+      <input type="checkbox" id="should-animate">
+    </label>
+  </fieldset>
+  
   <canvas id="checkers-game"></canvas>
 
   <script src="utils.js"></script>
@@ -18,6 +25,7 @@
   <script src="models/animation.js"></script>
   <script src="models/game.js"></script>
   <script src="controllers/path.js"></script>
+  <script src="controllers/ui.js"></script>
   <script src="controllers/game.js"></script>
   
   <!-- <script src="./render-board/SetupTemplates.js"></script>

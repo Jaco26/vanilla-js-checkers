@@ -11,6 +11,7 @@ const templates = {
   ],
 };
 
+const { uiConfig } = UI_CONTROLLER;
 
 const game = new GAME_MODEL.Game({
   board: {
@@ -19,6 +20,7 @@ const game = new GAME_MODEL.Game({
     height: 700,
   },
   template: templates.standard,
+  shouldAnimate: false
 });
 
 game.canvas.addEventListener('mousedown', handleMouseDown);
@@ -35,9 +37,11 @@ function handleMouseDown(e) {
     game.animations.stop('possiblePaths');
 
     validPaths = PATH_CONTROLLER.findValidPaths(clickedTile, game.tiles);
+    console.log(validPaths);
+    
   }
 
-  if (validPaths && validPaths.list.length) {
+  if (validPaths && validPaths.list.length && uiConfig.shouldAnimate) {
     game.animations.possiblePaths(validPaths.list, game)
   } 
 
@@ -50,7 +54,7 @@ function handleMouseDown(e) {
   function handleMouseUp(e) {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
-    
+
     try {
 
       const newTile = game.findTile(e);

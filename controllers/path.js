@@ -1,6 +1,8 @@
 const PATH_CONTROLLER = (function() {
 
   function buildAdjacencyList(start, tiles, keys) {
+    console.log(tiles);
+    
     const adjacencyList = {};
     (function inner(currentNode, isRoot = false) {      
       const currentChildren = currentNode.getNeighbors(keys);
