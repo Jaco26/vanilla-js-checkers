@@ -39,7 +39,8 @@ function handleMouseDown(e) {
     game.animations.possiblePaths(validPaths.list, game)
   } 
 
-  function handleMouseMove(e) {    
+  function handleMouseMove(e) { 
+    if (game.animations.intervalId) clearInterval(game.animations.intervalId);   
     clickedPiece.changePosition(e);
     game.board.renderBoard();
   }
@@ -51,6 +52,7 @@ function handleMouseDown(e) {
       const newTile = game.findTile(e);
       console.log(validPaths);
       if (!newTile.hasPiece && !newTile.isRed) {
+        if (game.animations.intervalId) clearInterval(game.animations.intervalId);
         clickedTile.hasPiece = null;
         newTile.hasPiece = clickedPiece;
         newTile.centerPiece();
