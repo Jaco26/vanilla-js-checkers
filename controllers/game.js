@@ -31,8 +31,13 @@ function handleMouseDown(e) {
   if (clickedPiece) {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    if (game.animations.intervalId) clearInterval(game.animations.intervalId);
     validPaths = PATH_CONTROLLER.findValidPaths(clickedTile, game.tiles);
   }
+
+  if (validPaths && validPaths.list.length) {
+    game.animations.possiblePaths(validPaths.list, game)
+  } 
 
   function handleMouseMove(e) {    
     clickedPiece.changePosition(e);

@@ -1,11 +1,14 @@
-const GAME_MODEL = (function(boardMod) {
+const GAME_MODEL = (function(boardMod, animationMod) {
 
   const { Board } = boardMod;
+  const { CheckersAnimations } = animationMod;
 
   class Game {
     constructor(config) {
       this.board = new Board(config.board);
       this.history = [config.template];
+
+      this.animations = new CheckersAnimations();
 
       this.board.generatePieces(config.template);
       this.board.drawPieces();
@@ -41,4 +44,4 @@ const GAME_MODEL = (function(boardMod) {
 
   return { Game };
 
-})(BOARD_MODEL);
+})(BOARD_MODEL, ANIMATION_MODEL);

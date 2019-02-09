@@ -18,7 +18,7 @@ const PATH_CONTROLLER = (function() {
         }
       });
     })(start, true);
-    return { adjacencyList };
+    return adjacencyList;
   }
 
 
@@ -69,12 +69,10 @@ const PATH_CONTROLLER = (function() {
   }
 
 
-
-
   function build(start, tiles, keys) {    
-    const { adjacencyList } = buildAdjacencyList(start, tiles, keys);
-    const parsed = parseAdjacencyList(adjacencyList);
-    return { adjacencyList, parsed };
+    const adjacencyList = buildAdjacencyList(start, tiles, keys);
+    const list = parseAdjacencyList(adjacencyList);
+    return { adjacencyList, list };
   }
 
   function findValidPaths(start, tiles) {
@@ -88,7 +86,6 @@ const PATH_CONTROLLER = (function() {
       keys = ['upLeft', 'upRight'];
     }
     return build(start, tiles, keys);
-    // return build(start, tiles, ['upLeft', 'upRight', 'downLeft', 'downRight']);
   }
 
   return { findValidPaths };
