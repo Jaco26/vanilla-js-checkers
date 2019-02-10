@@ -53,7 +53,11 @@ const TILE_MODEL = (function() {
     }
 
     getNeighbors(keys) {
-      return keys.map(key => this.neighbors[key]);
+      // return keys.map(key => this.neighbors[key]);
+      return keys.reduce((acc, key) => {
+        acc[key] = this.neighbors[key];
+        return acc;
+      }, {});
     }
 
     centerPiece() {

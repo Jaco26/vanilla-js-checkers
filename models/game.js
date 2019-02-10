@@ -1,7 +1,8 @@
-const GAME_MODEL = (function(boardMod, animationMod) {
+const GAME_MODEL = (function(boardMod, validPathsMod, animationMod) {
 
   const { Board } = boardMod;
   const { CheckersAnimations } = animationMod;
+  const { ValidPaths } = validPathsMod;
 
   class Game {
     constructor(config) {
@@ -40,8 +41,12 @@ const GAME_MODEL = (function(boardMod, animationMod) {
       return this.tiles[rowIndex][colIndex];
     }
 
+    findValidPaths(start) {
+      return new ValidPaths(start, this.tiles);
+    }
+
   }
 
   return { Game };
 
-})(BOARD_MODEL, ANIMATION_MODEL);
+})(BOARD_MODEL, VALID_PATHS_MODEL, ANIMATION_MODEL);

@@ -36,7 +36,7 @@ function handleMouseDown(e) {
 
     game.animations.stop('possiblePaths');
 
-    validPaths = PATH_CONTROLLER.findValidPaths(clickedTile, game.tiles);
+    validPaths = game.findValidPaths(clickedTile);
     console.log(validPaths);
     
   }
