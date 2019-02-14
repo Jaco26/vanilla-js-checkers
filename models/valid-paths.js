@@ -12,6 +12,7 @@ const VALID_PATHS_MODEL = (function() {
     },
     isOpponentAndCanJump(currentPlayer, neighborTile, direction, tiles) {
       function isOpponent() {
+        // console.log(currentPlayer, neighborTile.hasPiece.player);
         return currentPlayer !== neighborTile.hasPiece.player;
       }
       function canJump() {
@@ -26,10 +27,11 @@ const VALID_PATHS_MODEL = (function() {
   }
 
   class AdjacencyListNode {
-    constructor(isRoot = false, isOpponent = false) {
+    constructor(isRoot = false, isOpponent = true, hasBeenJumped = true) {
       this.isOpponent = isOpponent;
       this.isRoot = isRoot;
       this.neighbors = [];
+      this.hasBeenJumped = hasBeenJumped;
     }
   }
 
@@ -42,7 +44,7 @@ const VALID_PATHS_MODEL = (function() {
 
     buildAdjacencyList(start, tiles, keys) {
       const adjacencyList = {};
-      const currentPlayer = start.player;
+      const currentPlayer = start.hasPiece.player;
       (function inner(currentTile, directionKeys, isRoot = false) {
 
         // register currentNode if it is not registered on the adjacency list
@@ -69,7 +71,9 @@ const VALID_PATHS_MODEL = (function() {
 
                   // register the neighbor with the opponent piece so that we can parse
                   // the adjacency list later
-                  adjacencyList[neighbor.name] = new AdjacencyListNode(false, true);
+                  if (!adjacencyList[neighbor.name]) {
+                    adjacencyList[neighbor.name] = new AdjacencyListNode(false);
+                  }
                   adjacencyList[neighbor.name].neighbors.push(openTile.name)
 
                   inner(openTile, directionKeys);
@@ -87,7 +91,10 @@ const VALID_PATHS_MODEL = (function() {
                   const { row, col } = neighbor.neighbors[key];
                   const openTile = tiles[row][col];
 
-                  adjacencyList[neighbor.name] = new AdjacencyListNode(isRoot, true);
+                  if (!adjacencyList[neighbor.name]) {
+                    adjacencyList[neighbor.name] = new AdjacencyListNode(isRoot);
+                  }
+                  
                   adjacencyList[neighbor.name].neighbors.push(openTile.name)
 
                   // console.log(`${currentTile.name}'s neighbor ${neighbor.name} can be jumped so that we end up in ${openTile.name}`);
@@ -99,8 +106,8 @@ const VALID_PATHS_MODEL = (function() {
         })
 
 
-      })(start, keys, true);
-    // })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
+      // })(start, keys, true);
+    })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
 
       return adjacencyList;
     }

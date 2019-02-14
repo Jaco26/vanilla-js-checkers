@@ -18,7 +18,17 @@ const templates = {
     [2, 0, 0, 0, 2, 0, 0, 0],
     [0, 1, 0, 1, 0, 1, 0, 2],
     [0, 0, 2, 0, 0, 0, 2, 0],
-  ]
+  ],
+  exceedMaxCallStack: [
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [2, 0, 2, 0, 2, 0, 2, 0],
+  ],
 };
 
 const { uiConfig } = UI_CONTROLLER;
@@ -29,7 +39,7 @@ const game = new GAME_MODEL.Game({
     width: 700,
     height: 700,
   },
-  template: templates.standard,
+  template: templates.exceedMaxCallStack,
   shouldAnimate: false
 });
 
