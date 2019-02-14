@@ -74,9 +74,11 @@ const VALID_PATHS_MODEL = (function() {
                   if (!adjacencyList[neighbor.name]) {
                     adjacencyList[neighbor.name] = new AdjacencyListNode(false);
                   }
-                  adjacencyList[neighbor.name].neighbors.push(openTile.name)
-
-                  inner(openTile, directionKeys);
+                  if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
+                    adjacencyList[neighbor.name].neighbors.push(openTile.name)
+                    inner(openTile, directionKeys);
+                  }
+                  
                 }
               } else {
                 // neighbor of clicked piece is empty
@@ -94,11 +96,12 @@ const VALID_PATHS_MODEL = (function() {
                   if (!adjacencyList[neighbor.name]) {
                     adjacencyList[neighbor.name] = new AdjacencyListNode(isRoot);
                   }
-                  
-                  adjacencyList[neighbor.name].neighbors.push(openTile.name)
 
-                  // console.log(`${currentTile.name}'s neighbor ${neighbor.name} can be jumped so that we end up in ${openTile.name}`);
-                  inner(openTile, directionKeys);
+                  if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
+                    adjacencyList[neighbor.name].neighbors.push(openTile.name);
+                    // console.log(`${currentTile.name}'s neighbor ${neighbor.name} can be jumped so that we end up in ${openTile.name}`);
+                    inner(openTile, directionKeys);
+                  }
                 } 
               }
             }
@@ -108,7 +111,8 @@ const VALID_PATHS_MODEL = (function() {
 
       // })(start, keys, true);
     })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
-
+    console.log(inner);
+    
       return adjacencyList;
     }
 
