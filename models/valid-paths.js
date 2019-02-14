@@ -111,7 +111,6 @@ const VALID_PATHS_MODEL = (function() {
 
       // })(start, keys, true);
     })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
-    console.log(inner);
     
       return adjacencyList;
     }
