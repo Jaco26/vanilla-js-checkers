@@ -25,8 +25,8 @@ const templates = {
     [0, 1, 0, 1, 0, 1, 0, 1],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 1, 0, 1, 0, 0],
-    [2, 0, 2, 0, 2, 0, 2, 0],
-    [0, 2, 0, 2, 0, 2, 0, 2],
+    [2, 0, 0, 0, 2, 0, 0, 0],
+    [0, 2, 0, 1, 0, 1, 0, 2],
     [2, 0, 2, 0, 2, 0, 2, 0],
   ],
 };
@@ -36,8 +36,8 @@ const { uiConfig } = UI_CONTROLLER;
 const game = new GAME_MODEL.Game({
   board: {
     canvasId: 'checkers-game',
-    width: 700,
-    height: 700,
+    width: 600,
+    height: 600,
   },
   template: templates.exceedMaxCallStack,
   shouldAnimate: false

@@ -38,7 +38,9 @@ const VALID_PATHS_MODEL = (function() {
     constructor(start, tiles) {
       const keys = util.getDirectionKeys(start.hasPiece);
       this.adjacencyList = this.buildAdjacencyList(start, tiles, keys);
-      this.list = this.parseAdjacencyList();
+      this.list = [];
+      // this.list = this.parseAdjacencyList();
+      this.parseAdjacencyList();
     }
 
     buildAdjacencyList(start, tiles, keys) {
@@ -60,7 +62,7 @@ const VALID_PATHS_MODEL = (function() {
           adjacencyList[neighbor.name] = new AdjacencyListNode(false, true);
         }
         if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
-          adjacencyList[neighbor.name].neighbors.push(openTile.name)
+          adjacencyList[neighbor.name].neighbors.push(openTile.name);
           callback(openTile, directionKeys);
         }
       }
@@ -97,53 +99,100 @@ const VALID_PATHS_MODEL = (function() {
     }
 
     parseAdjacencyList() {
-      const listKeys = Object.keys(this.adjacencyList);    
+      const listKeys = Object.keys(this.adjacencyList);
       const rootKey = listKeys.find(key => this.adjacencyList[key].isRoot);
-  
+      const al = listKeys.reduce((a, key) => {
+        a[key] = this.adjacencyList[key].neighbors;
+        return a;
+      }, {});      
+      console.log(al);
+
       const queue = [];
-      const visited = {};
       const results = [];
-      
-      this.adjacencyList[rootKey].neighbors.forEach(nbr => {        
+      const previousMoves = [];
+
+      function movePreviouslyMade(from, to) {
+        const fromTo = [from, to].join();
+        const toFrom = [to, from].join();      
+        return previousMoves.some(item => item.join() === fromTo || item.join() === toFrom);
+      }
+
+      this.adjacencyList[rootKey].neighbors.forEach(nbr => {
         results.push([rootKey, nbr]);
         queue.push(nbr);
       });
-  
-      visited[rootKey] = true;
-  
+
       while (queue.length) {
-        let key = queue.shift();
-        if (!visited[key]) { 
-          // if key has not been visited, mark it as visited and look for it in the adjacency list
-          visited[key] = true;
-          if (this.adjacencyList[key]) {
-            // look at each of list[key]'s neighbors
-            this.adjacencyList[key].neighbors.forEach(nbr => {
-              // look at each item in results
+        let currentKey = queue.pop();
+        if (this.adjacencyList[currentKey]) {
+          this.adjacencyList[currentKey].neighbors.forEach(nbr => {
+            if (!movePreviouslyMade(currentKey, nbr)) {              
               results.forEach(item => {
-                // if key is in item
-                if (item[item.length - 1] === key) { // if the last value in item is the key
-                  // push neighbor onto it
+                if (item[item.length - 1] === currentKey) {
                   item.push(nbr);
-                } else if (item.includes(key)) { // otherwise, if item includes the key
-                  // create a slice of the item from index 0 to indexOf(key) + 1
-                  const slice = item.slice(0, item.indexOf(key) + 1);                
-                  // push nbr onto it
+                } else if (item.includes(currentKey)) {
+                  const slice = item.slice(0, item.indexOf(currentKey) + 1);
                   slice.push(nbr);
-                  // push the slice onto results
-                  results.push(slice);                
-                } 
+                  results.push(slice);
+                }
               });
-              queue.push(nbr);   
-            });
-          }
+              previousMoves.push([currentKey, nbr]);
+              queue.push(nbr);
+            }
+          });
         }
       }
-      return results;
+      this.list = results;
     }
-
   }
 
   return { ValidPaths };
 
 })();
+
+
+// parseAdjacencyList() {
+//   const listKeys = Object.keys(this.adjacencyList);    
+//   const rootKey = listKeys.find(key => this.adjacencyList[key].isRoot);
+
+//   const queue = [];
+//   const visited = {};
+//   const results = [];
+  
+//   this.adjacencyList[rootKey].neighbors.forEach(nbr => {        
+//     results.push([rootKey, nbr]);
+//     queue.push(nbr);
+//   });
+
+//   visited[rootKey] = true;
+
+//   while (queue.length) {
+//     let key = queue.shift();
+//     if (!visited[key]) { 
+//       // if key has not been visited, mark it as visited and look for it in the adjacency list
+//       visited[key] = true;
+//       if (this.adjacencyList[key]) {
+//         // look at each of list[key]'s neighbors
+//         this.adjacencyList[key].neighbors.forEach(nbr => {
+//           // look at each item in results
+//           results.forEach(item => {
+//             // if key is in item
+//             if (item[item.length - 1] === key) { // if the last value in item is the key
+//               // push neighbor onto it
+//               item.push(nbr);
+//             } else if (item.includes(key)) { // otherwise, if item includes the key
+//               // create a slice of the item from index 0 to indexOf(key) + 1
+//               const slice = item.slice(0, item.indexOf(key) + 1);                
+//               // push nbr onto it
+//               slice.push(nbr);
+//               // push the slice onto results
+//               results.push(slice);                
+//             } 
+//           });
+//           queue.push(nbr);   
+//         });
+//       }
+//     }
+//   }
+//   return results;
+// }
