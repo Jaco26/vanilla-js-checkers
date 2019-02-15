@@ -27,11 +27,10 @@ const VALID_PATHS_MODEL = (function() {
   }
 
   class AdjacencyListNode {
-    constructor(isRoot = false, isOpponent = true, hasBeenJumped = true) {
+    constructor(isRoot = false, isOpponent = false) {
       this.isOpponent = isOpponent;
       this.isRoot = isRoot;
       this.neighbors = [];
-      this.hasBeenJumped = hasBeenJumped;
     }
   }
 
@@ -45,73 +44,55 @@ const VALID_PATHS_MODEL = (function() {
     buildAdjacencyList(start, tiles, keys) {
       const adjacencyList = {};
       const currentPlayer = start.hasPiece.player;
-      (function inner(currentTile, directionKeys, isRoot = false) {
 
+      function handleJump(currentTile, directionKeys, neighbor, key, callback) {
+
+        if (!adjacencyList[currentTile.name].neighbors.includes(neighbor.name)) {
+          adjacencyList[currentTile.name].neighbors.push(neighbor.name); // that piece is an opponent and there is space on the other side to jump to
+        }
+        
+        const { row, col } = neighbor.neighbors[key];
+        const openTile = tiles[row][col];
+
+        // register the neighbor with the opponent piece so that we can parse
+        // the adjacency list later
+        if (!adjacencyList[neighbor.name]) {
+          adjacencyList[neighbor.name] = new AdjacencyListNode(false, true);
+        }
+        if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
+          adjacencyList[neighbor.name].neighbors.push(openTile.name)
+          callback(openTile, directionKeys);
+        }
+      }
+
+      (function traverse(currentTile, directionKeys, isRoot = false) {
         // register currentNode if it is not registered on the adjacency list
         if (!adjacencyList[currentTile.name]) {
           adjacencyList[currentTile.name] = new AdjacencyListNode(isRoot);
         }
-
         directionKeys.forEach(key => {
           const { row, col } = currentTile.neighbors[key]; // row and column number of neighbor
-
           if (row !== null && col !== null) {
             const neighbor = tiles[row][col];
-
-            if (isRoot) {
-              // the currentTile is the one we clicked
-              if (neighbor.hasPiece) {
-                // the neighbor tile has a piece
+            if (isRoot) { // the currentTile is the one we clicked
+              if (neighbor.hasPiece) { // the neighbor tile has a piece
                 if (util.isOpponentAndCanJump(currentPlayer, neighbor, key, tiles)) {
-                  // that piece is an opponent and there is space on the other side to jump to
-                  adjacencyList[currentTile.name].neighbors.push(neighbor.name);
-
-                  const { row, col } = neighbor.neighbors[key];
-                  const openTile = tiles[row][col];
-
-                  // register the neighbor with the opponent piece so that we can parse
-                  // the adjacency list later
-                  if (!adjacencyList[neighbor.name]) {
-                    adjacencyList[neighbor.name] = new AdjacencyListNode(false);
-                  }
-                  if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
-                    adjacencyList[neighbor.name].neighbors.push(openTile.name)
-                    inner(openTile, directionKeys);
-                  }
-                  
+                  handleJump(currentTile, directionKeys, neighbor, key, traverse);
                 }
-              } else {
-                // neighbor of clicked piece is empty
+              } else { // neighbor of clicked piece is empty
                 adjacencyList[currentTile.name].neighbors.push(neighbor.name);
               }
-            } else {
-              // the current tile is one we have jumped to
+            } else { // the current tile is one we have jumped to
               if (neighbor.hasPiece) {
                 if (util.isOpponentAndCanJump(currentPlayer, neighbor, key, tiles)) {
-                  
-                  adjacencyList[currentTile.name].neighbors.push(neighbor.name);
-                  const { row, col } = neighbor.neighbors[key];
-                  const openTile = tiles[row][col];
-
-                  if (!adjacencyList[neighbor.name]) {
-                    adjacencyList[neighbor.name] = new AdjacencyListNode(isRoot);
-                  }
-
-                  if (!adjacencyList[neighbor.name].neighbors.includes(openTile.name)) {
-                    adjacencyList[neighbor.name].neighbors.push(openTile.name);
-                    // console.log(`${currentTile.name}'s neighbor ${neighbor.name} can be jumped so that we end up in ${openTile.name}`);
-                    inner(openTile, directionKeys);
-                  }
+                  handleJump(currentTile, directionKeys, neighbor, key, traverse);
                 } 
               }
             }
           } 
-        })
-
-
+        });
       // })(start, keys, true);
-    })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
-    
+      })(start, ['downRight', 'downLeft', 'upRight', 'upLeft'], true);
       return adjacencyList;
     }
 
